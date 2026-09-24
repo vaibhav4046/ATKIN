@@ -14,6 +14,8 @@ import {
 import type { Matter, Document, Claim, ReviewItem, Authority } from '../../types/index.ts';
 import { Badge } from '../common/Badge.tsx';
 import type { WorkbenchTab } from '../layout/Sidebar.tsx';
+import { MorningReviewQueue } from './MorningReviewQueue.tsx';
+import { StrategyLabEngine } from '../../engine/strategy/strategyLabEngine.ts';
 
 interface OverviewTabProps {
   matter: Matter;
@@ -221,6 +223,13 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </div>
       </div>
 
+      {/* 12-Stage Lawyer Working Day: Morning Review Queue */}
+      <MorningReviewQueue
+        matterId={matter.id}
+        matterTitle={matter.title}
+        onNavigateTab={onNavigateTab}
+      />
+
       {/* Featured Matter Contradiction Callout */}
       {contestedClaims.length > 0 && (
         <div className="bg-white border border-amber-300 rounded-[6px] p-4 shadow-subtle">
@@ -261,6 +270,100 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           </div>
         </div>
       )}
+
+      {/* Strategy Lab: Objective Evidential Readiness */}
+      {(() => {
+        const strategyReport = StrategyLabEngine.evaluateCaseReadiness(matter, documents, claims, reviewItems);
+        const percent = Math.round(strategyReport.evidenceCoverageRatio * 100);
+
+        return (
+          <div className="bg-white border border-border-hairline rounded-[6px] p-5 shadow-card space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border-hairline pb-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-serif font-semibold text-ink">
+                    Strategy Lab: Evidential Readiness
+                  </h3>
+                  <Badge variant={percent >= 75 ? 'green' : percent >= 50 ? 'ochre' : 'red'} size="sm">
+                    {percent}% Evidenced
+                  </Badge>
+                </div>
+                <p className="text-xs text-ink-muted mt-0.5">
+                  Civil Evidence Act 1995 & CPR Part 32 readiness ratio. Zero uncalibrated outcome predictions.
+                </p>
+              </div>
+
+              <span className="text-[11px] font-mono text-ink-steel">
+                {strategyReport.evidencedElements} / {strategyReport.totalRequiredElements} Elements Grounded
+              </span>
+            </div>
+
+            {/* Coverage Progress Bar */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs text-ink-slate font-medium">
+                <span>Statutory Evidence Coverage Ratio</span>
+                <span className="font-mono">{percent}%</span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-[2px] h-2 overflow-hidden border border-border-hairline">
+                <div 
+                  className={`h-full transition-all duration-300 ${percent >= 75 ? 'bg-emerald-600' : percent >= 50 ? 'bg-blue-600' : 'bg-amber-600'}`}
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Statutory Elements Breakdown */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-ink-steel font-mono">
+                Required Statutory & Precedent Elements
+              </h4>
+              <div className="space-y-1.5">
+                {strategyReport.statutoryCoverages.map(elem => (
+                  <div 
+                    key={elem.elementId}
+                    className="p-2.5 bg-canvas border border-border-hairline rounded-[4px] flex items-start justify-between gap-3 text-xs"
+                  >
+                    <div className="space-y-0.5">
+                      <div className="font-medium text-ink">
+                        {elem.requirementDescription}
+                      </div>
+                      <div className="text-[11px] font-mono text-ink-steel">
+                        {elem.statutoryReference}
+                      </div>
+                    </div>
+                    <Badge variant={elem.isEvidenced ? 'green' : 'ochre'} size="sm">
+                      {elem.isEvidenced ? 'Evidenced' : 'Unproven'}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Missing Essential Proof Checklist */}
+            {strategyReport.missingDocumentChecklist.length > 0 && (
+              <div className="space-y-1.5 pt-1">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-ink-steel font-mono">
+                  Evidential Gap Checklist (Missing Disclosures)
+                </h4>
+                <ul className="space-y-1 text-xs text-ink-slate">
+                  {strategyReport.missingDocumentChecklist.map((doc, idx) => (
+                    <li key={idx} className="flex items-start gap-1.5">
+                      <span className="text-amber-700 font-bold">•</span>
+                      <span>{doc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Explicit Abstention Notice */}
+            <div className="p-3 bg-canvas border border-border-hairline rounded-[4px] text-xs text-ink-slate leading-relaxed">
+              <span className="font-semibold text-ink">SRA Conduct Notice: </span>
+              {strategyReport.explicitAbstentionNotice}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Trust & Boundary Architecture Receipt */}
       <div className="bg-canvas-subtle border border-border-hairline rounded-[6px] p-4 text-[12.5px] text-ink space-y-2">

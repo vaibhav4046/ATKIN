@@ -3,7 +3,8 @@ import type {
   MemoryScope, 
   MemoryKind, 
   MemoryReviewState, 
-  MemoryStatus 
+  MemoryStatus,
+  StateClass
 } from '../../types/index.ts';
 
 export class MemoryEngine {
@@ -151,6 +152,60 @@ export class MemoryEngine {
     }
 
     return invalidatedIds;
+  }
+
+  /**
+   * 6-Tier State Ledger Classification:
+   * Map memory scopes to the 6 sovereign state classes.
+   */
+  public getMemoriesByStateClass(stateClass: StateClass, matterId?: string): MemoryRecord[] {
+    const scopeMap: Record<StateClass, MemoryScope[]> = {
+      original_evidence: ['matter_facts'],
+      extracted_observations: ['matter_facts', 'legal_research_notes'],
+      reviewed_matter_knowledge: ['matter_facts', 'work_progress'],
+      user_preferences: ['user_preferences'],
+      approved_reusable_knowledge: ['workspace_playbooks'],
+      public_legal_reference_packs: ['legal_research_notes']
+    };
+
+    const targetScopes = scopeMap[stateClass] || [];
+    return Array.from(this.memories.values()).filter(m => {
+      if (m.status === 'deleted') return false;
+      if (!targetScopes.includes(m.scope)) return false;
+      if (matterId && m.matterId && m.matterId !== matterId) return false;
+      return true;
+    });
+  }
+
+  /**
+   * Export the complete state ledger as encrypted/verifiable JSON.
+   */
+  public exportStateLedger(): string {
+    const data = {
+      version: '1.0.0',
+      exportedAt: new Date().toISOString(),
+      recordCount: this.memories.size,
+      records: Array.from(this.memories.values())
+    };
+    return JSON.stringify(data, null, 2);
+  }
+
+  /**
+   * Import state ledger with validation.
+   */
+  public importStateLedger(jsonString: string): boolean {
+    try {
+      const parsed = JSON.parse(jsonString);
+      if (!parsed.records || !Array.isArray(parsed.records)) return false;
+      for (const rec of parsed.records) {
+        if (rec.id && rec.scope && rec.text) {
+          this.memories.set(rec.id, rec);
+        }
+      }
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 

@@ -93,6 +93,13 @@ export interface Claim {
   provenanceEdges: EvidenceEdge[];
   editorNotes?: string;
   updatedAt: string;
+  // 4-timestamp temporal provenance (Civil Evidence Act 1995 s.9)
+  eventDate?: string;
+  sourceDate?: string | null;
+  importedAt?: string;
+  verifiedAt?: string | null;
+  verifiedBy?: string | null;
+  stateClass?: StateClass;
 }
 
 export interface Authority {
@@ -415,4 +422,281 @@ export interface ChatMessage {
     latencyMs: number;
     tokensGenerated?: number;
   };
+}
+
+// -------------------------------------------------------------
+// Slice 1: 6-Class State Ledger & Provenance
+// -------------------------------------------------------------
+
+export type StateClass =
+  | 'original_evidence'
+  | 'extracted_observations'
+  | 'reviewed_matter_knowledge'
+  | 'user_preferences'
+  | 'approved_reusable_knowledge'
+  | 'public_legal_reference_packs';
+
+export interface StateProvenance {
+  eventDate?: string;
+  sourceDate?: string | null;
+  importedAt: string;
+  verifiedAt?: string | null;
+  verifiedBy?: string | null;
+}
+
+export interface MorningQueueItem {
+  id: string;
+  matterId: string;
+  matterTitle: string;
+  category: 'deadline' | 'changed_evidence' | 'unreviewed_draft' | 'contradiction' | 'task';
+  priority: 'urgent' | 'high' | 'normal';
+  title: string;
+  summary: string;
+  dueOrAlertDate?: string;
+  targetTab: 'overview' | 'sources' | 'facts' | 'timeline' | 'contract' | 'graph' | 'research' | 'draft' | 'review' | 'memory' | 'settings';
+  isResolved: boolean;
+}
+
+// -------------------------------------------------------------
+// Slice 2: Model Portability & 6 Quality Contracts
+// -------------------------------------------------------------
+
+export interface CapabilityProfile {
+  modelTag: string;
+  vendor: 'gemma' | 'llama' | 'local_gguf' | 'custom';
+  maxTestedContextTokens: number;
+  structuredJsonReliability: 'certified' | 'experimental' | 'unsupported';
+  supportedTasks: Array<'fact_extraction' | 'statutory_reasoning' | 'adverse_evidence_check' | 'contract_redline' | 'citation_verification'>;
+  vramRequiredMb: number;
+  recommendsQuantization: 'q4_k_m' | 'q8_0' | 'fp16' | 'none';
+  testedThroughputTokensPerSec?: number;
+}
+
+export interface EvidencePacket {
+  matterId: string;
+  documentVersionIds: string[];
+  literalSpans: Span[];
+  provenanceHierarchy: string[];
+  keyDates: Array<{ label: string; date: string }>;
+  contraryEvidence: string[];
+  identifiedGaps: string[];
+  prompt: string;
+}
+
+export interface TaskPolicy {
+  permittedTools: string[];
+  tokenBudget: number;
+  requiresSolicitorReview: boolean;
+  networkMode: NetworkMode;
+  allowedSourceScopes: string[];
+  abstentionPermitted: boolean;
+}
+
+export interface OutputProposition {
+  statement: string;
+  spanCitationIds: string[];
+  confidence: 'high' | 'provisional' | 'abstain';
+}
+
+export interface OutputContract {
+  typedPropositions: OutputProposition[];
+  exactSourceCitations: Array<{ spanId: string; quote: string; byteOffsetStart?: number; byteOffsetEnd?: number }>;
+  draftBlocks: DraftBlock[];
+  explicitUncertainties: string[];
+  suggestedNextSteps: string[];
+  abstained: boolean;
+  abstentionReason?: string;
+}
+
+export interface QualityReport {
+  ruleValidationPassed: boolean;
+  hallucinatedSpanCount: number;
+  contradictoryAssertionsCount: number;
+  humanReviewStatus: 'pending' | 'signed_off';
+  passedChecks: string[];
+  failedChecks: string[];
+}
+
+export interface QualificationCheckResult {
+  ruleNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  ruleName: string;
+  passed: boolean;
+  scorePercent: number;
+  details: string;
+}
+
+export interface QualificationReport {
+  modelTag: string;
+  testedAt: string;
+  overallPassed: boolean;
+  passedCount: number;
+  totalChecks: number;
+  checks: QualificationCheckResult[];
+}
+
+// -------------------------------------------------------------
+// Slice 3: Local Speech & Audio Transcription
+// -------------------------------------------------------------
+
+export interface SpeechTranscriptWord {
+  word: string;
+  startSec: number;
+  endSec: number;
+  confidence: number;
+}
+
+export interface SpeechTranscriptionResult {
+  id: string;
+  matterId: string;
+  audioSha256: string;
+  durationSeconds: number;
+  fullText: string;
+  words: SpeechTranscriptWord[];
+  speakerTag?: string;
+  recordedAt: string;
+  clientConsentRecorded: boolean;
+  billingUnits6Min: number;
+}
+
+export interface LatinGlossaryEntry {
+  term: string;
+  phonetic: string;
+  legalMeaning: string;
+  usageContext: string;
+}
+
+// -------------------------------------------------------------
+// Slice 4: Deep Research State Machine & Strategy Lab
+// -------------------------------------------------------------
+
+export type DeepResearchStep =
+  | 'scope'
+  | 'plan'
+  | 'local_search'
+  | 'sufficiency_check'
+  | 'rights_gate'
+  | 'fetch_public'
+  | 'extract'
+  | 'draft_memo'
+  | 'adverse_check'
+  | 'lawyer_approval';
+
+export interface DeepResearchSession {
+  id: string;
+  matterId: string;
+  query: string;
+  currentStep: DeepResearchStep;
+  status: 'idle' | 'executing' | 'blocked_offline' | 'abstained_insufficient' | 'completed' | 'failed';
+  sufficiencyScore: number; // 0 to 1.0 (arXiv:2411.06037)
+  missingElements: string[];
+  fetchedSources: Array<{ sourceId: string; title: string; url: string; rightsPassed: boolean }>;
+  generatedMemoId?: string;
+  logs: string[];
+}
+
+export interface StatutoryElementCoverage {
+  elementId: string;
+  statutoryReference: string; // e.g. "CRA 2015 s.9(1)"
+  requirementDescription: string;
+  isEvidenced: boolean;
+  supportingSpanIds: string[];
+  contradictorySpanIds: string[];
+}
+
+export interface StrategyReadinessReport {
+  matterId: string;
+  generatedAt: string;
+  totalRequiredElements: number;
+  evidencedElements: number;
+  evidenceCoverageRatio: number; // evidencedElements / totalRequiredElements
+  unsupportedAssertionCount: number;
+  unresolvedAdverseEvidenceCount: number;
+  missingDocumentChecklist: string[];
+  statutoryCoverages: StatutoryElementCoverage[];
+  proceduralLimitationAlert?: string;
+  explicitAbstentionNotice: string;
+}
+
+// -------------------------------------------------------------
+// Slice 5: 6,000-Document Corpus Manifest & Adaptation
+// -------------------------------------------------------------
+
+export interface CorpusCollectionMetrics {
+  collectionId: string;
+  name: string;
+  jurisdiction: Jurisdiction;
+  licence: string;
+  documentsCount: number;
+  pagesCount: number;
+  chunksCount: number;
+  annotationsCount: number;
+  quarantined: boolean;
+  quarantineReason?: string;
+}
+
+export interface CorpusManifestSummary {
+  updatedAt: string;
+  collectionsCount: number;
+  totalDocuments: number;
+  totalPages: number;
+  totalChunks: number;
+  totalAnnotations: number;
+  targetTargetGoal: number; // 6,000 documents
+  percentAchieved: number;
+  collections: CorpusCollectionMetrics[];
+}
+
+// -------------------------------------------------------------
+// Slice 6: Role-Gated Conflict Check
+// -------------------------------------------------------------
+
+export interface ConflictEntity {
+  id: string;
+  canonicalName: string;
+  aliases: string[];
+  entityType: 'individual' | 'corporation' | 'fiduciary';
+  associatedMatterIds: string[];
+  roles: Array<'client' | 'adverse_party' | 'witness' | 'expert' | 'director'>;
+}
+
+export interface ConflictCheckMatch {
+  matchedEntityId: string;
+  canonicalName: string;
+  queryTerm: string;
+  conflictType: 'direct_adverse' | 'former_client' | 'corporate_affiliate' | 'witness';
+  matterId: string;
+  severity: 'blocking' | 'flagged' | 'informational';
+  explanation: string;
+}
+
+// -------------------------------------------------------------
+// Slice 7: Controlled 120-Task Benchmark Suite
+// -------------------------------------------------------------
+
+export type BenchmarkCategory =
+  | 'statutory_citation_preservation'
+  | 'adverse_evidence_identification'
+  | 'missing_evidence_abstention'
+  | 'contract_playbook_redline';
+
+export interface BenchmarkTask {
+  taskId: string;
+  category: BenchmarkCategory;
+  title: string;
+  jurisdiction: Jurisdiction;
+  inputPrompt: string;
+  expectedSpans: string[];
+  expectedAbstention: boolean;
+  groundTruthKeywords: string[];
+}
+
+export interface BenchmarkRunScore {
+  evaluatedTier: 'base_model' | 'harness_rag' | 'adapter_engine';
+  totalTasks: number;
+  passedTasks: number;
+  accuracyPercent: number;
+  citationFidelityPercent: number;
+  adverseRecallPercent: number;
+  abstentionPrecisionPercent: number;
+  latencyAvgMs: number;
 }

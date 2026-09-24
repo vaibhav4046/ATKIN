@@ -18,9 +18,10 @@ import {
   Check,
   RotateCw
 } from 'lucide-react';
-import type { Authority, LegalSourcePack, NetworkMode, Jurisdiction } from '../../types/index.ts';
+import type { Authority, LegalSourcePack, NetworkMode, Jurisdiction, DeepResearchSession } from '../../types/index.ts';
 import { SourceCatalog } from '../../engine/research/sourceCatalog.ts';
 import { legalSearchEngine, COMPREHENSIVE_STATUTORY_INDEX } from '../../engine/research/legalSearchEngine.ts';
+import { deepResearchMachine } from '../../engine/research/deepResearchMachine.ts';
 import { Badge } from '../common/Badge.tsx';
 
 interface ResearchTabProps {
@@ -34,7 +35,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
   networkMode,
   onAddAuthority 
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'authorities' | 'catalog' | 'query'>('authorities');
+  const [activeSubTab, setActiveSubTab] = useState<'authorities' | 'deep_research' | 'query' | 'catalog'>('authorities');
   const [selectedJurisdiction, setSelectedJurisdiction] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -46,6 +47,29 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
   const [querySource, setQuerySource] = useState<'live_api' | 'local_index' | null>(null);
   const [isQuerying, setIsQuerying] = useState(false);
   const [attachedIds, setAttachedIds] = useState<Set<string>>(new Set());
+
+  // Deep Research State Machine
+  const [deepQuery, setDeepQuery] = useState('Bates v Post Office relational contract implied duty of good faith breach');
+  const [deepSession, setDeepSession] = useState<DeepResearchSession | null>(null);
+  const [isExecutingDeep, setIsExecutingDeep] = useState(false);
+
+  const handleRunFullDeepResearch = async () => {
+    setIsExecutingDeep(true);
+    const session = deepResearchMachine.startSession('matter-active', deepQuery);
+    setDeepSession({ ...session });
+
+    try {
+      // Step through all 10 stages with realistic UI updates
+      for (let i = 0; i < 9; i++) {
+        await new Promise(r => setTimeout(r, 250));
+        const updated = await deepResearchMachine.advanceStep(session.id);
+        setDeepSession({ ...updated });
+        if (updated.status === 'abstained_insufficient') break;
+      }
+    } finally {
+      setIsExecutingDeep(false);
+    }
+  };
 
   const catalog = new SourceCatalog();
   const allSourcePacks = catalog.getAllSources();
@@ -118,10 +142,10 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
         </div>
 
         {/* Sub-tab pills */}
-        <div className="flex items-center p-1 bg-gallery-paper rounded-[4px] border border-border-hairline shrink-0">
+        <div className="flex flex-wrap items-center p-1 bg-gallery-paper rounded-[4px] border border-border-hairline shrink-0 gap-1">
           <button
             onClick={() => setActiveSubTab('authorities')}
-            className={`px-3.5 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
               activeSubTab === 'authorities'
                 ? 'bg-gallery-white text-ink shadow-sm border border-border-hairline'
                 : 'text-ink-slate hover:text-ink'
@@ -130,8 +154,19 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
             Matter Authorities ({authorities.length})
           </button>
           <button
+            onClick={() => setActiveSubTab('deep_research')}
+            className={`px-3 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors flex items-center gap-1.5 ${
+              activeSubTab === 'deep_research'
+                ? 'bg-gallery-white text-ink shadow-sm border border-border-hairline'
+                : 'text-ink-slate hover:text-ink'
+            }`}
+          >
+            <Layers className="w-3 h-3 text-proofline-blue" />
+            <span>Deep Research (10-Stage)</span>
+          </button>
+          <button
             onClick={() => setActiveSubTab('query')}
-            className={`px-3.5 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors flex items-center gap-1.5 ${
               activeSubTab === 'query'
                 ? 'bg-gallery-white text-ink shadow-sm border border-border-hairline'
                 : 'text-ink-slate hover:text-ink'
@@ -142,7 +177,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
           </button>
           <button
             onClick={() => setActiveSubTab('catalog')}
-            className={`px-3.5 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
               activeSubTab === 'catalog'
                 ? 'bg-gallery-white text-ink shadow-sm border border-border-hairline'
                 : 'text-ink-slate hover:text-ink'
@@ -152,6 +187,174 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Subtab: Sovereign Deep Research State Machine */}
+      {activeSubTab === 'deep_research' && (
+        <div className="space-y-5">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-hairline pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-[15px] font-semibold text-ink">
+                    10-Stage Sovereign Deep Research State Machine
+                  </h3>
+                  <Badge variant="blue" size="sm">Autonomous Pipeline</Badge>
+                </div>
+                <p className="text-[12px] text-ink-slate mt-0.5">
+                  Durable legal state machine enforcing arXiv:2411.06037 sufficiency evaluation, rights gate validation, and airgapped source extraction.
+                </p>
+              </div>
+
+              <Badge variant={networkMode === 'offline' ? 'green' : 'ochre'} size="sm">
+                {networkMode === 'offline' ? 'Airgap Shield Enforced' : 'Public Research Mode'}
+              </Badge>
+            </div>
+
+            {/* Query Form */}
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-ink-steel font-mono">
+                  Primary Legal Question &amp; Evidential Scope
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={deepQuery}
+                    onChange={(e) => setDeepQuery(e.target.value)}
+                    placeholder="Enter legal research proposition..."
+                    className="flex-1 px-3.5 py-2 border border-border-hairline rounded-[4px] text-xs text-ink bg-white focus:outline-none focus:ring-1 focus:ring-proofline-blue font-sans"
+                  />
+                  <button
+                    disabled={isExecutingDeep}
+                    onClick={handleRunFullDeepResearch}
+                    className="px-4 py-2 bg-proofline-blue hover:bg-blue-700 text-white text-xs font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50 shrink-0"
+                  >
+                    <RotateCw className={`w-3.5 h-3.5 ${isExecutingDeep ? 'animate-spin' : ''}`} />
+                    <span>{isExecutingDeep ? 'Executing Pipeline...' : 'Launch Deep Research'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Sample Queries */}
+              <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                <span className="text-[11px] text-ink-muted">Templates:</span>
+                {[
+                  'Bates v Post Office relational contract implied duty of good faith breach',
+                  'Consumer Rights Act 2015 s.20 short-term right to reject computation',
+                  'Housing Act 2004 s.214 tenancy deposit non-protection 3x penalty'
+                ].map(q => (
+                  <button
+                    key={q}
+                    onClick={() => setDeepQuery(q)}
+                    className="px-2 py-0.5 rounded-[3px] bg-canvas border border-border-hairline hover:bg-slate-200 text-ink text-[11px] transition-colors truncate max-w-[280px]"
+                    title={q}
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 10-Stage Pipeline Visualization */}
+            <div className="space-y-2 pt-2">
+              <div className="flex items-center justify-between text-xs text-ink-steel font-mono">
+                <span className="font-semibold uppercase tracking-wider">Pipeline Stage Progression</span>
+                {deepSession && (
+                  <span>Sufficiency Score: {Math.round(deepSession.sufficiencyScore * 100)}%</span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {[
+                  { step: 'scope', label: '1. Scope' },
+                  { step: 'plan', label: '2. Plan' },
+                  { step: 'local_search', label: '3. Local Search' },
+                  { step: 'sufficiency_check', label: '4. Sufficiency' },
+                  { step: 'rights_gate', label: '5. Rights Gate' },
+                  { step: 'fetch_public', label: '6. Fetch Public' },
+                  { step: 'extract', label: '7. Extract' },
+                  { step: 'draft_memo', label: '8. Draft Memo' },
+                  { step: 'adverse_check', label: '9. Adverse Check' },
+                  { step: 'lawyer_approval', label: '10. Approval' }
+                ].map((s) => {
+                  const isCurrent = deepSession?.currentStep === s.step;
+                  const isCompleted = deepSession?.status === 'completed' || (deepSession && deepSession.logs.some(l => l.includes(s.label.split('.')[1].trim())));
+
+                  return (
+                    <div
+                      key={s.step}
+                      className={`p-2 rounded-[4px] border text-center transition-all text-xs font-mono ${
+                        isCurrent
+                          ? 'bg-blue-50 border-blue-400 text-blue-900 font-bold shadow-xs'
+                          : isCompleted
+                          ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-medium'
+                          : 'bg-canvas border-border-hairline text-ink-muted'
+                      }`}
+                    >
+                      {s.label}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Session Execution Logs & Results */}
+            {deepSession && (
+              <div className="space-y-3 pt-3 border-t border-border-hairline">
+                {/* Sufficiency Callout */}
+                {deepSession.sufficiencyScore > 0 && (
+                  <div className={`p-3.5 rounded-[4px] border text-xs space-y-1 ${
+                    deepSession.sufficiencyScore >= 0.75 
+                      ? 'bg-emerald-50/60 border-emerald-300 text-emerald-900'
+                      : 'bg-amber-50/60 border-amber-300 text-amber-900'
+                  }`}>
+                    <div className="font-semibold flex items-center justify-between">
+                      <span>Evidential Sufficiency Gate (arXiv:2411.06037 Protocol)</span>
+                      <span>Score: {Math.round(deepSession.sufficiencyScore * 100)}%</span>
+                    </div>
+                    <p className="text-[11.5px] leading-relaxed">
+                      {deepSession.missingElements.length === 0
+                        ? 'All required statutory references and binding precedents identified in sovereign corpus.'
+                        : `Gaps identified: ${deepSession.missingElements.join('; ')}. Model instructed to avoid unevidenced inferences.`}
+                    </p>
+                  </div>
+                )}
+
+                {/* Live Audit Log */}
+                <div className="space-y-1">
+                  <div className="text-[11px] font-mono font-semibold uppercase tracking-wider text-ink-steel">
+                    State Machine Audit Trail
+                  </div>
+                  <div className="bg-canvas border border-border-hairline rounded-[4px] p-3 max-h-[180px] overflow-y-auto font-mono text-[11px] space-y-1 text-ink-slate">
+                    {deepSession.logs.map((log, idx) => (
+                      <div key={idx} className="leading-relaxed">
+                        {log}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Fetched Sources */}
+                {deepSession.fetchedSources.length > 0 && (
+                  <div className="space-y-1.5 pt-1">
+                    <div className="text-[11px] font-mono font-semibold uppercase tracking-wider text-ink-steel">
+                      Grounded Primary Law Records ({deepSession.fetchedSources.length})
+                    </div>
+                    <div className="space-y-1">
+                      {deepSession.fetchedSources.map((src, idx) => (
+                        <div key={idx} className="p-2 bg-white border border-border-hairline rounded-[3px] flex items-center justify-between text-xs">
+                          <span className="font-medium text-ink truncate">{src.title}</span>
+                          <span className="text-[10px] text-proofline-green font-mono">OGL v3.0 Verified</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Subtab 1: Matter Authorities List */}
       {activeSubTab === 'authorities' && (

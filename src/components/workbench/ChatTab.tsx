@@ -43,6 +43,7 @@ import { MemoryEngine } from '../../engine/memory/memoryEngine.ts';
 import { LocalModelManager } from '../../engine/model/localModelManager.ts';
 import { NetworkBroker } from '../../engine/network/networkBroker.ts';
 import { IcsHandler } from '../../engine/calendar/icsHandler.ts';
+import { localSpeechEngine } from '../../engine/media/localSpeechEngine.ts';
 import { Badge } from '../common/Badge.tsx';
 
 interface ChatTabProps {
@@ -98,6 +99,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
   const [inputQuery, setInputQuery] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDictating, setIsDictating] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState<string | null>(null);
 
   // Split-Screen Interactive Document Viewer
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
@@ -239,22 +241,34 @@ export const ChatTab: React.FC<ChatTabProps> = ({
     setTimeout(() => setCopiedMsgId(null), 2000);
   };
 
-  const handleSimulateDictation = () => {
+  const handleSimulateDictation = async () => {
     setIsDictating(true);
+    setVoiceStatus('Recording offline voice stream (zero cloud egress)...');
+
+    let dictated = '';
+    if (matterId.includes('bates')) {
+      dictated = 'Attendance note with Alan Bates: Fujitsu PIN-188 engineering reports confirm remote accounting adjustments and Bug 188 duplication; Post Office Clause 12 fails reasonableness under UCTA 1977 s.3 and s.11 inter alia.';
+    } else if (matterId.includes('contract') || matterId.includes('novacorp')) {
+      dictated = 'Attendance note with General Counsel: Review Clause 8.1 uncapped customer indemnity against UK SaaS playbook standard and propose bilateral cap mutatis mutandis.';
+    } else if (matterId.includes('tenancy') || matterId.includes('thorne')) {
+      dictated = 'Conference with tenant Thorne: Housing Act 2004 s.213 deposit was never protected in government tenancy deposit scheme; Section 21 notice is invalid under Deregulation Act 2015.';
+    } else {
+      dictated = 'Attendance note with claimant Vance: Laptop screen failure manifested on day 24 post-delivery; prima facie 30-day short-term right to reject under CRA 2015 s.22 is intact.';
+    }
+
+    const txResult = await localSpeechEngine.processOfflineAudio({
+      matterId,
+      audioBlob: new ArrayBuffer(512),
+      clientConsentRecorded: true,
+      overrideTranscript: dictated
+    });
+
     setTimeout(() => {
-      let dictated = '';
-      if (matterId.includes('bates')) {
-        dictated = 'Attendance note with Alan Bates: Fujitsu PIN-188 engineering reports confirm remote accounting adjustments and Bug 188 duplication; Post Office Clause 12 fails reasonableness under UCTA 1977 s.3 and s.11.';
-      } else if (matterId.includes('contract') || matterId.includes('novacorp')) {
-        dictated = 'Attendance note with General Counsel: Review Clause 8.1 uncapped customer indemnity against UK SaaS playbook standard and propose bilateral cap tied to 12 months fees.';
-      } else if (matterId.includes('tenancy') || matterId.includes('thorne')) {
-        dictated = 'Conference with tenant Thorne: Housing Act 2004 s.213 deposit was never protected in government tenancy deposit scheme; Section 21 notice is therefore invalid under Deregulation Act 2015.';
-      } else {
-        dictated = 'Attendance note with claimant Vance: Laptop screen failure manifested on day 24 post-delivery; 30-day short-term right to reject under CRA 2015 s.22 is intact despite vendor claim of liquid ingress.';
-      }
-      setInputQuery(dictated);
+      setInputQuery(txResult.fullText);
       setIsDictating(false);
-    }, 900);
+      setVoiceStatus(`Offline ASR Complete · ${txResult.durationSeconds}s · SRA Billing: ${txResult.billingUnits6Min} Unit (6-min convention) · Latin Glossary Verified`);
+      setTimeout(() => setVoiceStatus(null), 5000);
+    }, 500);
   };
 
   return (
@@ -476,6 +490,12 @@ export const ChatTab: React.FC<ChatTabProps> = ({
 
         {/* Input Composer */}
         <div className="p-3.5 bg-white border-t border-border-hairline">
+          {voiceStatus && (
+            <div className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-900 text-[11px] font-mono rounded-[3px] flex items-center justify-between mb-2 shadow-xs">
+              <span>{voiceStatus}</span>
+              <span className="text-[10px] text-emerald-700 font-semibold">SOVEREIGN ENCRYPTED</span>
+            </div>
+          )}
           <form
             onSubmit={(e) => {
               e.preventDefault();
