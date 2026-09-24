@@ -19,15 +19,16 @@ import type { Matter } from '../../types/index.ts';
 export type WorkbenchTab = 
   | 'overview' 
   | 'chat'
+  | 'notebook'
   | 'sources' 
   | 'facts' 
   | 'timeline' 
-  | 'contract'
+  | 'contract' 
   | 'graph' 
   | 'research' 
   | 'draft' 
   | 'review' 
-  | 'memory'
+  | 'memory' 
   | 'settings';
 
 interface SidebarProps {
@@ -60,6 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems: Array<{ id: WorkbenchTab; label: string; icon: React.ReactNode; badge?: string | number; badgeColor?: string }> = [
     { id: 'overview', label: 'Matter Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'chat', label: 'Evidential Copilot', icon: <FileSignature className="w-4 h-4 text-proofline-blue" /> },
+    { id: 'notebook', label: 'Notebook Studio', icon: <BookOpen className="w-4 h-4 text-indigo-600" />, badge: 'Studio', badgeColor: 'bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold' },
     { id: 'sources', label: 'Primary Evidence', icon: <FileText className="w-4 h-4" />, badge: counts.docs },
     { id: 'facts', label: 'Fact & Claim Ledger', icon: <CheckSquare className="w-4 h-4" />, badge: counts.claims },
     { id: 'timeline', label: 'Chronology & Adverse', icon: <CalendarClock className="w-4 h-4" />, badge: counts.conflicts > 0 ? `${counts.conflicts} conflict` : undefined, badgeColor: 'bg-amber-100 text-amber-900 border border-amber-300' },

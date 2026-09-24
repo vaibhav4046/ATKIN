@@ -17,6 +17,7 @@ import { SettingsTab } from './components/workbench/SettingsTab.tsx';
 import { ChatTab } from './components/workbench/ChatTab.tsx';
 import { MemoryTab } from './components/workbench/MemoryTab.tsx';
 import { ContractTab } from './components/workbench/ContractTab.tsx';
+import { NotebookStudioTab } from './components/workbench/NotebookStudioTab.tsx';
 
 import type { 
   Matter, 
@@ -466,6 +467,17 @@ export function App() {
                   memoryEngine={memoryEngine}
                   modelManager={modelManager}
                   networkBroker={networkBroker}
+                  onSelectSpan={setSelectedSpan}
+                />
+              )}
+
+              {currentTab === 'notebook' && (
+                <NotebookStudioTab
+                  matter={activeMatter}
+                  documents={documents}
+                  spans={spans}
+                  claims={claims}
+                  authorities={authorities}
                   onSelectSpan={setSelectedSpan}
                 />
               )}
