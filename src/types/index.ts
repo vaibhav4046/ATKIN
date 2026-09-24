@@ -385,6 +385,15 @@ export interface ModelStatus {
   cloudRoutesDisabled?: boolean;
 }
 
+export interface AgenticTraceStep {
+  step: number;
+  agentName: string;
+  action: string;
+  durationMs: number;
+  status: 'completed' | 'in_progress' | 'flagged';
+  outputSnippet?: string;
+}
+
 export interface ChatMessage {
   id: string;
   matterId: string;
@@ -394,6 +403,12 @@ export interface ChatMessage {
   sourcesUsed?: Array<{ docId: string; filename: string; spanId: string; lineRange?: string }>;
   memoriesUsed?: Array<{ memoryId: string; text: string; scope: MemoryScope }>;
   needsReviewItems?: string[];
+  reasoningSteps?: AgenticTraceStep[];
+  suggestedAction?: {
+    type: 'insert_draft' | 'add_calendar' | 'add_fact' | 'copy_memo';
+    label: string;
+    payload?: any;
+  };
   generationDetails?: {
     modelTag: string;
     localRuntime: boolean;
