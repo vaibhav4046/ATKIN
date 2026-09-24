@@ -8,7 +8,11 @@ import {
   AlertTriangle, 
   BookOpen, 
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  GitBranch,
+  RefreshCw,
+  AlertCircle,
+  FileCheck
 } from 'lucide-react';
 import type { Claim, Span, Document, Authority } from '../../types/index.ts';
 import { Badge } from '../common/Badge.tsx';
@@ -28,8 +32,9 @@ export const GraphTab: React.FC<GraphTabProps> = ({
   authorities,
   onSelectSpan
 }) => {
-  const [viewMode, setViewMode] = useState<'visual' | 'list'>('visual');
+  const [viewMode, setViewMode] = useState<'visual' | 'list' | 'impact'>('visual');
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>('claim-client-failure-date');
+  const [simulatedDocId, setSimulatedDocId] = useState<string>('doc-receipt-8492');
 
   const spansById = new Map(spans.map(s => [s.id, s]));
   const docsById = new Map(documents.map(d => [d.id, d]));
@@ -39,206 +44,162 @@ export const GraphTab: React.FC<GraphTabProps> = ({
   const selectedDoc = documents.find(d => d.id === selectedNodeId);
   const selectedAuth = authorities.find(a => a.id === selectedNodeId);
 
+  // Compute downstream change impact for simulated document modification
+  const affectedSpans = spans.filter(s => s.documentId === simulatedDocId);
+  const affectedSpanIds = new Set(affectedSpans.map(s => s.id));
+  const affectedClaims = claims.filter(c => c.provenanceEdges.some(e => affectedSpanIds.has(e.spanId)));
+  const simulatedDoc = docsById.get(simulatedDocId);
+
   return (
-    <div className="space-y-4 max-w-[920px] mx-auto py-2">
+    <div className="space-y-4 max-w-[960px] mx-auto py-2">
       {/* Header and View Mode Switcher */}
-      <div className="flex items-center justify-between bg-gallery-white border border-border-hairline p-4 rounded-2xl shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gallery-white border border-border-hairline p-5 rounded-2xl shadow-xs">
         <div>
+          <div className="flex items-center gap-2 mb-1">
+            <Badge variant="blue" size="sm">Evidence Topology</Badge>
+            <Badge variant="green" size="sm">Deterministic Tracing</Badge>
+          </div>
           <h2 className="text-[17px] font-semibold text-ink">
-            Evidence Graph &amp; Relation Map
+            Evidence Graph &amp; Change Impact Topology
           </h2>
           <p className="text-[12px] text-ink-slate mt-0.5">
-            Topology connecting documents, extracted spans, claims, contradictions, and statutory authorities.
+            Typed edges connecting documents, character offsets, factual assertions, and statutory authorities.
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-gallery-paper p-1 rounded-full-pill border border-border-hairline">
+        <div className="flex items-center gap-1.5 bg-gallery-paper p-1 rounded-full-pill border border-border-hairline self-start sm:self-auto text-[12px]">
           <button
             onClick={() => setViewMode('visual')}
-            className={`px-3 py-1 rounded-full-pill text-[12px] font-medium transition-colors flex items-center gap-1 ${
+            className={`px-3 py-1 rounded-full-pill font-medium transition-colors flex items-center gap-1 ${
               viewMode === 'visual' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
             }`}
           >
             <Network className="w-3.5 h-3.5" />
-            <span>Interactive Graph</span>
+            <span>Canvas</span>
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`px-3 py-1 rounded-full-pill text-[12px] font-medium transition-colors flex items-center gap-1 ${
+            className={`px-3 py-1 rounded-full-pill font-medium transition-colors flex items-center gap-1 ${
               viewMode === 'list' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
             }`}
           >
             <List className="w-3.5 h-3.5" />
-            <span>Accessible List View</span>
+            <span>Linear List</span>
+          </button>
+          <button
+            onClick={() => setViewMode('impact')}
+            className={`px-3 py-1 rounded-full-pill font-medium transition-colors flex items-center gap-1 ${
+              viewMode === 'impact' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
+            }`}
+          >
+            <GitBranch className="w-3.5 h-3.5 text-proofline-ochre" />
+            <span>Change Impact</span>
           </button>
         </div>
       </div>
 
-      {viewMode === 'visual' ? (
-        /* Visual Graph View */
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* SVG Canvas (2 cols) */}
-          <div className="lg:col-span-2 bg-gallery-white border border-border-hairline rounded-card p-4 relative min-h-[460px] flex flex-col justify-between shadow-xs">
-            {/* SVG Interactive Canvas */}
-            <div className="relative w-full h-[400px]">
-              <svg className="w-full h-full" viewBox="0 0 540 380">
-                {/* Edge lines */}
-                {/* Document to Claim edges */}
-                <line x1="80" y1="80" x2="270" y2="70" stroke="#d6d6d6" strokeWidth="2" strokeDasharray="3 3" />
-                <line x1="80" y1="180" x2="270" y2="160" stroke="#d6d6d6" strokeWidth="2" />
-                <line x1="80" y1="280" x2="270" y2="230" stroke="#d6d6d6" strokeWidth="2" />
-                <line x1="80" y1="340" x2="270" y2="320" stroke="#d6d6d6" strokeWidth="2" />
+      {/* VIEW 1: VISUAL CANVAS */}
+      {viewMode === 'visual' && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Visual Topology Representation */}
+          <div className="md:col-span-2 bg-gallery-white border border-border-hairline rounded-card p-5 min-h-[460px] flex flex-col justify-between shadow-xs">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-ink-steel uppercase tracking-wider">
+                <span>Relational Topology Canvas</span>
+                <span className="font-mono">Nodes: {documents.length + claims.length + authorities.length}</span>
+              </div>
 
-                {/* Contradiction Edge (Warm Ochre) between Claim 2 and Claim 3 */}
-                <path 
-                  d="M 270 160 C 220 195, 220 195, 270 230" 
-                  fill="none" 
-                  stroke="#b64400" 
-                  strokeWidth="2.5" 
-                  strokeDasharray="4 2" 
-                />
-                <text x="210" y="200" fill="#b64400" fontSize="10" fontWeight="bold">CONTRADICTS</text>
+              {/* Graphical Nodes Stage */}
+              <div className="p-4 bg-gallery-paper/60 rounded-xl border border-border-hairline space-y-4">
+                {/* Documents Layer */}
+                <div>
+                  <span className="text-[10px] font-mono text-ink-steel uppercase tracking-wider block mb-2">
+                    Evidence Layer (Primary Documents)
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {documents.map(doc => (
+                      <button
+                        key={doc.id}
+                        onClick={() => setSelectedNodeId(doc.id)}
+                        className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
+                          selectedNodeId === doc.id
+                            ? 'bg-ink text-white border-ink shadow-xs'
+                            : 'bg-gallery-white border-border-hairline text-ink hover:border-ink/40'
+                        }`}
+                      >
+                        <FileText className="w-3 h-3 text-proofline-blue" />
+                        <span className="truncate max-w-[150px]">{doc.filename}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                {/* Claim to Authority edges */}
-                <line x1="270" y1="70" x2="450" y2="120" stroke="#2e7d32" strokeWidth="1.5" strokeOpacity="0.6" />
-                <line x1="270" y1="320" x2="450" y2="280" stroke="#2e7d32" strokeWidth="1.5" strokeOpacity="0.6" />
+                {/* Claims Layer */}
+                <div>
+                  <span className="text-[10px] font-mono text-ink-steel uppercase tracking-wider block mb-2">
+                    Assertion Layer (Typed Claims)
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {claims.map(claim => {
+                      const isContested = claim.status === 'contested';
+                      return (
+                        <button
+                          key={claim.id}
+                          onClick={() => setSelectedNodeId(claim.id)}
+                          className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
+                            selectedNodeId === claim.id
+                              ? 'bg-proofline-blue text-white border-proofline-blue shadow-xs'
+                              : isContested
+                              ? 'bg-proofline-ochre/10 border-proofline-ochre/40 text-proofline-ochre'
+                              : 'bg-gallery-white border-border-hairline text-ink hover:border-proofline-blue/40'
+                          }`}
+                        >
+                          <CheckSquare className="w-3 h-3" />
+                          <span className="truncate max-w-[200px]">{claim.statement.substring(0, 32)}...</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-                {/* Document Nodes (Left column, Ink outline) */}
-                <g 
-                  onClick={() => setSelectedNodeId('doc-receipt-8492')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Document Receipt INV-8492"
-                >
-                  <circle cx="80" cy="80" r="22" fill="#ffffff" stroke="#1d1d1f" strokeWidth="2" />
-                  <text x="80" y="84" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1d1d1f">RCPT</text>
-                  <text x="80" y="112" textAnchor="middle" fontSize="9" fill="#707070">INV-8492.txt</text>
-                </g>
-
-                <g 
-                  onClick={() => setSelectedNodeId('doc-client-statement')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Document Client Statement"
-                >
-                  <circle cx="80" cy="180" r="22" fill="#ffffff" stroke="#1d1d1f" strokeWidth="2" />
-                  <text x="80" y="184" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1d1d1f">STMT</text>
-                  <text x="80" y="212" textAnchor="middle" fontSize="9" fill="#707070">ClientStmt.md</text>
-                </g>
-
-                <g 
-                  onClick={() => setSelectedNodeId('doc-intake-email')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Document Contradictory Intake Email"
-                >
-                  <circle cx="80" cy="280" r="22" fill="#ffffff" stroke="#b64400" strokeWidth="2.5" />
-                  <text x="80" y="284" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#b64400">INTK</text>
-                  <text x="80" y="312" textAnchor="middle" fontSize="9" fill="#b64400">IntakeCRM.eml</text>
-                </g>
-
-                <g 
-                  onClick={() => setSelectedNodeId('doc-service-report')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Document Apex Service Report"
-                >
-                  <circle cx="80" cy="340" r="20" fill="#ffffff" stroke="#1d1d1f" strokeWidth="2" />
-                  <text x="80" y="344" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#1d1d1f">APEX</text>
-                </g>
-
-                {/* Claim Nodes (Center column, Soft blue fill) */}
-                <g 
-                  onClick={() => setSelectedNodeId('claim-purchase-delivery')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Claim Purchase and Delivery Date"
-                >
-                  <rect x="235" y="52" width="70" height="34" rx="10" fill="#0071e3" fillOpacity="0.12" stroke="#0071e3" strokeWidth="1.5" />
-                  <text x="270" y="73" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#0071e3">18 Jan Deliv</text>
-                </g>
-
-                <g 
-                  onClick={() => setSelectedNodeId('claim-client-failure-date')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Claim Client Stated Failure 12 April"
-                >
-                  <rect x="225" y="142" width="90" height="36" rx="10" fill="#b64400" fillOpacity="0.12" stroke="#b64400" strokeWidth="2" />
-                  <text x="270" y="164" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#b64400">12 Apr (Client)</text>
-                </g>
-
-                <g 
-                  onClick={() => setSelectedNodeId('claim-intake-earlier-date')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Claim Support Intake Log 8 April"
-                >
-                  <rect x="225" y="212" width="90" height="36" rx="10" fill="#b64400" fillOpacity="0.12" stroke="#b64400" strokeWidth="2" />
-                  <text x="270" y="234" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#b64400">08 Apr (Intake)</text>
-                </g>
-
-                <g 
-                  onClick={() => setSelectedNodeId('claim-inherent-defect')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Claim Inherent Solder Defect"
-                >
-                  <rect x="225" y="302" width="90" height="36" rx="10" fill="#0071e3" fillOpacity="0.12" stroke="#0071e3" strokeWidth="1.5" />
-                  <text x="270" y="324" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#0071e3">Inherent Defect</text>
-                </g>
-
-                {/* Authority Nodes (Right column, Emerald) */}
-                <g 
-                  onClick={() => setSelectedNodeId('auth-cra-s19-14')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Authority CRA 2015 s.19(14)"
-                >
-                  <rect x="420" y="102" width="95" height="36" rx="8" fill="#2e7d32" fillOpacity="0.1" stroke="#2e7d32" strokeWidth="1.5" />
-                  <text x="467" y="124" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#2e7d32">CRA s.19(14)</text>
-                </g>
-
-                <g 
-                  onClick={() => setSelectedNodeId('auth-cra-s9')}
-                  className="cursor-pointer"
-                  tabIndex={0}
-                  role="button"
-                  aria-label="Authority CRA 2015 s.9"
-                >
-                  <rect x="420" y="262" width="95" height="36" rx="8" fill="#2e7d32" fillOpacity="0.1" stroke="#2e7d32" strokeWidth="1.5" />
-                  <text x="467" y="284" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#2e7d32">CRA s.9 Quality</text>
-                </g>
-              </svg>
+                {/* Authorities Layer */}
+                <div>
+                  <span className="text-[10px] font-mono text-ink-steel uppercase tracking-wider block mb-2">
+                    Authority Layer (Statutory Provisions)
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {authorities.map(auth => (
+                      <button
+                        key={auth.id}
+                        onClick={() => setSelectedNodeId(auth.id)}
+                        className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
+                          selectedNodeId === auth.id
+                            ? 'bg-proofline-green text-white border-proofline-green shadow-xs'
+                            : 'bg-gallery-white border-border-hairline text-ink hover:border-proofline-green/40'
+                        }`}
+                      >
+                        <BookOpen className="w-3 h-3 text-proofline-green" />
+                        <span>{auth.identifier}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Graph Legend */}
-            <div className="pt-3 border-t border-border-hairline flex flex-wrap items-center justify-between text-[11px] text-ink-steel">
-              <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full border border-ink bg-white" />
-                  <span>Document</span>
-                </span>
-                <span className="flex items-center gap-1.5">
+            <div className="pt-3 border-t border-border-hairline flex items-center justify-between text-[11px] text-ink-steel">
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-1">
                   <span className="w-2.5 h-2.5 rounded bg-proofline-blue/20 border border-proofline-blue" />
-                  <span>Claim / Fact</span>
+                  <span>Claim</span>
                 </span>
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1">
                   <span className="w-2.5 h-2.5 rounded bg-proofline-ochre/20 border border-proofline-ochre" />
-                  <span>Contradiction</span>
+                  <span>Contested</span>
                 </span>
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1">
                   <span className="w-2.5 h-2.5 rounded bg-proofline-green/20 border border-proofline-green" />
-                  <span>Statutory Authority</span>
+                  <span>Statute</span>
                 </span>
               </div>
               <span className="text-[10px] font-mono">Click node for inspection</span>
@@ -246,7 +207,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
           </div>
 
           {/* Node Inspector Panel (Right 1 col) */}
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-4 flex flex-col justify-between shadow-xs">
+          <div className="bg-gallery-white border border-border-hairline rounded-card p-5 flex flex-col justify-between shadow-xs">
             <div>
               <div className="text-[11px] font-semibold text-ink-steel uppercase tracking-wider mb-2">
                 Selected Graph Element
@@ -270,7 +231,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                   )}
                   {selectedClaim.provenanceEdges.length > 0 && (
                     <div className="pt-2">
-                      <div className="text-[11px] font-semibold text-ink-steel mb-1">Citations:</div>
+                      <div className="text-[11px] font-semibold text-ink-steel mb-1">Grounding Citations:</div>
                       {selectedClaim.provenanceEdges.map(e => {
                         const s = spansById.get(e.spanId);
                         return (
@@ -295,6 +256,12 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                     SHA: {selectedDoc.sha256}
                   </div>
                 </div>
+              ) : selectedAuth ? (
+                <div className="space-y-2">
+                  <Badge variant="green" size="sm">{selectedAuth.jurisdiction}</Badge>
+                  <h4 className="text-[14px] font-semibold text-ink">{selectedAuth.identifier}</h4>
+                  <p className="text-[12px] text-ink-slate">{selectedAuth.summary}</p>
+                </div>
               ) : (
                 <div className="text-[12px] text-ink-steel">
                   Click any node in the canvas to examine relations.
@@ -307,8 +274,10 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             </div>
           </div>
         </div>
-      ) : (
-        /* Accessible Linear List View */
+      )}
+
+      {/* VIEW 2: LINEAR LIST */}
+      {viewMode === 'list' && (
         <div className="bg-gallery-white border border-border-hairline rounded-card p-5 space-y-4 shadow-xs" role="region" aria-label="Accessible Evidence Network">
           <div className="text-[13px] font-medium text-ink-steel">
             Linear accessible listing of all evidential nodes and relations:
@@ -342,6 +311,85 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* VIEW 3: CHANGE IMPACT SIMULATOR */}
+      {viewMode === 'impact' && (
+        <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-5">
+          <div>
+            <h3 className="text-[15px] font-semibold text-ink">
+              Evidence Graph Change Impact Analysis
+            </h3>
+            <p className="text-[12px] text-ink-slate mt-0.5">
+              Simulates downstream consequences when a source document is corrected, amended, or invalidated.
+            </p>
+          </div>
+
+          <div className="p-4 bg-gallery-paper rounded-xl border border-border-hairline space-y-3">
+            <label className="block text-[11px] font-semibold text-ink-steel uppercase tracking-wider">
+              Select Document to Simulate Amendment / Invalidation:
+            </label>
+            <select
+              value={simulatedDocId}
+              onChange={(e) => setSimulatedDocId(e.target.value)}
+              className="w-full text-[13px] bg-gallery-white border border-border-hairline rounded-lg px-3 py-2 text-ink font-medium focus:border-proofline-blue focus:outline-none"
+            >
+              {documents.map(d => (
+                <option key={d.id} value={d.id}>
+                  {d.filename} (Imported: {d.importedAt})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Change Impact Report */}
+          <div className="border border-border-hairline rounded-xl p-5 space-y-4 bg-gallery-mist/30">
+            <div className="flex items-center justify-between border-b border-border-hairline/60 pb-3">
+              <div className="flex items-center gap-2 text-proofline-ochre font-semibold text-[13px]">
+                <AlertTriangle className="w-4 h-4" />
+                <span>Impact Assessment for {simulatedDoc?.filename}</span>
+              </div>
+              <Badge variant="ochre" size="sm">{affectedClaims.length} Claims Impacted</Badge>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[12px]">
+              <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline">
+                <span className="text-ink-steel block text-[11px]">Direct Dependent Spans</span>
+                <span className="font-mono font-semibold text-ink text-[14px] mt-0.5">{affectedSpans.length} spans</span>
+              </div>
+
+              <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline">
+                <span className="text-ink-steel block text-[11px]">Dependent Assertions</span>
+                <span className="font-mono font-semibold text-proofline-ochre text-[14px] mt-0.5">{affectedClaims.length} claims</span>
+              </div>
+
+              <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline">
+                <span className="text-ink-steel block text-[11px]">Downstream Invalidation</span>
+                <span className="font-mono font-semibold text-proofline-crimson text-[14px] mt-0.5">Draft Brief Re-check</span>
+              </div>
+            </div>
+
+            {/* List of Affected Assertions */}
+            <div className="space-y-2 pt-2">
+              <span className="text-[11px] font-semibold text-ink-steel uppercase tracking-wider block">
+                Impacted Factual Propositions Requiring Fee Earner Re-Verification:
+              </span>
+              {affectedClaims.map(c => (
+                <div key={c.id} className="p-3 bg-gallery-white rounded-lg border border-border-hairline flex items-center justify-between text-[12px]">
+                  <span className="font-medium text-ink truncate max-w-[500px]">{c.statement}</span>
+                  <Badge variant="ochre" size="sm">Requires Re-review</Badge>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-3 bg-gallery-paper rounded-lg border border-border-hairline text-[11px] text-ink-slate flex items-start gap-2">
+              <ShieldCheck className="w-4 h-4 text-proofline-green shrink-0 mt-0.5" />
+              <div>
+                <strong>Sovereign Graph Invariant:</strong> Modifying or deleting this source document triggers cascading invalidation across all dependent scoped memories and draft blocks, preventing stale evidence from appearing in court work product.
+              </div>
+            </div>
           </div>
         </div>
       )}
