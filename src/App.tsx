@@ -81,6 +81,17 @@ import { BundleExchange } from './engine/collaboration/bundleExchange.ts';
 import { NotebookExporter } from './engine/export/notebookExporter.ts';
 import { IcsHandler, type CalendarEvent } from './engine/calendar/icsHandler.ts';
 import { type IngestionAnalysisResult } from './engine/ingestion/matterAnalyzer.ts';
+import { 
+  seedInitialFixturesIfEmpty, 
+  getMattersFromDB, 
+  saveMatterToDB, 
+  loadMatterEntitiesFromDB, 
+  persistIngestionResultToDB, 
+  saveDraftToDB, 
+  saveClaimToDB, 
+  deleteClaimFromDB, 
+  saveReviewItemToDB 
+} from './db/index.ts';
 
 // Singletons for sovereign runtime
 const memoryEngine = new MemoryEngine();
@@ -133,6 +144,28 @@ export function App() {
 
   useEffect(() => {
     checkOllamaConnection().then(setModelStatus);
+
+    // Hydrate persistent state from IndexedDB
+    async function initPersistentDB() {
+      await seedInitialFixturesIfEmpty();
+      const storedMatters = await getMattersFromDB();
+      if (storedMatters && storedMatters.length > 0) {
+        setMatters(storedMatters);
+        const defaultMatterId = storedMatters[0].id;
+        setActiveMatterId(defaultMatterId);
+        const entities = await loadMatterEntitiesFromDB(defaultMatterId);
+        if (entities && entities.documents.length > 0) {
+          setDocuments(entities.documents);
+          setSpans(entities.spans);
+          setClaims(entities.claims);
+          if (entities.authorities.length > 0) setAuthorities(entities.authorities);
+          if (entities.draft) setDraft(entities.draft);
+          setReviewItems(entities.reviewItems);
+          if (entities.spans.length > 0) setSelectedSpan(entities.spans[0]);
+        }
+      }
+    }
+    initPersistentDB();
   }, []);
 
   const handleRefreshModel = async () => {
@@ -140,10 +173,19 @@ export function App() {
     setModelStatus(status);
   };
 
-  const handleSelectMatter = (matterId: string) => {
+  const handleSelectMatter = async (matterId: string) => {
     setActiveMatterId(matterId);
 
-    if (matterId === BATES_MATTER.id) {
+    const entities = await loadMatterEntitiesFromDB(matterId);
+    if (entities && (entities.documents.length > 0 || entities.claims.length > 0)) {
+      setDocuments(entities.documents);
+      setSpans(entities.spans);
+      setClaims(entities.claims);
+      if (entities.authorities.length > 0) setAuthorities(entities.authorities);
+      if (entities.draft) setDraft(entities.draft);
+      setReviewItems(entities.reviewItems);
+      if (entities.spans.length > 0) setSelectedSpan(entities.spans[0]);
+    } else if (matterId === BATES_MATTER.id) {
       setDocuments(BATES_DOCUMENTS);
       setSpans(BATES_SPANS);
       setClaims(BATES_CLAIMS);
@@ -151,30 +193,13 @@ export function App() {
       setReviewItems(BATES_REVIEWS);
       setDraft(BATES_DRAFT);
       setSelectedSpan(BATES_SPANS[0]);
-    } else if (matterId === CONTRACT_MATTER.id) {
-      setDocuments(CONTRACT_DOCUMENTS);
-      setSpans(CONTRACT_SPANS);
-      setClaims(CONTRACT_CLAIMS);
-      setAuthorities(COMMERCIAL_CONTRACT_AUTHORITIES);
-      setReviewItems(CONTRACT_REVIEWS);
-      setDraft(CONTRACT_DRAFT);
-      setSelectedSpan(CONTRACT_SPANS[0]);
-    } else if (matterId === TENANCY_MATTER.id) {
-      setDocuments(TENANCY_DOCUMENTS);
-      setSpans(TENANCY_SPANS);
-      setClaims(TENANCY_CLAIMS);
-      setAuthorities(TENANCY_HOUSING_AUTHORITIES);
-      setReviewItems(TENANCY_REVIEWS);
-      setDraft(TENANCY_DRAFT);
-      setSelectedSpan(TENANCY_SPANS[0]);
     } else {
-      setDocuments(SAMPLE_DOCUMENTS);
-      setSpans(SAMPLE_SPANS);
-      setClaims(SAMPLE_CLAIMS);
-      setAuthorities(CRA_2015_AUTHORITIES);
-      setReviewItems(SAMPLE_REVIEW_ITEMS);
-      setDraft(SAMPLE_DRAFT);
-      setSelectedSpan(SAMPLE_SPANS[0]);
+      // Clean empty state for user-created matters
+      setDocuments([]);
+      setSpans([]);
+      setClaims([]);
+      setReviewItems([]);
+      setSelectedSpan(null);
     }
   };
 
@@ -184,24 +209,35 @@ export function App() {
     setCurrentTab('overview');
   };
 
-  const handleIngestAnalysis = (result: IngestionAnalysisResult) => {
+  const handleIngestAnalysis = async (result: IngestionAnalysisResult) => {
+    const updatedDraft: Draft = result.draftBlocks.length > 0 ? {
+      ...draft,
+      blocks: [...draft.blocks, ...result.draftBlocks],
+      updatedAt: new Date().toISOString()
+    } : draft;
+
     setDocuments(prev => [result.document, ...prev]);
     setSpans(prev => [...prev, ...result.spans]);
     setClaims(prev => [...prev, ...result.claims]);
     setReviewItems(prev => [...result.reviewItems, ...prev]);
     if (result.draftBlocks.length > 0) {
-      setDraft(prev => ({
-        ...prev,
-        blocks: [...prev.blocks, ...result.draftBlocks],
-        updatedAt: new Date().toISOString()
-      }));
+      setDraft(updatedDraft);
     }
     if (result.spans.length > 0) {
       setSelectedSpan(result.spans[0]);
     }
+
+    // Persist to IndexedDB
+    await persistIngestionResultToDB({
+      document: result.document,
+      spans: result.spans,
+      claims: result.claims,
+      reviewItems: result.reviewItems,
+      draft: updatedDraft
+    });
   };
 
-  const handleCreateNewMatter = (e: React.FormEvent) => {
+  const handleCreateNewMatter = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim()) return;
 
@@ -216,13 +252,7 @@ export function App() {
       isDemo: false
     };
 
-    setMatters(prev => [newMatter, ...prev]);
-    setActiveMatterId(newMatter.id);
-    setDocuments([]);
-    setSpans([]);
-    setClaims([]);
-    setReviewItems([]);
-    setDraft({
+    const newDraft: Draft = {
       id: `draft-${Date.now()}`,
       matterId: newMatter.id,
       type: 'matter_brief',
@@ -231,7 +261,19 @@ export function App() {
       generatedBy: 'deterministic_offline',
       reviewStatus: 'needs_review',
       updatedAt: new Date().toISOString()
-    });
+    };
+
+    // Persist matter and draft to IndexedDB
+    await saveMatterToDB(newMatter);
+    await saveDraftToDB(newDraft);
+
+    setMatters(prev => [newMatter, ...prev]);
+    setActiveMatterId(newMatter.id);
+    setDocuments([]);
+    setSpans([]);
+    setClaims([]);
+    setReviewItems([]);
+    setDraft(newDraft);
     setSelectedSpan(null);
     setIsNewMatterOpen(false);
     setNewTitle('');
@@ -344,43 +386,69 @@ export function App() {
 
   const handleAddClaim = (claim: Claim) => {
     setClaims(prev => [claim, ...prev]);
+    saveClaimToDB(claim);
   };
 
   const handleUpdateClaim = (updated: Claim) => {
     setClaims(prev => prev.map(c => c.id === updated.id ? updated : c));
+    saveClaimToDB(updated);
   };
 
   const handleDeleteClaim = (id: string) => {
     setClaims(prev => prev.filter(c => c.id !== id));
+    deleteClaimFromDB(id);
   };
 
   const handleUpdateDraftBlock = (blockId: string, newText: string) => {
-    setDraft(prev => ({
-      ...prev,
-      updatedAt: new Date().toISOString(),
-      blocks: prev.blocks.map(b => b.id === blockId ? { ...b, text: newText } : b)
-    }));
+    setDraft(prev => {
+      const updated = {
+        ...prev,
+        updatedAt: new Date().toISOString(),
+        blocks: prev.blocks.map(b => b.id === blockId ? { ...b, text: newText } : b)
+      };
+      saveDraftToDB(updated);
+      return updated;
+    });
   };
 
   const handleApproveBlock = (blockId: string) => {
-    setDraft(prev => ({
-      ...prev,
-      updatedAt: new Date().toISOString(),
-      blocks: prev.blocks.map(b => b.id === blockId ? { ...b, reviewStatus: 'verified' } : b)
-    }));
+    setDraft(prev => {
+      const updated = {
+        ...prev,
+        updatedAt: new Date().toISOString(),
+        blocks: prev.blocks.map(b => b.id === blockId ? { ...b, reviewStatus: 'verified' as const } : b)
+      };
+      saveDraftToDB(updated);
+      return updated;
+    });
   };
 
   const handleRegenerateDraft = () => {
     const freshDraft = generateDeterministicDraft(activeMatter, documents, spans, claims);
     setDraft(freshDraft);
+    saveDraftToDB(freshDraft);
   };
 
   const handleResolveReviewItem = (id: string) => {
-    setReviewItems(prev => prev.map(item => item.id === id ? { ...item, status: 'resolved' } : item));
+    setReviewItems(prev => prev.map(item => {
+      if (item.id === id) {
+        const updated = { ...item, status: 'resolved' as const };
+        saveReviewItemToDB(updated);
+        return updated;
+      }
+      return item;
+    }));
   };
 
   const handleDismissReviewItem = (id: string) => {
-    setReviewItems(prev => prev.map(item => item.id === id ? { ...item, status: 'dismissed' } : item));
+    setReviewItems(prev => prev.map(item => {
+      if (item.id === id) {
+        const updated = { ...item, status: 'dismissed' as const };
+        saveReviewItemToDB(updated);
+        return updated;
+      }
+      return item;
+    }));
   };
 
   const spansMap = new Map(spans.map(s => [s.id, s]));
