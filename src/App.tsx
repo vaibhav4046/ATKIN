@@ -54,7 +54,11 @@ import {
   TENANCY_REVIEWS, 
   TENANCY_DRAFT 
 } from './db/fixtures/tenancyMatter.ts';
-import { CRA_2015_AUTHORITIES } from './db/fixtures/authorities.ts';
+import { 
+  CRA_2015_AUTHORITIES, 
+  COMMERCIAL_CONTRACT_AUTHORITIES, 
+  TENANCY_HOUSING_AUTHORITIES 
+} from './db/fixtures/authorities.ts';
 import { checkOllamaConnection } from './engine/modelBridge.ts';
 import { generateDeterministicDraft, exportDraftAsMarkdown } from './engine/draftingEngine.ts';
 import { detectContradictions } from './engine/contradictionEngine.ts';
@@ -131,6 +135,7 @@ export function App() {
       setDocuments(CONTRACT_DOCUMENTS);
       setSpans(CONTRACT_SPANS);
       setClaims(CONTRACT_CLAIMS);
+      setAuthorities(COMMERCIAL_CONTRACT_AUTHORITIES);
       setReviewItems(CONTRACT_REVIEWS);
       setDraft(CONTRACT_DRAFT);
       setSelectedSpan(CONTRACT_SPANS[0]);
@@ -138,6 +143,7 @@ export function App() {
       setDocuments(TENANCY_DOCUMENTS);
       setSpans(TENANCY_SPANS);
       setClaims(TENANCY_CLAIMS);
+      setAuthorities(TENANCY_HOUSING_AUTHORITIES);
       setReviewItems(TENANCY_REVIEWS);
       setDraft(TENANCY_DRAFT);
       setSelectedSpan(TENANCY_SPANS[0]);
@@ -145,6 +151,7 @@ export function App() {
       setDocuments(SAMPLE_DOCUMENTS);
       setSpans(SAMPLE_SPANS);
       setClaims(SAMPLE_CLAIMS);
+      setAuthorities(CRA_2015_AUTHORITIES);
       setReviewItems(SAMPLE_REVIEW_ITEMS);
       setDraft(SAMPLE_DRAFT);
       setSelectedSpan(SAMPLE_SPANS[0]);

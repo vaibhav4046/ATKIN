@@ -67,3 +67,88 @@ export const CRA_2015_AUTHORITIES: Authority[] = [
     jurisdiction: 'England and Wales'
   }
 ];
+
+export const COMMERCIAL_CONTRACT_AUTHORITIES: Authority[] = [
+  {
+    id: 'auth-ucta-s3',
+    citation: 'Unfair Contract Terms Act 1977, s. 3',
+    officialUrl: 'https://www.legislation.gov.uk/ukpga/1977/50/section/3',
+    identifier: 'UCTA 1977 s.3',
+    sectionParagraph: 'Section 3(1)–(2)',
+    summary: 'Liability arising in contract where one party deals on the other’s written standard terms of business. Exclusion and limitation clauses cannot exclude liability for breach except in so far as the contract term satisfies the requirement of reasonableness.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Statutory reasonableness test applies to standard B2B terms.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'England and Wales'
+  },
+  {
+    id: 'auth-crtpa-s1',
+    citation: 'Contracts (Rights of Third Parties) Act 1999, s. 1',
+    officialUrl: 'https://www.legislation.gov.uk/ukpga/1999/31/section/1',
+    identifier: 'CRTPA 1999 s.1',
+    sectionParagraph: 'Section 1(1)–(3)',
+    summary: 'Right of third party to enforce contractual term. A person who is not a party to a contract may in their own right enforce a term if the contract expressly provides that they may, or the term purports to confer a benefit on them.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Standard boilerplate expressly excludes CRTPA 1999 unless otherwise stated.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'England and Wales'
+  },
+  {
+    id: 'auth-cpr-part26',
+    citation: 'Civil Procedure Rules 1998, Part 26 (Case Management & Track Allocation)',
+    officialUrl: 'https://www.justice.gov.uk/courts/procedure-rules/civil/rules/part26',
+    identifier: 'CPR 1998 Part 26',
+    sectionParagraph: 'Rule 26.9',
+    summary: 'Allocation to track: Intermediate and Multi-Track allocation criteria for commercial and technology disputes exceeding £25,000 threshold.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Court has discretion over directions questionnaire timetable and case management conferences.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'England and Wales'
+  }
+];
+
+export const TENANCY_HOUSING_AUTHORITIES: Authority[] = [
+  {
+    id: 'auth-ha-s213',
+    citation: 'Housing Act 2004, s. 213 (Requirements relating to tenancy deposits)',
+    officialUrl: 'https://www.legislation.gov.uk/ukpga/2004/34/section/213',
+    identifier: 'Housing Act 2004 s.213',
+    sectionParagraph: 'Section 213(1)–(6)',
+    summary: 'Mandatory protection of tenancy deposits. Landlord must comply with initial requirements of an authorised tenancy deposit scheme and give prescribed information to tenant within 30 days of receipt.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Non-compliance triggers automatic Section 21 notice invalidity and s.214 financial penalty.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'England and Wales'
+  },
+  {
+    id: 'auth-ha-s214',
+    citation: 'Housing Act 2004, s. 214 (Proceedings relating to tenancy deposits)',
+    officialUrl: 'https://www.legislation.gov.uk/ukpga/2004/34/section/214',
+    identifier: 'Housing Act 2004 s.214',
+    sectionParagraph: 'Section 214(4)',
+    summary: 'Court must order landlord to pay tenant a statutory penalty of not less than the amount of the deposit and not more than three times the amount of the deposit where s.213 requirements were not met.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Mandatory statutory compensation order; court holds discretion between 1x and 3x deposit.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'England and Wales'
+  },
+  {
+    id: 'auth-lta-s11',
+    citation: 'Landlord and Tenant Act 1985, s. 11 (Repairing obligations in short leases)',
+    officialUrl: 'https://www.legislation.gov.uk/ukpga/1985/70/section/11',
+    identifier: 'LTA 1985 s.11',
+    sectionParagraph: 'Section 11(1)',
+    summary: 'Implied repairing covenants: landlord must keep in repair the structure and exterior of the dwelling-house (including drains, gutters, downpipes) and installations for supply of water, gas, electricity, sanitation, and space heating.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Landlord duty is non-excludable under short leases of less than 7 years.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'England and Wales'
+  }
+];
+
