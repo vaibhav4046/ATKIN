@@ -302,6 +302,29 @@ export interface ContractRisk {
   suggestedRevision?: string;
 }
 
+export interface PlaybookRule {
+  id: string;
+  category: ContractClause['category'];
+  title: string;
+  severity: 'high' | 'medium' | 'low';
+  targetPosition: string;
+  acceptableFallbacks: string[];
+  escalationTriggers: string[];
+  requiredRedline?: string;
+  validatorType: 'uncapped_indemnity' | 'payment_term_conflict' | 'governing_law' | 'auto_renewal' | 'custom_keyword' | 'missing_clause';
+  forbiddenKeywords?: string[];
+  requiredKeywords?: string[];
+}
+
+export interface ContractPlaybook {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  jurisdiction: string;
+  rules: PlaybookRule[];
+}
+
 export interface ContractReviewResult {
   matterId: string;
   documentId: string;
@@ -311,6 +334,7 @@ export interface ContractReviewResult {
   obligations: ContractObligation[];
   risks: ContractRisk[];
   missingClauses: string[];
+  playbookUsed?: string;
 }
 
 // -------------------------------------------------------------

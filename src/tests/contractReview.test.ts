@@ -59,4 +59,59 @@ describe('Contract Reviewer & Institutional Playbook Audit', () => {
     const customerObs = result.obligations.filter(o => o.obligorParty === 'Customer');
     expect(customerObs.length).toBeGreaterThan(0);
   });
+
+  it('validates playbook schema and rejects invalid JSON formats', () => {
+    const validPlaybook = reviewer.getStandardPlaybook();
+    const validCheck = reviewer.validatePlaybookSchema(validPlaybook);
+    expect(validCheck.valid).toBe(true);
+    expect(validCheck.playbook?.name).toBe('UK Commercial SaaS Standard Playbook');
+
+    const invalidCheck1 = reviewer.validatePlaybookSchema(null);
+    expect(invalidCheck1.valid).toBe(false);
+
+    const invalidCheck2 = reviewer.validatePlaybookSchema({ name: 'No ID Playbook' });
+    expect(invalidCheck2.valid).toBe(false);
+    expect(invalidCheck2.error).toContain('id');
+
+    const invalidCheck3 = reviewer.validatePlaybookSchema({
+      id: 'test',
+      name: 'Test',
+      version: '1.0',
+      rules: [{ id: 'r1', title: 'Rule 1', severity: 'critical' }] // invalid severity
+    });
+    expect(invalidCheck3.valid).toBe(false);
+    expect(invalidCheck3.error).toContain('invalid severity');
+  });
+
+  it('applies custom firm playbook with custom keyword constraints', () => {
+    const customPlaybook = {
+      id: 'firm-playbook-custom',
+      name: 'Clifford & Partners Custom FinTech Playbook',
+      version: '1.0.0',
+      description: 'Strict vendor guidelines prohibiting wire instructions over email and uncapped liabilities.',
+      jurisdiction: 'England & Wales',
+      rules: [
+        {
+          id: 'custom-wire-fraud',
+          category: 'payment_terms' as const,
+          title: 'Prohibited Uncapped Indemnity Formulation',
+          severity: 'high' as const,
+          targetPosition: 'No clause shall contain uncapped liability wording under any circumstances.',
+          acceptableFallbacks: ['Supercap at 2x annual contract value'],
+          escalationTriggers: ['Any uncapped indemnity language in draft'],
+          requiredRedline: 'Strike out uncapped wording and tie to Section 9.',
+          validatorType: 'custom_keyword' as const,
+          forbiddenKeywords: ['uncapped by any monetary limitation', 'Barclays Bank']
+        }
+      ]
+    };
+
+    const result = reviewer.reviewDocument(CONTRACT_MATTER_ID, msaDoc, customPlaybook);
+
+    expect(result.playbookUsed).toContain('Clifford & Partners');
+    const wireRisk = result.risks.find(r => r.id.includes('custom-wire-fraud'));
+    expect(wireRisk).toBeDefined();
+    expect(wireRisk?.severity).toBe('high');
+    expect(wireRisk?.title).toContain('Prohibited Uncapped Indemnity');
+  });
 });
