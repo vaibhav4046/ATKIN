@@ -31,6 +31,15 @@ import type {
 } from './types/index.ts';
 
 import { 
+  BATES_MATTER, 
+  BATES_DOCUMENTS, 
+  BATES_SPANS, 
+  BATES_CLAIMS, 
+  BATES_REVIEWS, 
+  BATES_DRAFT,
+  BATES_AUTHORITIES
+} from './db/fixtures/batesPostOfficeMatter.ts';
+import { 
   SAMPLE_MATTER, 
   SAMPLE_DOCUMENTS, 
   SAMPLE_SPANS, 
@@ -70,6 +79,7 @@ import { DocxExporter } from './engine/export/docxExporter.ts';
 import { BundleExchange } from './engine/collaboration/bundleExchange.ts';
 import { NotebookExporter } from './engine/export/notebookExporter.ts';
 import { IcsHandler, type CalendarEvent } from './engine/calendar/icsHandler.ts';
+import { type IngestionAnalysisResult } from './engine/ingestion/matterAnalyzer.ts';
 
 // Singletons for sovereign runtime
 const memoryEngine = new MemoryEngine();
@@ -80,21 +90,22 @@ export function App() {
   const [activeView, setActiveView] = useState<'landing' | 'workbench'>('landing');
   const [currentTab, setCurrentTab] = useState<WorkbenchTab>('overview');
 
-  // Multi-matter portfolio
+  // Multi-matter portfolio with real landmark litigation as primary
   const [matters, setMatters] = useState<Matter[]>([
-    SAMPLE_MATTER,
+    BATES_MATTER,
     CONTRACT_MATTER,
-    TENANCY_MATTER
+    TENANCY_MATTER,
+    SAMPLE_MATTER
   ]);
-  const [activeMatterId, setActiveMatterId] = useState<string>(SAMPLE_MATTER.id);
+  const [activeMatterId, setActiveMatterId] = useState<string>(BATES_MATTER.id);
 
   // Evidential state
-  const [documents, setDocuments] = useState<Document[]>(SAMPLE_DOCUMENTS);
-  const [spans, setSpans] = useState<Span[]>(SAMPLE_SPANS);
-  const [claims, setClaims] = useState<Claim[]>(SAMPLE_CLAIMS);
-  const [authorities, setAuthorities] = useState<Authority[]>(CRA_2015_AUTHORITIES);
-  const [draft, setDraft] = useState<Draft>(SAMPLE_DRAFT);
-  const [reviewItems, setReviewItems] = useState<ReviewItem[]>(SAMPLE_REVIEW_ITEMS);
+  const [documents, setDocuments] = useState<Document[]>(BATES_DOCUMENTS);
+  const [spans, setSpans] = useState<Span[]>(BATES_SPANS);
+  const [claims, setClaims] = useState<Claim[]>(BATES_CLAIMS);
+  const [authorities, setAuthorities] = useState<Authority[]>(BATES_AUTHORITIES);
+  const [draft, setDraft] = useState<Draft>(BATES_DRAFT);
+  const [reviewItems, setReviewItems] = useState<ReviewItem[]>(BATES_REVIEWS);
 
   // Sovereign Broker & Vault state
   const [networkMode, setNetworkMode] = useState<NetworkMode>('offline');
@@ -131,7 +142,15 @@ export function App() {
   const handleSelectMatter = (matterId: string) => {
     setActiveMatterId(matterId);
 
-    if (matterId === CONTRACT_MATTER.id) {
+    if (matterId === BATES_MATTER.id) {
+      setDocuments(BATES_DOCUMENTS);
+      setSpans(BATES_SPANS);
+      setClaims(BATES_CLAIMS);
+      setAuthorities(BATES_AUTHORITIES);
+      setReviewItems(BATES_REVIEWS);
+      setDraft(BATES_DRAFT);
+      setSelectedSpan(BATES_SPANS[0]);
+    } else if (matterId === CONTRACT_MATTER.id) {
       setDocuments(CONTRACT_DOCUMENTS);
       setSpans(CONTRACT_SPANS);
       setClaims(CONTRACT_CLAIMS);
@@ -159,9 +178,26 @@ export function App() {
   };
 
   const handleLoadSampleMatter = () => {
-    handleSelectMatter(SAMPLE_MATTER.id);
+    handleSelectMatter(BATES_MATTER.id);
     setActiveView('workbench');
     setCurrentTab('overview');
+  };
+
+  const handleIngestAnalysis = (result: IngestionAnalysisResult) => {
+    setDocuments(prev => [result.document, ...prev]);
+    setSpans(prev => [...prev, ...result.spans]);
+    setClaims(prev => [...prev, ...result.claims]);
+    setReviewItems(prev => [...result.reviewItems, ...prev]);
+    if (result.draftBlocks.length > 0) {
+      setDraft(prev => ({
+        ...prev,
+        blocks: [...prev.blocks, ...result.draftBlocks],
+        updatedAt: new Date().toISOString()
+      }));
+    }
+    if (result.spans.length > 0) {
+      setSelectedSpan(result.spans[0]);
+    }
   };
 
   const handleCreateNewMatter = (e: React.FormEvent) => {
@@ -450,6 +486,9 @@ export function App() {
                   onSelectSpan={setSelectedSpan}
                   selectedSpan={selectedSpan}
                   onAddDocument={(doc) => setDocuments(prev => [doc, ...prev])}
+                  onIngestAnalysis={handleIngestAnalysis}
+                  existingClaims={claims}
+                  matterId={activeMatterId}
                 />
               )}
 

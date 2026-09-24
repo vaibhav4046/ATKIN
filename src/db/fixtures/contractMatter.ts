@@ -18,7 +18,7 @@ export const CONTRACT_MATTER: Matter = {
   status: 'active',
   createdAt: '2026-09-24T00:00:00Z',
   updatedAt: '2026-09-24T00:00:00Z',
-  isDemo: true,
+  isDemo: false,
   notes: 'B2B SaaS Master Services Agreement audit highlighting uncapped customer indemnity and conflicting payment terms.'
 };
 

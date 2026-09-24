@@ -141,7 +141,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className="w-full flex items-center justify-center gap-1.5 text-[12px] font-medium text-ink-slate hover:text-ink bg-gallery-white border border-border-hairline hover:bg-gallery-mist py-1.5 rounded-lg transition-colors shadow-xs"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          <span>Reset Sample Matter</span>
+          <span>Reset Active Matter</span>
         </button>
 
         <div className="flex items-start gap-1.5 text-[11px] text-ink-steel leading-tight">

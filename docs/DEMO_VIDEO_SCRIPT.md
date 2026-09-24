@@ -15,12 +15,12 @@
    - Clean browser window or native Tauri desktop frame. Browser zoom at 100%.
    - Dark/Light Apple editorial palette active. Mouse cursor smooth, high visibility.
 2. **Preloaded Test Portfolio**:
-   - Matter 1: *Vance v ZenithTech Retail Ltd* (Consumer Rights Act 2015 laptop dispute with 8 Apr vs 12 Apr contradiction).
-   - Matter 2: *NovaCorp Solutions v Meridian Cloud Technologies Ltd* (B2B SaaS MSA with Net 30 vs Net 60 conflict and uncapped indemnity).
+   - Matter 1: *Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB)* (Landmark High Court Horizon IT litigation with Fujitsu Bug 188 discrepancy and remote write logs).
+   - Matter 2: *NovaCorp Solutions v Meridian Cloud Technologies Ltd* (Enterprise SaaS MSA with Net 30 vs Net 60 conflict and uncapped indemnity).
    - Matter 3: *Thorne v Oakridge Estates Ltd* (Tenancy disrepair containing the Canary Secret Token).
 3. **Inference & Runtimes**:
    - Local Ollama running `gemma4:e4b` on loopback `127.0.0.1:11434` with `OLLAMA_NO_CLOUD=1`.
-   - Terminal window minimized, ready to show passing Vitest test suite (39/39 passing).
+   - Terminal window minimized, ready to show passing Vitest test suite (45/45 passing across 13 test suites).
 4. **Audio**:
    - Dedicated cardioid microphone, zero room echo, no background music or distracting audio.
 
@@ -87,17 +87,18 @@
 **Primary Judge Targets**: Vishal Punjabi (AI Grounding & Hallucination Elimination, SAP) | Anisha Ramakrishna Yarlapati (UX & Visual Hierarchy, Adobe) | Allan Dabre (PwC)  
 
 #### Visual Action Cues:
-- **0:50**: Switch to the active matter: ***Vance v ZenithTech Retail Ltd*** (Consumer Rights Act laptop defect).
+- **0:50**: Switch to the active matter: ***Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB)***.
 - **0:54**: Click **"Facts & Claims"** tab, then toggle to the **"Evidence Matrix"** view.
-- **1:00**: Click on Claim 3. The right-hand panel highlights the exact source document text with character offsets `[startOffset: 842, endOffset: 928]` and line numbers `#L14-16`.
-- **1:08**: Click into the **Contradictions** view. Highlight the side-by-side comparative card showing the **8 April vs. 12 April** defect onset conflict.
+- **1:00**: Click on Claim 1 (Fujitsu remote write access). The right-hand panel highlights exact text in Fraser J's judgment with byte offsets `[startOffset: 651, endOffset: 955]` and line numbers `#L25-27`.
+- **1:08**: Click into the **Timeline & Conflicts** tab. Highlight the adverse contradiction: Post Office litigation defense ("remote access impossible") vs Fujitsu PIN-188 Bug Report ("routine remote SQL journal adjustments").
+- **1:14**: Click **"Sources"** -> **"Ingest"** to demonstrate live evidential ingestion parsing new files with WebCrypto SHA-256 and span extraction in real time.
 
 #### Spoken Voiceover (Word-for-Word):
-> *"Proofline rejects ungrounded generation. In this Consumer Rights Act dispute, every factual proposition is bound to exact character and line spans with SHA-256 provenance hashes. Zero hallucinated citations are admitted.
+> *"Proofline rejects synthetic toys: this is real-world landmark litigation—Bates v Post Office [2019] EWHC 3408. Every factual proposition is bound to exact byte and line spans with SHA-256 provenance hashes. Zero hallucinations are admitted.
 > 
-> Rather than suppressing adverse facts, Proofline discovers them. Notice this contradiction card: our engine paired the claimant’s recollection of failure on 12 April directly against the retailer’s contemporary telephone log recording initial contact on 8 April.
+> Rather than suppressing adverse facts, Proofline discovers them. Notice this critical contradiction card: our engine paired the Post Office's denial of remote access directly against the Fujitsu PIN-188 bug report proving routine remote SQL adjustments.
 > 
-> Proofline formulates neutral investigative inquiries to resolve the discrepancy before formal court pleadings are filed."*
+> Furthermore, with our Sovereign Ingestion Engine, any lawyer can drop an actual court pleading or contract, automatically extracting byte spans, facts, and contradictions in real time."*
 
 ---
 

@@ -19,7 +19,7 @@ export const TENANCY_MATTER: Matter = {
   status: 'active',
   createdAt: '2026-09-24T00:00:00Z',
   updatedAt: '2026-09-24T00:00:00Z',
-  isDemo: true,
+  isDemo: false,
   notes: 'Tenancy disrepair (Category 1 mould hazard) and unlawful deposit withholding under Housing Act 2004.'
 };
 

@@ -48,7 +48,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             onClick={onOpenWorkbench}
             className="px-6 py-3 rounded-full-pill bg-proofline-blue hover:bg-proofline-navy text-white text-[15px] font-medium transition-all shadow-sm flex items-center gap-2"
           >
-            <span>Try the workspace</span>
+            <span>Open Sovereign Workbench</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
@@ -56,7 +56,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             onClick={onLoadSample}
             className="px-6 py-3 rounded-full-pill bg-gallery-white border border-border-hairline hover:bg-gallery-mist text-ink text-[15px] font-medium transition-colors shadow-xs"
           >
-            Load Sample Consumer Matter
+            Open Landmark Case: Bates v Post Office [2019]
           </button>
         </div>
 

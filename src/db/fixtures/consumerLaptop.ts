@@ -17,7 +17,7 @@ export const SAMPLE_MATTER: Matter = {
   status: 'active',
   createdAt: '2026-09-24T00:00:00Z',
   updatedAt: '2026-09-24T00:00:00Z',
-  isDemo: true,
+  isDemo: false,
   notes: 'Consumer dispute concerning defective ZenithBook Pro 15 laptop under Consumer Rights Act 2015.'
 };
 

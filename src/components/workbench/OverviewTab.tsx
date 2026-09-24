@@ -37,48 +37,93 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   return (
     <div className="space-y-6 max-w-[920px] mx-auto py-2">
       {/* Matter Header Banner */}
-      <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Badge variant="blue" size="sm">Civil Consumer Dispute</Badge>
-              <Badge variant="slate" size="sm">Pre-Action Protocol</Badge>
-              <Badge variant="green" size="sm">Jurisdiction: {matter.jurisdiction}</Badge>
+      {/* Matter Header Banner */}
+      {(() => {
+        const isBates = matter.id.includes('bates');
+        const isContract = matter.matterType === 'contract' || matter.id.includes('contract');
+        const isTenancy = matter.matterType === 'tenancy' || matter.id.includes('tenancy');
+
+        const categoryBadge = isBates 
+          ? 'High Court Commercial / Group Litigation' 
+          : isContract 
+          ? 'Enterprise Cloud Master Agreement' 
+          : isTenancy 
+          ? 'Housing & Tenancy Disrepair' 
+          : 'Civil Consumer Litigation';
+
+        const trackBadge = isBates 
+          ? 'Civil Procedure Rules (CPR Part 19 / Part 31)' 
+          : isContract 
+          ? 'Institutional SaaS Playbook Review' 
+          : isTenancy 
+          ? 'Housing Act 2004 Pre-Action' 
+          : 'Pre-Action Protocol for Debt Claims';
+
+        const timelineNote = isBates
+          ? {
+              text: 'Judgment Handdown: 16 Dec 2019 (Fraser J) → Horizon Bug 188 Disclosed · Implied Duty of Good Faith Established',
+              badge: 'UCTA 1977 s.3 & CPR Part 31'
+            }
+          : isContract
+          ? {
+              text: 'Agreement Effective: 10 Feb 2026 → 30-Day Non-Renewal Notification Deadline: 11 Jan 2027',
+              badge: 'Playbook Rules & Cap Active'
+            }
+          : isTenancy
+          ? {
+              text: 'Tenancy Deposit Received: 01 Sep 2025 → 30-Day Mandatory Protection Expiry: 01 Oct 2025',
+              badge: 'Housing Act 2004 s.214 Active'
+            }
+          : {
+              text: 'Delivery: 18 Jan 2026 → Statutory 6-Month Presumption Window ends: 18 Jul 2026',
+              badge: 'CRA 2015 s.19(14) Active'
+            };
+
+        return (
+          <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <Badge variant="blue" size="sm">{categoryBadge}</Badge>
+                  <Badge variant="slate" size="sm">{trackBadge}</Badge>
+                  <Badge variant="green" size="sm">Jurisdiction: {matter.jurisdiction}</Badge>
+                </div>
+                <h2 className="text-2xl font-semibold text-ink tracking-tight">
+                  {matter.title}
+                </h2>
+                <p className="text-[14px] text-ink-slate mt-1 leading-relaxed">
+                  {matter.notes || 'Matter file under active evidential audit and statutory assessment.'}
+                </p>
+              </div>
+
+              <div className="shrink-0 flex sm:flex-col items-end justify-between gap-2">
+                <span className="text-[12px] text-ink-steel font-mono">
+                  Created: {new Date(matter.createdAt).toLocaleDateString('en-GB')}
+                </span>
+                <button
+                  onClick={() => onNavigateTab('draft')}
+                  className="px-4 py-2 bg-proofline-blue hover:bg-proofline-navy text-white text-[13px] font-medium rounded-full-pill transition-colors flex items-center gap-1.5 shadow-sm"
+                >
+                  <span>Audit Draft</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
-            <h2 className="text-2xl font-semibold text-ink tracking-tight">
-              {matter.title}
-            </h2>
-            <p className="text-[14px] text-ink-slate mt-1 leading-relaxed">
-              {matter.notes || 'Matter file under active evidential audit and statutory assessment.'}
-            </p>
-          </div>
 
-          <div className="shrink-0 flex sm:flex-col items-end justify-between gap-2">
-            <span className="text-[12px] text-ink-steel font-mono">
-              Created: {new Date(matter.createdAt).toLocaleDateString('en-GB')}
-            </span>
-            <button
-              onClick={() => onNavigateTab('draft')}
-              className="px-4 py-2 bg-proofline-blue hover:bg-proofline-navy text-white text-[13px] font-medium rounded-full-pill transition-colors flex items-center gap-1.5 shadow-sm"
-            >
-              <span>Audit Draft</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            {/* Timeline Presumption Banner */}
+            <div className="mt-5 pt-4 border-t border-border-hairline/80 flex items-center justify-between text-[12px] text-ink-slate">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-proofline-blue" />
+                <span>{timelineNote.text}</span>
+              </div>
+              <span className="text-proofline-green font-medium flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                {timelineNote.badge}
+              </span>
+            </div>
           </div>
-        </div>
-
-        {/* Timeline Presumption Banner */}
-        <div className="mt-5 pt-4 border-t border-border-hairline/80 flex items-center justify-between text-[12px] text-ink-slate">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-proofline-blue" />
-            <span>Delivery: <strong>18 Jan 2026</strong> → Statutory 6-Month Presumption Window ends: <strong>18 Jul 2026</strong></span>
-          </div>
-          <span className="text-proofline-green font-medium flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            CRA 2015 s.19(14) Active
-          </span>
-        </div>
-      </div>
+        );
+      })()}
 
       {/* KPI Metric Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
