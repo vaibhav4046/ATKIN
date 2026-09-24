@@ -171,19 +171,19 @@ export const ContractTab: React.FC<ContractTabProps> = ({
 
       {/* Contract Metadata Card */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 bg-gallery-white border border-border-hairline rounded-card shadow-subtle">
+        <div className="p-4 bg-gallery-white border border-border-hairline rounded-[6px] shadow-sm">
           <span className="text-[11px] font-medium text-ink-steel block">Contracting Parties</span>
           <span className="text-[13.5px] font-semibold text-ink mt-1 block">
             {reviewResult.parties.join(' · ') || 'Unspecified'}
           </span>
         </div>
-        <div className="p-4 bg-gallery-white border border-border-hairline rounded-card shadow-subtle">
+        <div className="p-4 bg-gallery-white border border-border-hairline rounded-[6px] shadow-sm">
           <span className="text-[11px] font-medium text-ink-steel block">Governing Law</span>
           <span className="text-[13.5px] font-semibold text-ink mt-1 block">
             {reviewResult.governingLaw.length > 50 ? `${reviewResult.governingLaw.slice(0, 50)}...` : reviewResult.governingLaw}
           </span>
         </div>
-        <div className="p-4 bg-gallery-white border border-border-hairline rounded-card shadow-subtle">
+        <div className="p-4 bg-gallery-white border border-border-hairline rounded-[6px] shadow-sm">
           <span className="text-[11px] font-medium text-ink-steel block">Indexed Provisions</span>
           <span className="text-[13.5px] font-semibold text-ink mt-1 block">
             {reviewResult.clauses.length} Clauses Extracted · {reviewResult.obligations.length} Obligations
@@ -192,15 +192,15 @@ export const ContractTab: React.FC<ContractTabProps> = ({
       </div>
 
       {/* Playbook Configuration & Sovereign Compliance Bar */}
-      <div className="bg-gallery-white border border-border-hairline rounded-card p-4 shadow-subtle flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-4 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded bg-proofline-blue/10 text-proofline-blue">
+          <div className="p-2 rounded-[4px] bg-proofline-blue/10 text-proofline-blue">
             <Sliders className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[13px] font-semibold text-ink">{activePlaybook.name}</span>
-              <span className="text-[11px] font-mono text-ink-steel px-1.5 py-0.5 rounded bg-gallery-mist">v{activePlaybook.version}</span>
+              <span className="text-[11px] font-mono text-ink-steel px-1.5 py-0.5 rounded-[3px] bg-gallery-mist">v{activePlaybook.version}</span>
               <span className="text-[11px] text-ink-slate font-medium">&bull; {activePlaybook.jurisdiction}</span>
             </div>
             <p className="text-[11.5px] text-ink-slate mt-0.5">
@@ -212,7 +212,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
         <div className="flex items-center gap-2 self-end md:self-auto">
           <button
             onClick={() => setIsPlaybookModalOpen(true)}
-            className="px-2.5 py-1.5 rounded text-[11.5px] font-medium bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink flex items-center gap-1.5 transition-colors"
+            className="px-2.5 py-1.5 rounded-[4px] text-[11.5px] font-medium bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink flex items-center gap-1.5 transition-colors"
           >
             <BookOpen className="w-3.5 h-3.5 text-proofline-blue" />
             Inspect Rules ({activePlaybook.rules.length})
@@ -220,7 +220,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
 
           <button
             onClick={handleExportPlaybook}
-            className="px-2.5 py-1.5 rounded text-[11.5px] font-medium bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink flex items-center gap-1.5 transition-colors"
+            className="px-2.5 py-1.5 rounded-[4px] text-[11.5px] font-medium bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink flex items-center gap-1.5 transition-colors"
             title="Export active rules as declarative JSON"
           >
             <Download className="w-3.5 h-3.5 text-ink-steel" />
@@ -236,7 +236,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="px-2.5 py-1.5 rounded text-[11.5px] font-medium bg-proofline-blue hover:bg-proofline-blue/90 text-white flex items-center gap-1.5 transition-colors shadow-subtle"
+            className="px-2.5 py-1.5 rounded-[4px] text-[11.5px] font-medium bg-proofline-blue hover:bg-proofline-navy text-white flex items-center gap-1.5 transition-colors shadow-sm"
             title="Import custom firm playbook JSON"
           >
             <Upload className="w-3.5 h-3.5" />
@@ -246,7 +246,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
           {activePlaybook.id !== STANDARD_UK_SAAS_PLAYBOOK.id && (
             <button
               onClick={handleResetStandardPlaybook}
-              className="p-1.5 rounded text-ink-steel hover:text-ink hover:bg-gallery-mist transition-colors"
+              className="p-1.5 rounded-[4px] text-ink-steel hover:text-ink hover:bg-gallery-mist transition-colors"
               title="Reset to default UK SaaS playbook"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -257,7 +257,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
 
       {/* Import Feedback Banner */}
       {importFeedback && (
-        <div className={`p-3 rounded-card-sm border flex items-center justify-between text-[12px] ${
+        <div className={`p-3 rounded-[4px] border flex items-center justify-between text-[12px] ${
           importFeedback.type === 'success' 
             ? 'bg-proofline-green/10 border-proofline-green/30 text-proofline-green' 
             : 'bg-proofline-crimson/10 border-proofline-crimson/30 text-proofline-crimson'
@@ -286,7 +286,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
           {reviewResult.risks.map((risk) => (
             <div
               key={risk.id}
-              className={`p-5 rounded-card border shadow-subtle space-y-3 ${
+              className={`p-5 rounded-[6px] border shadow-sm space-y-3 ${
                 risk.severity === 'high' 
                   ? 'bg-proofline-crimson/5 border-proofline-crimson/30' 
                   : 'bg-proofline-ochre/5 border-proofline-ochre/30'
@@ -310,7 +310,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                 {risk.explanation}
               </p>
 
-              <div className="bg-gallery-white/80 p-3 rounded-card-sm border border-border-hairline space-y-1.5">
+              <div className="bg-gallery-white/80 p-3 rounded-[4px] border border-border-hairline space-y-1.5">
                 <span className="text-[11px] font-medium text-ink-steel flex items-center gap-1">
                   <BookOpen className="w-3 h-3 text-proofline-blue" />
                   Institutional Rule Reference:
@@ -321,7 +321,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
               </div>
 
               {risk.suggestedRevision && (
-                <div className="p-3 bg-gallery-paper rounded-card-sm border border-border-hairline space-y-2">
+                <div className="p-3 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-semibold text-proofline-blue flex items-center gap-1">
                       <ArrowRight className="w-3 h-3" />
@@ -329,13 +329,13 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                     </span>
                     <button
                       onClick={() => handleCopyRedline(risk)}
-                      className="px-2 py-0.5 rounded text-[11px] bg-gallery-white border border-border-hairline hover:bg-gallery-mist flex items-center gap-1 text-ink transition-colors"
+                      className="px-2 py-0.5 rounded-[3px] text-[11px] bg-gallery-white border border-border-hairline hover:bg-gallery-mist flex items-center gap-1 text-ink transition-colors"
                     >
                       {copiedRiskId === risk.id ? <Check className="w-3 h-3 text-proofline-green" /> : <Copy className="w-3 h-3 text-ink-steel" />}
                       <span>{copiedRiskId === risk.id ? 'Copied' : 'Copy Markup'}</span>
                     </button>
                   </div>
-                  <p className="text-[12.5px] font-mono text-ink bg-gallery-white p-2 rounded border border-border-hairline/60">
+                  <p className="text-[12.5px] font-mono text-ink bg-gallery-white p-2 rounded-[3px] border border-border-hairline/60">
                     {risk.suggestedRevision}
                   </p>
                 </div>
@@ -358,7 +358,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-2.5 py-1 rounded-full-pill text-[11px] font-medium transition-colors ${
+                className={`px-2.5 py-1 rounded-[4px] text-[11px] font-medium transition-colors ${
                   selectedCategory === cat
                     ? 'bg-ink text-white'
                     : 'text-ink-slate hover:bg-gallery-mist'
@@ -374,7 +374,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
           {filteredClauses.map((clause) => (
             <div
               key={clause.id}
-              className="p-4 bg-gallery-white border border-border-hairline rounded-card shadow-subtle space-y-2"
+              className="p-4 bg-gallery-white border border-border-hairline rounded-[6px] shadow-sm space-y-2"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -390,7 +390,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                 </span>
               </div>
 
-              <blockquote className="text-[12.5px] text-ink-slate italic border-l-2 border-proofline-blue/40 pl-3 my-2 leading-relaxed">
+              <blockquote className="text-[12.5px] text-ink-slate italic border-l-2 border-proofline-blue/40 pl-3 my-2 leading-relaxed font-legal-serif">
                 "{clause.exactText}"
               </blockquote>
 
@@ -409,8 +409,8 @@ export const ContractTab: React.FC<ContractTabProps> = ({
 
       {/* Rules Inspector Modal */}
       {isPlaybookModalOpen && (
-        <div className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-gallery-white border border-border-hairline rounded-card shadow-modal max-w-2xl w-full max-h-[85vh] flex flex-col">
+        <div className="fixed inset-0 z-50 bg-ink/50 flex items-center justify-center p-4">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] shadow-lg max-w-2xl w-full max-h-[85vh] flex flex-col">
             <div className="p-5 border-b border-border-hairline flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <BookOpen className="w-5 h-5 text-proofline-blue" />
@@ -421,7 +421,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
               </div>
               <button
                 onClick={() => setIsPlaybookModalOpen(false)}
-                className="p-1 rounded text-ink-steel hover:text-ink hover:bg-gallery-mist transition-colors"
+                className="p-1 rounded-[4px] text-ink-steel hover:text-ink hover:bg-gallery-mist transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -434,7 +434,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
 
               <div className="space-y-3 pt-2">
                 {activePlaybook.rules.map((rule) => (
-                  <div key={rule.id} className="p-4 rounded-card-sm border border-border-hairline bg-gallery-paper space-y-2.5">
+                  <div key={rule.id} className="p-4 rounded-[4px] border border-border-hairline bg-gallery-paper space-y-2.5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Badge variant={rule.severity === 'high' ? 'red' : 'ochre'} size="sm">
@@ -473,7 +473,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                       {rule.requiredRedline && (
                         <div className="pt-1.5">
                           <strong className="text-proofline-blue font-medium">Standard Redline: </strong>
-                          <pre className="mt-1 p-2 bg-gallery-white border border-border-hairline rounded text-[11px] font-mono text-ink overflow-x-auto whitespace-pre-wrap">
+                          <pre className="mt-1 p-2 bg-gallery-white border border-border-hairline rounded-[3px] text-[11px] font-mono text-ink overflow-x-auto whitespace-pre-wrap">
                             {rule.requiredRedline}
                           </pre>
                         </div>
@@ -490,7 +490,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
               </span>
               <button
                 onClick={() => setIsPlaybookModalOpen(false)}
-                className="px-3 py-1.5 rounded text-[12px] font-medium bg-ink text-white hover:bg-ink-slate transition-colors"
+                className="px-3 py-1.5 rounded-[4px] text-[12px] font-medium bg-ink text-white hover:bg-ink-slate transition-colors"
               >
                 Close Inspector
               </button>

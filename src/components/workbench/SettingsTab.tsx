@@ -166,7 +166,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   return (
     <div className="space-y-6 max-w-[960px] mx-auto py-2">
       {/* Header */}
-      <div className="bg-gallery-white border border-border-hairline p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-gallery-white border border-border-hairline p-5 rounded-[6px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="blue" size="sm">Sovereign Control Center</Badge>
@@ -183,28 +183,28 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         </div>
 
         {/* Sub-tab Navigation */}
-        <div className="flex items-center p-1 bg-gallery-paper rounded-xl border border-border-hairline self-start sm:self-auto text-[12px]">
+        <div className="flex items-center p-1 bg-gallery-paper rounded-[4px] border border-border-hairline self-start sm:self-auto text-[12px]">
           <button
             onClick={() => setActiveSubTab('model')}
-            className={`px-3 py-1 rounded-lg font-medium transition-colors ${activeSubTab === 'model' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${activeSubTab === 'model' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             Model Manager
           </button>
           <button
             onClick={() => setActiveSubTab('hardware')}
-            className={`px-3 py-1 rounded-lg font-medium transition-colors ${activeSubTab === 'hardware' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${activeSubTab === 'hardware' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             VRAM Budget
           </button>
           <button
             onClick={() => setActiveSubTab('vault')}
-            className={`px-3 py-1 rounded-lg font-medium transition-colors ${activeSubTab === 'vault' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${activeSubTab === 'vault' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             Vault &amp; Crypto
           </button>
           <button
             onClick={() => setActiveSubTab('jobs')}
-            className={`px-3 py-1 rounded-lg font-medium transition-colors ${activeSubTab === 'jobs' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${activeSubTab === 'jobs' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             Work Queue ({jobs.length})
           </button>
@@ -215,7 +215,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
       {activeSubTab === 'model' && (
         <div className="space-y-5">
           {/* Runtime Status */}
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-4">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className={`w-3 h-3 rounded-full ${modelStatus.state === 'connected' ? 'bg-proofline-green animate-pulse' : 'bg-ink-steel'}`} />
@@ -226,7 +226,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               <button
                 disabled={isRefreshing}
                 onClick={handleRefresh}
-                className="text-[12px] font-medium px-3 py-1.5 rounded-full-pill bg-gallery-paper border border-border-hairline hover:bg-gallery-mist text-ink transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                className="text-[12px] font-medium px-3 py-1.5 rounded-[4px] bg-gallery-paper border border-border-hairline hover:bg-gallery-mist text-ink transition-colors flex items-center gap-1.5 disabled:opacity-50"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
                 <span>Test Loopback</span>
@@ -237,7 +237,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
               <div 
                 onClick={() => setSelectedModel('gemma4:e4b')}
-                className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-[4px] border cursor-pointer transition-all ${
                   selectedModel === 'gemma4:e4b' 
                     ? 'border-proofline-blue bg-proofline-blue/5 shadow-xs' 
                     : 'border-border-hairline bg-gallery-paper hover:bg-gallery-mist/50'
@@ -254,7 +254,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
               <div 
                 onClick={() => setSelectedModel('gemma4:e2b')}
-                className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-[4px] border cursor-pointer transition-all ${
                   selectedModel === 'gemma4:e2b' 
                     ? 'border-proofline-blue bg-proofline-blue/5 shadow-xs' 
                     : 'border-border-hairline bg-gallery-paper hover:bg-gallery-mist/50'
@@ -271,7 +271,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
               <div 
                 onClick={() => setSelectedModel('llama3.2:3b')}
-                className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
+                className={`p-3.5 rounded-[4px] border cursor-pointer transition-all ${
                   selectedModel === 'llama3.2:3b' 
                     ? 'border-proofline-blue bg-proofline-blue/5 shadow-xs' 
                     : 'border-border-hairline bg-gallery-paper hover:bg-gallery-mist/50'
@@ -288,7 +288,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             {/* In-App Pull Action */}
-            <div className="bg-gallery-paper p-4 rounded-xl border border-border-hairline space-y-3">
+            <div className="bg-gallery-paper p-4 rounded-[4px] border border-border-hairline space-y-3">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-[13px] font-semibold text-ink">
@@ -302,7 +302,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 <button
                   disabled={isPulling}
                   onClick={handlePullModel}
-                  className="px-4 py-2 bg-proofline-blue text-white rounded-full-pill text-[12px] font-medium hover:bg-proofline-blue/90 transition-colors shadow-xs flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-blue/90 transition-colors shadow-xs flex items-center gap-1.5 disabled:opacity-50"
                 >
                   <Download className={`w-3.5 h-3.5 ${isPulling ? 'animate-bounce' : ''}`} />
                   <span>{isPulling ? 'Pulling Layer...' : `Pull ${selectedModel}`}</span>
@@ -315,9 +315,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                     <span className="text-ink-slate">{pullStep}</span>
                     <span className="font-semibold text-ink">{pullProgress}%</span>
                   </div>
-                  <div className="w-full bg-border-hairline h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-border-hairline h-2 rounded-[2px] overflow-hidden">
                     <div 
-                      className="bg-proofline-blue h-full transition-all duration-300 rounded-full"
+                      className="bg-proofline-blue h-full transition-all duration-300 rounded-[2px]"
                       style={{ width: `${pullProgress}%` }}
                     />
                   </div>
@@ -326,7 +326,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             {/* OLLAMA_NO_CLOUD verification */}
-            <div className="flex items-center justify-between p-3.5 bg-proofline-green/10 border border-proofline-green/20 rounded-xl text-[12px]">
+            <div className="flex items-center justify-between p-3.5 bg-proofline-green/10 border border-proofline-green/20 rounded-[4px] text-[12px]">
               <div className="flex items-center gap-2 text-proofline-green font-semibold">
                 <ShieldCheck className="w-4 h-4" />
                 <span>Sovereign Isolation: OLLAMA_NO_CLOUD=1 Verified</span>
@@ -336,7 +336,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           </div>
 
           {/* Local OpenAI-Compatible Protocol Adapter */}
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-4">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-[15px] font-semibold text-ink">
@@ -350,12 +350,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 type="checkbox"
                 checked={useOpenAiCompat}
                 onChange={(e) => setUseOpenAiCompat(e.target.checked)}
-                className="w-4 h-4 text-proofline-blue rounded"
+                className="w-4 h-4 text-proofline-blue rounded-[2px]"
               />
             </div>
 
             {useOpenAiCompat && (
-              <div className="p-3 bg-gallery-paper rounded-xl border border-border-hairline space-y-2">
+              <div className="p-3 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
                 <label className="block text-[11px] font-semibold text-ink-steel uppercase tracking-wider">
                   Loopback Endpoint Address
                 </label>
@@ -363,7 +363,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   type="text"
                   value={openAiEndpoint}
                   onChange={(e) => setOpenAiEndpoint(e.target.value)}
-                  className="w-full text-[12px] font-mono bg-gallery-white border border-border-hairline rounded-lg px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[12px] font-mono bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
                 />
                 <div className="text-[11px] text-ink-steel">
                   Notice: Only <code>127.0.0.1</code> and <code>localhost</code> ports are permitted by sovereign broker. Remote URLs are rejected.
@@ -376,7 +376,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
       {/* SUBTAB 2: VRAM BUDGETING */}
       {activeSubTab === 'hardware' && (
-        <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-5">
+        <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-5">
           <div>
             <h3 className="text-[15px] font-semibold text-ink">
               Hardware VRAM &amp; Context Budget Calculator
@@ -393,7 +393,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             {/* Stacked Progress Bar */}
-            <div className="w-full bg-border-hairline h-4 rounded-full overflow-hidden flex">
+            <div className="w-full bg-border-hairline h-4 rounded-[2px] overflow-hidden flex">
               <div 
                 className="bg-proofline-blue h-full" 
                 style={{ width: `${(baseModelVram / maxVram) * 100}%` }} 
@@ -412,19 +412,19 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             <div className="grid grid-cols-4 gap-2 pt-2 text-[11px]">
-              <div className="p-2.5 bg-gallery-paper rounded-lg border border-border-hairline">
+              <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">Model Weights</span>
                 <span className="font-semibold text-proofline-blue">{baseModelVram} MB</span>
               </div>
-              <div className="p-2.5 bg-gallery-paper rounded-lg border border-border-hairline">
+              <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">KV Context Cache</span>
                 <span className="font-semibold text-proofline-ochre">{kvCacheVram} MB</span>
               </div>
-              <div className="p-2.5 bg-gallery-paper rounded-lg border border-border-hairline">
+              <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">Windows DWM / OS</span>
                 <span className="font-semibold text-ink-steel">{osVram} MB</span>
               </div>
-              <div className="p-2.5 bg-gallery-paper rounded-lg border border-border-hairline">
+              <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">Free Safety Buffer</span>
                 <span className="font-semibold text-proofline-green">{freeVram} MB</span>
               </div>
@@ -432,7 +432,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           </div>
 
           {/* Context Window Selector */}
-          <div className="p-4 bg-gallery-paper rounded-xl border border-border-hairline space-y-2">
+          <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-[13px] text-ink">Context Window Limit</span>
               <span className="text-[12px] font-mono text-proofline-blue font-semibold">{contextWindow} tokens</span>
@@ -442,7 +442,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 <button
                   key={tokens}
                   onClick={() => setContextWindow(tokens)}
-                  className={`px-3 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${
+                  className={`px-3 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
                     contextWindow === tokens 
                       ? 'bg-proofline-blue text-white shadow-xs' 
                       : 'bg-gallery-white border border-border-hairline text-ink-slate hover:text-ink'
@@ -461,7 +461,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
       {/* SUBTAB 3: VAULT & CRYPTOGRAPHY */}
       {activeSubTab === 'vault' && (
-        <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-5">
+        <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-5">
           <div className="flex items-center justify-between border-b border-border-hairline/60 pb-4">
             <div>
               <h3 className="text-[15px] font-semibold text-ink">
@@ -474,7 +474,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
             <button
               onClick={onToggleVaultLock}
-              className={`px-4 py-2 rounded-full-pill text-[12px] font-medium flex items-center gap-2 transition-colors ${
+              className={`px-4 py-2 rounded-[4px] text-[12px] font-medium flex items-center gap-2 transition-colors ${
                 isVaultLocked 
                   ? 'bg-proofline-crimson text-white hover:bg-proofline-crimson/90' 
                   : 'bg-gallery-paper border border-border-hairline text-ink hover:bg-gallery-mist'
@@ -486,9 +486,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-[12px]">
-            <div className="p-4 bg-gallery-paper rounded-xl border border-border-hairline space-y-2">
+            <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
               <span className="font-semibold text-ink block">Vault Storage Directory</span>
-              <code className="text-[11px] text-ink-slate block bg-gallery-white p-2 rounded border border-border-hairline font-mono break-all">
+              <code className="text-[11px] text-ink-slate block bg-gallery-white p-2 rounded-[2px] border border-border-hairline font-mono break-all">
                 %LOCALAPPDATA%\Proofline\vault\matters.db
               </code>
               <div className="text-[11px] text-ink-steel">
@@ -496,12 +496,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               </div>
             </div>
 
-            <div className="p-4 bg-gallery-paper rounded-xl border border-border-hairline space-y-2">
+            <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
               <span className="font-semibold text-ink block">Automatic Idle Lock</span>
               <select
                 value={idleTimeout}
                 onChange={(e) => setIdleTimeout(e.target.value)}
-                className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-lg px-3 py-1.5 text-ink focus:outline-none"
+                className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus:outline-none"
               >
                 <option value="5">Lock after 5 minutes of inactivity</option>
                 <option value="15">Lock after 15 minutes of inactivity (Default)</option>
@@ -515,7 +515,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           </div>
 
           {/* Backup & Restore Controls */}
-          <div className="p-4 bg-gallery-paper rounded-xl border border-border-hairline space-y-3">
+          <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <span className="font-semibold text-ink text-[13px] block">
@@ -527,14 +527,14 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               </div>
               <button
                 onClick={handleExportBackup}
-                className="px-4 py-2 bg-ink text-white rounded-full-pill text-[12px] font-medium hover:bg-ink/85 transition-colors shadow-xs"
+                className="px-4 py-2 bg-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-ink/85 transition-colors shadow-xs"
               >
                 Create Backup
               </button>
             </div>
 
             {backupSuccess && (
-              <div className="p-2.5 bg-proofline-green/10 border border-proofline-green/20 rounded-lg text-[12px] text-proofline-green flex items-center gap-2">
+              <div className="p-2.5 bg-proofline-green/10 border border-proofline-green/20 rounded-[4px] text-[12px] text-proofline-green flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>Encrypted vault backup successfully exported to local downloads!</span>
               </div>
@@ -545,7 +545,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
       {/* SUBTAB 4: LOCAL JOB QUEUE */}
       {activeSubTab === 'jobs' && (
-        <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-4">
+        <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-[15px] font-semibold text-ink">
@@ -562,11 +562,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
 
           <div className="space-y-2.5">
             {jobs.map(job => (
-              <div key={job.id} className="p-3.5 bg-gallery-paper border border-border-hairline rounded-xl flex items-center justify-between gap-3 text-[12px]">
+              <div key={job.id} className="p-3.5 bg-gallery-paper border border-border-hairline rounded-[4px] flex items-center justify-between gap-3 text-[12px]">
                 <div className="space-y-0.5 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-ink truncate">{job.title}</span>
-                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-semibold ${
+                    <span className={`px-2 py-0.5 rounded-[2px] text-[10px] uppercase font-semibold ${
                       job.state === 'completed' ? 'bg-proofline-green/15 text-proofline-green' :
                       job.state === 'running' ? 'bg-proofline-blue/15 text-proofline-blue animate-pulse' :
                       job.state === 'paused' ? 'bg-proofline-ochre/15 text-proofline-ochre' :
@@ -588,7 +588,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   {job.state === 'running' && (
                     <button
                       onClick={() => JobQueue.getInstance().pause(job.id)}
-                      className="p-1 rounded hover:bg-gallery-mist text-ink-slate"
+                      className="p-1 rounded-[4px] hover:bg-gallery-mist text-ink-slate"
                       title="Pause"
                     >
                       <Pause className="w-3.5 h-3.5" />
@@ -598,7 +598,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   {job.state === 'paused' && (
                     <button
                       onClick={() => JobQueue.getInstance().resume(job.id)}
-                      className="p-1 rounded hover:bg-gallery-mist text-ink-slate"
+                      className="p-1 rounded-[4px] hover:bg-gallery-mist text-ink-slate"
                       title="Resume"
                     >
                       <Play className="w-3.5 h-3.5" />
@@ -608,7 +608,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   {['queued', 'running', 'paused'].includes(job.state) && (
                     <button
                       onClick={() => JobQueue.getInstance().cancel(job.id)}
-                      className="p-1 rounded hover:bg-gallery-mist text-proofline-crimson"
+                      className="p-1 rounded-[4px] hover:bg-gallery-mist text-proofline-crimson"
                       title="Cancel"
                     >
                       <XCircle className="w-3.5 h-3.5" />

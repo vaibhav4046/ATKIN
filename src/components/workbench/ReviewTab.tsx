@@ -47,7 +47,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
   return (
     <div className="space-y-6 max-w-[920px] mx-auto py-2">
       {/* Header & Metrics */}
-      <div className="bg-gallery-white border border-border-hairline p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-gallery-white border border-border-hairline p-5 rounded-[6px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="ochre" size="sm">Pre-Action Audit Gate</Badge>
@@ -66,7 +66,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
           <select
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="text-[12px] bg-gallery-paper border border-border-hairline rounded-full-pill px-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none"
+            className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none"
           >
             <option value="all">All Severities</option>
             <option value="high">High Severity Only</option>
@@ -84,7 +84,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
         </h3>
 
         {filteredPending.length === 0 ? (
-          <div className="bg-gallery-white border border-border-hairline rounded-2xl p-8 text-center space-y-2">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-8 text-center space-y-2">
             <CheckCircle2 className="w-8 h-8 text-proofline-green mx-auto" />
             <h4 className="text-[15px] font-semibold text-ink">All Action Items Resolved</h4>
             <p className="text-[13px] text-ink-slate max-w-[360px] mx-auto">
@@ -99,7 +99,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
             return (
               <div
                 key={item.id}
-                className={`bg-gallery-white border rounded-2xl p-5 shadow-xs space-y-3 transition-all ${
+                className={`bg-gallery-white border rounded-[6px] p-5 shadow-xs space-y-3 transition-all ${
                   isHigh ? 'border-proofline-ochre/40 ring-1 ring-proofline-ochre/20' : 'border-border-hairline'
                 }`}
               >
@@ -129,7 +129,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
 
                 {/* Resolution Controls */}
                 {isResolving ? (
-                  <div className="p-3 bg-gallery-paper rounded-xl border border-border-hairline space-y-2">
+                  <div className="p-3 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
                     <label className="text-[12px] font-medium text-ink block">
                       Solicitor Audit / Resolution Rationale:
                     </label>
@@ -138,7 +138,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                       placeholder="e.g. Client confirmed 8 April was initial intermittent freeze, 12 April was complete failure."
                       value={resolutionText}
                       onChange={(e) => setResolutionText(e.target.value)}
-                      className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-lg px-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none"
+                      className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none"
                     />
                     <div className="flex justify-end gap-2 pt-1">
                       <button
@@ -149,7 +149,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                       </button>
                       <button
                         onClick={() => handleConfirmResolve(item.id)}
-                        className="text-[12px] px-3.5 py-1 bg-proofline-green text-white rounded-full-pill hover:bg-proofline-green/90 font-medium"
+                        className="text-[12px] px-3.5 py-1 bg-proofline-green text-white rounded-[4px] hover:bg-proofline-green/90 font-medium"
                       >
                         Confirm Resolution
                       </button>
@@ -173,13 +173,13 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => onDismissItem(item.id)}
-                        className="text-[11px] text-ink-steel hover:text-ink px-2.5 py-1 rounded hover:bg-gallery-mist"
+                        className="text-[11px] text-ink-steel hover:text-ink px-2.5 py-1 rounded-[4px] hover:bg-gallery-mist"
                       >
                         Dismiss
                       </button>
                       <button
                         onClick={() => setResolvingId(item.id)}
-                        className="text-[12px] font-medium px-3.5 py-1 rounded-full-pill bg-ink text-white hover:bg-ink/85 flex items-center gap-1 shadow-xs"
+                        className="text-[12px] font-medium px-3.5 py-1 rounded-[4px] bg-ink text-white hover:bg-ink/85 flex items-center gap-1 shadow-xs"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>Sign-off / Resolve</span>
@@ -204,7 +204,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
             {resolvedItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-gallery-white border border-border-hairline/80 rounded-xl p-3 text-[12px] text-ink-slate flex items-start justify-between gap-3"
+                className="bg-gallery-white border border-border-hairline/80 rounded-[4px] p-3 text-[12px] text-ink-slate flex items-start justify-between gap-3"
               >
                 <div>
                   <div className="flex items-center gap-2 font-medium text-ink">

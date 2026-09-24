@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   FileText, 
   AlertTriangle, 
   CheckCircle2, 
-  ExternalLink, 
   ArrowRight,
   ShieldCheck,
-  Cpu
+  FileCheck,
+  Scale,
+  Binary,
+  Hash
 } from 'lucide-react';
 import { Badge } from '../common/Badge.tsx';
 
@@ -15,150 +17,206 @@ interface FeatureStageProps {
 }
 
 export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) => {
+  const [activeMatterCase, setActiveMatterCase] = useState<'bates' | 'novacorp' | 'tenancy'>('bates');
+
+  const matterCases = {
+    bates: {
+      title: 'Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB)',
+      jurisdiction: 'England & Wales · High Court Queen\'s Bench Division',
+      statutoryRef: 'Civil Procedure Rules (CPR Part 31) · UCTA 1977 s.3 & s.11',
+      sourceDocName: 'FUJITSU_HORIZON_PIN188_BUG_REPORT.txt',
+      sourceDocDate: '14 Nov 2000',
+      sourceDocSha: 'e9b21f8a84cd3050123984fa0c8b',
+      excerptLine: 'Line 28: "Problem Incident PIN-188: System auto-generated £4,180 discrepancy in balancing screen. Bug 188 confirmed remote accounting alteration by Bracknell engineers without subpostmaster consent."',
+      clientDocName: 'POST_OFFICE_WITNESS_STATEMENT_PERKINS.txt',
+      clientDocDate: '12 Feb 2017',
+      clientDocSha: 'd41d8cd98f00b204e9800998ecf8',
+      clientExcerptLine: 'Line 14: "Horizon is robust and incapable of remote modification. No postmaster accounts have ever been adjusted without physical presence at the terminal counter."',
+      contradictionFinding: 'Direct evidential conflict: Fujitsu internal telemetry records remote writes into counter ledgers, refuting Post Office witness claims of system inviolability.',
+      admissibilityCert: 'CEA 1995 s.9 Certificate Validated (SHA-256 Digest Confirmed)'
+    },
+    novacorp: {
+      title: 'NovaCorp Solutions Ltd v Meridian Cloud Technologies Ltd',
+      jurisdiction: 'Commercial Court · England and Wales',
+      statutoryRef: 'Unfair Contract Terms Act 1977 · Commercial Law',
+      sourceDocName: 'NOVACORP_MERIDIAN_SAAS_MSA_2026.txt',
+      sourceDocDate: '10 Feb 2026',
+      sourceDocSha: '7f9c2d14b8a21e4c98f01b34ad78',
+      excerptLine: 'Clause 4.2 (L48): "Invoices shall be payable within thirty (30) days from date of electronic dispatch."',
+      clientDocName: 'SCHEDULE_B_SERVICE_FEES_ADDENDUM.txt',
+      clientDocDate: '12 Feb 2026',
+      clientDocSha: '3a1c84f92d8e41a0b5c7198e3b2f',
+      clientExcerptLine: 'Section 3.1 (L12): "Customer shall remit all subscription balances on Net 60 terms following reconciliation."',
+      contradictionFinding: 'Commercial conflict: Clause 4.2 specifies Net 30 default terms, but Schedule B specifies Net 60. Creates billing default exposure of £240,000.',
+      admissibilityCert: 'SaaS Playbook Rule #4 Violation (Uncapped Liability Detected in Cl.8.1)'
+    },
+    tenancy: {
+      title: 'Thorne v Oakridge Estates Ltd',
+      jurisdiction: 'County Court at Central London · Housing Disrepair',
+      statutoryRef: 'Housing Act 2004 s.213 & s.214 · Deregulation Act 2015',
+      sourceDocName: 'TENANCY_AGREEMENT_FLAT_4B.txt',
+      sourceDocDate: '01 Sep 2025',
+      sourceDocSha: '5c28e9140d3a77f81b29a4cc910e',
+      excerptLine: 'Clause 5 (L31): "Security Deposit of £2,400 received on 01 Sep 2025 and held by Landlord in private Barclays business account."',
+      clientDocName: 'DPS_DEPOSIT_SCHEME_VERIFICATION_CERT.txt',
+      clientDocDate: '20 Nov 2025',
+      clientDocSha: '912a7f804b1c2e88a9df3014e218',
+      clientExcerptLine: 'Registry Audit (L8): "No protected deposit records registered for Thorne / Flat 4B within statutory 30-day window."',
+      contradictionFinding: 'Statutory non-compliance: Deposit was never protected in government DPS scheme within 30 days. Triggers mandatory 1x-3x deposit penalty under s.214.',
+      admissibilityCert: 'Housing Act 2004 s.214 Statutory Presumption Triggered'
+    }
+  };
+
+  const active = matterCases[activeMatterCase];
+
   return (
-    <div className="w-full max-w-[1180px] mx-auto bg-gallery-white border border-border-hairline rounded-card shadow-stage overflow-hidden">
-      {/* Mini App Header Mockup */}
-      <div className="h-11 bg-gallery-paper border-b border-border-hairline px-4 flex items-center justify-between">
+    <div className="w-full bg-white border border-border-hairline rounded-md shadow-card overflow-hidden">
+      {/* Interactive Case Switcher Bar */}
+      <div className="bg-canvas-subtle border-b border-border-hairline px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex gap-1.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-border-hairline" />
-            <div className="w-2.5 h-2.5 rounded-full bg-border-hairline" />
-            <div className="w-2.5 h-2.5 rounded-full bg-border-hairline" />
-          </div>
-          <span className="text-[11px] font-mono text-ink-steel pl-2">
-            Proofline Workbench · Vance v ZenithTech Retail Ltd (England and Wales)
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-steel font-mono">
+            Interactive Matter Exhibit:
           </span>
+          <div className="flex items-center gap-1 bg-white border border-border-hairline p-0.5 rounded-[4px]">
+            <button
+              onClick={() => setActiveMatterCase('bates')}
+              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors ${
+                activeMatterCase === 'bates'
+                  ? 'bg-ink text-white'
+                  : 'text-ink-slate hover:text-ink'
+              }`}
+            >
+              Bates v Post Office
+            </button>
+            <button
+              onClick={() => setActiveMatterCase('novacorp')}
+              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors ${
+                activeMatterCase === 'novacorp'
+                  ? 'bg-ink text-white'
+                  : 'text-ink-slate hover:text-ink'
+              }`}
+            >
+              NovaCorp B2B SaaS MSA
+            </button>
+            <button
+              onClick={() => setActiveMatterCase('tenancy')}
+              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors ${
+                activeMatterCase === 'tenancy'
+                  ? 'bg-ink text-white'
+                  : 'text-ink-slate hover:text-ink'
+              }`}
+            >
+              Thorne Tenancy Disrepair
+            </button>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge variant="ochre" size="sm">
-            1 Contradiction Detected
-          </Badge>
           <Badge variant="green" size="sm">
-            Deterministic Verifier Active
+            Deterministic Evidential Gate
+          </Badge>
+          <Badge variant="ochre" size="sm">
+            Adverse Discrepancy Active
           </Badge>
         </div>
       </div>
 
-      {/* Interactive Workbench Stage Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[460px]">
-        {/* Left Mini Sidebar (3 cols) */}
-        <div className="lg:col-span-3 bg-gallery-mist/40 border-r border-border-hairline p-3.5 space-y-3 hidden sm:block">
-          <div className="text-[11px] font-semibold text-ink-steel uppercase tracking-wider">
-            Evidence Files (5)
-          </div>
-          <div className="space-y-1.5 text-[12px]">
-            <div className="p-2 rounded-lg bg-gallery-white border border-border-hairline font-medium text-ink shadow-xs">
-              📄 Receipt_INV-8492.txt
-            </div>
-            <div className="p-2 rounded-lg bg-gallery-white border border-border-hairline font-medium text-ink shadow-xs">
-              📝 Client_Statement.md
-            </div>
-            <div className="p-2 rounded-lg bg-proofline-ochre/10 border border-proofline-ochre/30 font-medium text-proofline-ochre">
-              ⚠️ Intake_CRM_CALL4491.eml
-            </div>
-            <div className="p-2 rounded-lg bg-gallery-white border border-border-hairline font-medium text-ink shadow-xs">
-              🔬 Service_Report_Apex.txt
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-border-hairline/80 text-[11px] text-ink-steel">
-            <span className="font-semibold text-ink block">Legal Authority:</span>
-            Consumer Rights Act 2015 s.19(14)
+      {/* Exhibit Header */}
+      <div className="px-6 py-4 border-b border-border-hairline bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+          <h3 className="text-base font-semibold text-ink">
+            {active.title}
+          </h3>
+          <div className="flex flex-wrap items-center gap-2 text-[12px] text-ink-steel mt-1 font-mono">
+            <span>{active.jurisdiction}</span>
+            <span>&bull;</span>
+            <span className="text-proofline-blue">{active.statutoryRef}</span>
           </div>
         </div>
 
-        {/* Center Live Contradiction Card (6 cols) */}
-        <div className="lg:col-span-6 p-6 space-y-4 flex flex-col justify-between">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Badge variant="ochre" size="sm">
-                Adverse Evidence Comparison
-              </Badge>
-              <span className="text-[12px] font-mono text-ink-steel">
-                Defect Onset Discrepancy
-              </span>
-            </div>
+        <button
+          onClick={onOpenWorkbench}
+          className="self-start md:self-auto px-3.5 py-1.5 bg-proofline-blue hover:bg-blue-700 text-white text-[12px] font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-subtle"
+        >
+          <span>Open in Full Workbench</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
 
-            <h3 className="text-xl font-semibold text-ink tracking-tight">
-              Client Recalled Date vs Internal Support Telephony Log
-            </h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[12px] pt-1">
-              <div className="p-3 rounded-xl bg-gallery-mist border border-border-hairline space-y-1.5">
-                <span className="text-proofline-blue font-semibold block">Client Chronology:</span>
-                <p className="text-ink-slate italic">
-                  "...until <mark className="bg-proofline-blue/20 text-ink px-1 rounded">12 April 2026</mark>, when the display turned black..."
-                </p>
-                <div className="text-[10px] text-ink-steel font-mono">Statement #L7</div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-proofline-ochre/10 border border-proofline-ochre/25 space-y-1.5">
-                <span className="text-proofline-ochre font-semibold block">Support Intake Log:</span>
-                <p className="text-ink-slate italic">
-                  "...customer telephoned on <mark className="bg-proofline-ochre/25 text-ink px-1 rounded">8 April 2026</mark> reporting freezes..."
-                </p>
-                <div className="text-[10px] text-proofline-ochre font-mono">Call #CALL-4491 L12</div>
-              </div>
-            </div>
-
-            <div className="p-3 bg-gallery-mist/60 rounded-xl text-[12px] text-ink-slate flex items-start gap-2">
-              <CheckCircle2 className="w-4 h-4 text-proofline-green shrink-0 mt-0.5" />
-              <span>
-                <strong>Audit Finding:</strong> Both dates establish breach well within the 6-month statutory presumption under CRA 2015 s.19(14). Discrepancy flagged for pre-action confirmation.
-              </span>
-            </div>
+      {/* Side-by-Side Dual Exhibit Comparison */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-hairline bg-white">
+        {/* Exhibit 1: Opposing / Technical Evidence */}
+        <div className="p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-amber-900 bg-amber-50 px-2 py-0.5 rounded-[3px] border border-amber-200">
+              Exhibit A &bull; Disclosed Technical Telemetry
+            </span>
+            <span className="text-[11px] text-ink-steel font-mono">
+              Date: {active.sourceDocDate}
+            </span>
           </div>
 
-          <div className="pt-4 border-t border-border-hairline flex items-center justify-between">
-            <button
-              onClick={onOpenWorkbench}
-              className="text-[13px] font-medium text-proofline-blue hover:text-proofline-navy flex items-center gap-1.5"
-            >
-              <span>Explore full matter workbench</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-            <span className="text-[11px] font-mono text-ink-steel">
-              Zero cloud transmission
+          <div className="text-[12.5px] font-semibold text-ink flex items-center gap-1.5">
+            <FileText className="w-4 h-4 text-proofline-ochre shrink-0" />
+            <span className="font-mono text-[12px]">{active.sourceDocName}</span>
+          </div>
+
+          <div className="p-3.5 bg-canvas-subtle border border-border-hairline rounded-[4px] font-mono text-[11.5px] text-ink-slate leading-relaxed">
+            {active.excerptLine}
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] text-ink-steel font-mono pt-1">
+            <span>SHA-256: {active.sourceDocSha}...</span>
+            <span className="text-proofline-green font-medium flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3" /> Byte Verified
             </span>
           </div>
         </div>
 
-        {/* Right Live Inspector Preview (3 cols) */}
-        <div className="lg:col-span-3 bg-gallery-paper border-l border-border-hairline p-4 space-y-3 hidden sm:flex flex-col justify-between">
-          <div className="space-y-2.5">
-            <div className="text-[11px] font-semibold text-ink-steel uppercase tracking-wider">
-              Grounded Span Inspector
-            </div>
-
-            <div className="p-3 rounded-lg bg-gallery-white border border-border-hairline space-y-2 text-[12px]">
-              <div className="flex items-center gap-1.5 text-proofline-green font-medium text-[11px]">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Byte Checksum Verified</span>
-              </div>
-              <p className="text-ink font-mono text-[11px] leading-relaxed">
-                chk-intk-01 (L12)
-              </p>
-              <div className="text-ink-slate text-[11px]">
-                "Customer stated intermittent power cuts occurred on 8 April 2026..."
-              </div>
-            </div>
-
-            <div className="p-2.5 rounded-lg bg-gallery-white border border-border-hairline text-[11px] space-y-1 text-ink-steel">
-              <div className="flex justify-between">
-                <span>Presumption:</span>
-                <span className="text-proofline-green font-medium">CRA s.19(14)</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Burden:</span>
-                <span className="text-ink">On Trader</span>
-              </div>
-            </div>
+        {/* Exhibit 2: Client / Witness Record */}
+        <div className="p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-blue-900 bg-blue-50 px-2 py-0.5 rounded-[3px] border border-blue-200">
+              Exhibit B &bull; Witness Deposition / Primary Agreement
+            </span>
+            <span className="text-[11px] text-ink-steel font-mono">
+              Date: {active.clientDocDate}
+            </span>
           </div>
 
-          <div className="text-[11px] text-ink-steel text-center pt-2 border-t border-border-hairline">
-            Proofline Verifier v1.0
+          <div className="text-[12.5px] font-semibold text-ink flex items-center gap-1.5">
+            <FileText className="w-4 h-4 text-proofline-blue shrink-0" />
+            <span className="font-mono text-[12px]">{active.clientDocName}</span>
           </div>
+
+          <div className="p-3.5 bg-canvas-subtle border border-border-hairline rounded-[4px] font-mono text-[11.5px] text-ink-slate leading-relaxed">
+            {active.clientExcerptLine}
+          </div>
+
+          <div className="flex items-center justify-between text-[11px] text-ink-steel font-mono pt-1">
+            <span>SHA-256: {active.clientDocSha}...</span>
+            <span className="text-proofline-green font-medium flex items-center gap-1">
+              <CheckCircle2 className="w-3 h-3" /> Byte Verified
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Synthesis Banner & Civil Evidence Act Admissibility Statement */}
+      <div className="p-4 bg-canvas-subtle border-t border-border-hairline flex flex-col md:flex-row md:items-center justify-between gap-3 text-[12px]">
+        <div className="space-y-1">
+          <div className="font-semibold text-ink flex items-center gap-1.5">
+            <Scale className="w-4 h-4 text-proofline-blue shrink-0" />
+            <span>Evidential Audit Finding:</span>
+          </div>
+          <p className="text-ink-slate max-w-[720px] text-[12.5px]">
+            {active.contradictionFinding}
+          </p>
+        </div>
+
+        <div className="shrink-0 flex items-center gap-1.5 text-proofline-green bg-emerald-50 px-3 py-1.5 rounded-[4px] border border-emerald-200 font-mono text-[11px]">
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>{active.admissibilityCert}</span>
         </div>
       </div>
     </div>

@@ -583,9 +583,9 @@ export function App() {
 
       {/* Vault Unlock Passphrase Modal */}
       {isUnlockModalOpen && (
-        <div className="fixed inset-0 bg-ink/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-6 w-full max-w-[420px] shadow-stage space-y-4">
-            <h3 className="text-lg font-semibold text-ink">
+        <div className="fixed inset-0 bg-ink/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 w-full max-w-[420px] shadow-lg space-y-4">
+            <h3 className="text-base font-semibold text-ink">
               Unlock Sovereign Vault
             </h3>
             <p className="text-[12.5px] text-ink-slate">
@@ -597,7 +597,7 @@ export function App() {
                 placeholder="Enter vault passphrase..."
                 value={passphraseInput}
                 onChange={(e) => setPassphraseInput(e.target.value)}
-                className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-lg px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
                 required
                 autoFocus
               />
@@ -616,7 +616,7 @@ export function App() {
                 </button>
                 <button
                   type="submit"
-                  className="text-[12px] px-4 py-1.5 bg-ink hover:bg-ink/85 text-white rounded-full-pill font-medium shadow-xs"
+                  className="text-[12px] px-4 py-1.5 bg-ink hover:bg-ink-slate text-white rounded-[4px] font-medium transition-colors"
                 >
                   Unlock Vault
                 </button>
@@ -628,9 +628,9 @@ export function App() {
 
       {/* New Matter Modal */}
       {isNewMatterOpen && (
-        <div className="fixed inset-0 bg-ink/30 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-6 w-full max-w-[460px] shadow-stage space-y-4">
-            <h3 className="text-lg font-semibold text-ink">
+        <div className="fixed inset-0 bg-ink/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 w-full max-w-[460px] shadow-lg space-y-4">
+            <h3 className="text-base font-semibold text-ink">
               Create New Civil Matter
             </h3>
             <form onSubmit={handleCreateNewMatter} className="space-y-3.5">
@@ -643,7 +643,7 @@ export function App() {
                   placeholder="e.g. Smith v NorthStar Electronics Ltd"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-lg px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
                   required
                 />
               </div>
@@ -657,7 +657,7 @@ export function App() {
                   placeholder="e.g. Jane Smith"
                   value={newClient}
                   onChange={(e) => setNewClient(e.target.value)}
-                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-lg px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
                 />
               </div>
 
@@ -675,7 +675,7 @@ export function App() {
                 </button>
                 <button
                   type="submit"
-                  className="text-[12px] px-4 py-1.5 bg-proofline-blue hover:bg-proofline-navy text-white rounded-full-pill font-medium shadow-xs"
+                  className="text-[12px] px-4 py-1.5 bg-proofline-blue hover:bg-proofline-navy text-white rounded-[4px] font-medium transition-colors"
                 >
                   Create Matter
                 </button>

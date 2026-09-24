@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { 
   FileSignature, 
   Download, 
-  Sparkles, 
   Cpu, 
   AlertTriangle, 
   CheckCircle2, 
   Edit3, 
-  RotateCcw,
-  FileText,
-  Mic,
-  Plus,
-  Clock,
-  UserCheck,
-  CheckSquare
+  RotateCcw, 
+  FileText, 
+  Mic, 
+  Plus, 
+  Clock, 
+  UserCheck, 
+  CheckSquare,
+  Scale
 } from 'lucide-react';
 import type { Draft, DraftType, DraftBlock, Span, Document, Matter, ModelStatus } from '../../types/index.ts';
 import { Badge } from '../common/Badge.tsx';
@@ -133,12 +133,12 @@ export const DraftTab: React.FC<DraftTabProps> = ({
   return (
     <div className="space-y-6 max-w-[960px] mx-auto py-2">
       {/* Draft Studio Header & Actions */}
-      <div className="bg-gallery-white border border-border-hairline p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-gallery-white border border-border-hairline p-5 rounded-[6px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="blue" size="sm">Audit-Ready Work Product</Badge>
             <Badge variant={draft.reviewStatus === 'needs_review' ? 'ochre' : 'green'} size="sm">
-              {draft.reviewStatus === 'needs_review' ? '⚠️ Needs Solicitor Review' : '✅ Approved'}
+              {draft.reviewStatus === 'needs_review' ? 'Needs Review' : 'Approved'}
             </Badge>
           </div>
           <h2 className="text-[17px] font-semibold text-ink">
@@ -151,19 +151,19 @@ export const DraftTab: React.FC<DraftTabProps> = ({
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Template Switcher */}
-          <div className="flex items-center bg-gallery-paper border border-border-hairline p-1 rounded-full-pill text-[12px]">
+          <div className="flex items-center bg-gallery-paper border border-border-hairline p-1 rounded-[4px] text-[12px]">
             <button
               onClick={() => handleRegen('matter_brief', false)}
-              className={`px-3 py-1 rounded-full-pill font-medium transition-colors ${
-                draft.type === 'matter_brief' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
+              className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${
+                draft.type === 'matter_brief' ? 'bg-gallery-white text-ink shadow-sm' : 'text-ink-slate hover:text-ink'
               }`}
             >
               Matter Brief
             </button>
             <button
               onClick={() => handleRegen('client_letter', false)}
-              className={`px-3 py-1 rounded-full-pill font-medium transition-colors ${
-                draft.type === 'client_letter' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
+              className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${
+                draft.type === 'client_letter' ? 'bg-gallery-white text-ink shadow-sm' : 'text-ink-slate hover:text-ink'
               }`}
             >
               Client Letter
@@ -173,7 +173,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
           {/* Dictation / Attendance Note Studio Button */}
           <button
             onClick={() => setIsDictationModalOpen(true)}
-            className="text-[12px] font-medium px-3.5 py-1.5 rounded-full-pill bg-gallery-paper border border-border-hairline hover:bg-gallery-mist text-ink transition-colors flex items-center gap-1.5 shadow-xs"
+            className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-gallery-paper border border-border-hairline hover:bg-gallery-mist text-ink transition-colors flex items-center gap-1.5 shadow-sm"
             title="Import voice dictation or meeting transcript"
           >
             <Mic className="w-3.5 h-3.5 text-proofline-blue" />
@@ -185,9 +185,9 @@ export const DraftTab: React.FC<DraftTabProps> = ({
             <button
               disabled={isGenerating}
               onClick={() => handleRegen(draft.type, true)}
-              className="text-[12px] font-medium px-3.5 py-1.5 rounded-full-pill bg-proofline-blue hover:bg-proofline-navy text-white transition-colors flex items-center gap-1 shadow-xs disabled:opacity-50"
+              className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-proofline-blue hover:bg-proofline-navy text-white transition-colors flex items-center gap-1 shadow-sm disabled:opacity-50"
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Cpu className="w-3.5 h-3.5" />
               <span>{isGenerating ? 'Synthesizing...' : 'Local Gemma 4 Draft'}</span>
             </button>
           )}
@@ -195,7 +195,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
           {/* Export Action */}
           <button
             onClick={handleExport}
-            className="text-[12px] font-medium px-3.5 py-1.5 rounded-full-pill bg-ink text-white hover:bg-ink/85 transition-colors flex items-center gap-1.5 shadow-sm"
+            className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-ink text-white hover:bg-ink-slate transition-colors flex items-center gap-1.5 shadow-sm"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Export Markdown</span>
@@ -212,7 +212,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
           return (
             <div
               key={block.id}
-              className={`bg-gallery-white border rounded-2xl p-6 transition-all shadow-xs space-y-3 ${
+              className={`bg-gallery-white border rounded-[6px] p-6 transition-all shadow-sm space-y-3 ${
                 isNeedsReview
                   ? 'border-proofline-ochre/40 ring-1 ring-proofline-ochre/20'
                   : 'border-border-hairline'
@@ -245,7 +245,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
 
               {/* Review Callout if flagged */}
               {isNeedsReview && (
-                <div className="p-3 bg-proofline-ochre/10 rounded-xl border border-proofline-ochre/25 text-[12px] text-proofline-ochre flex items-start gap-2">
+                <div className="p-3 bg-proofline-ochre/10 rounded-[4px] border border-proofline-ochre/25 text-[12px] text-proofline-ochre flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold block">Evidential Audit Flag:</span>
@@ -260,7 +260,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                   <textarea
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
-                    className="w-full text-[14px] bg-gallery-paper border border-border-hairline rounded-lg p-3 text-ink focus:border-proofline-blue focus:outline-none font-sans leading-relaxed"
+                    className="w-full text-[14px] bg-gallery-paper border border-border-hairline rounded-[4px] p-3 text-ink focus:border-proofline-blue focus:outline-none font-legal-serif leading-relaxed"
                     rows={4}
                   />
                   <div className="flex justify-end gap-2">
@@ -272,14 +272,14 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                     </button>
                     <button
                       onClick={() => handleSaveEdit(block.id)}
-                      className="text-[12px] px-4 py-1 bg-ink text-white rounded-full-pill hover:bg-ink/85 font-medium"
+                      className="text-[12px] px-4 py-1 bg-ink text-white rounded-[4px] hover:bg-ink-slate font-medium transition-colors"
                     >
                       Save Text
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="text-[14px] text-ink leading-relaxed font-sans whitespace-pre-line">
+                <div className="text-[14px] text-ink leading-relaxed font-legal-serif whitespace-pre-line bg-gallery-paper/30 p-4 rounded-[4px] border border-border-hairline/40">
                   {block.text}
                 </div>
               )}
@@ -296,7 +296,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                         <button
                           key={sid}
                           onClick={() => span && onSelectSpan(span)}
-                          className="px-2 py-0.5 rounded bg-gallery-mist border border-border-hairline text-ink hover:border-proofline-blue hover:text-proofline-blue transition-colors flex items-center gap-1"
+                          className="px-2 py-0.5 rounded-[3px] bg-gallery-mist border border-border-hairline text-ink hover:border-proofline-blue hover:text-proofline-blue transition-colors flex items-center gap-1"
                         >
                           <FileText className="w-2.5 h-2.5" />
                           <span>{doc?.filename || sid}</span>
@@ -324,8 +324,8 @@ export const DraftTab: React.FC<DraftTabProps> = ({
 
       {/* Dictation & Attendance Note Studio Modal */}
       {isDictationModalOpen && (
-        <div className="fixed inset-0 bg-ink/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-6 w-full max-w-[620px] shadow-stage space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-ink/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 w-full max-w-[620px] shadow-lg space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-border-hairline/60 pb-3">
               <div className="flex items-center gap-2">
                 <Mic className="w-4 h-4 text-proofline-blue" />
@@ -357,7 +357,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                 value={transcriptInput}
                 onChange={(e) => setTranscriptInput(e.target.value)}
                 rows={6}
-                className="w-full text-[12px] font-mono bg-gallery-paper border border-border-hairline rounded-lg p-3 text-ink focus:border-proofline-blue focus:outline-none leading-relaxed"
+                className="w-full text-[12px] font-mono bg-gallery-paper border border-border-hairline rounded-[4px] p-3 text-ink focus:border-proofline-blue focus:outline-none leading-relaxed"
                 placeholder="Paste conference transcript with [timestamps] and [speakers]..."
               />
             </div>
@@ -365,7 +365,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
             <div className="flex justify-end gap-2">
               <button
                 onClick={handleParseDictation}
-                className="px-4 py-2 bg-proofline-blue text-white rounded-full-pill text-[12px] font-medium hover:bg-proofline-blue/90 transition-colors shadow-xs"
+                className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-navy transition-colors shadow-sm"
               >
                 Parse SRA Attendance Note
               </button>
@@ -373,24 +373,24 @@ export const DraftTab: React.FC<DraftTabProps> = ({
 
             {/* Parsed Note Preview */}
             {parsedAttendanceNote && (
-              <div className="p-4 bg-gallery-mist/40 border border-border-hairline rounded-xl space-y-3 pt-3">
+              <div className="p-4 bg-gallery-mist/40 border border-border-hairline rounded-[4px] space-y-3 pt-3">
                 <div className="flex items-center justify-between text-[12px]">
                   <span className="font-semibold text-ink">{parsedAttendanceNote.title}</span>
                   <Badge variant="green" size="sm">Audit-Ready</Badge>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
-                  <div className="p-2 bg-gallery-white rounded border border-border-hairline">
+                  <div className="p-2 bg-gallery-white rounded-[4px] border border-border-hairline">
                     <span className="text-ink-steel block">Attendees</span>
                     <span className="text-ink font-semibold">{parsedAttendanceNote.attendees.join(', ') || 'Solicitor, Client'}</span>
                   </div>
-                  <div className="p-2 bg-gallery-white rounded border border-border-hairline">
+                  <div className="p-2 bg-gallery-white rounded-[4px] border border-border-hairline">
                     <span className="text-ink-steel block">Billing Units</span>
                     <span className="text-ink font-semibold">1 unit (6 mins)</span>
                   </div>
                 </div>
 
-                <div className="text-[12px] text-ink-slate font-sans whitespace-pre-line bg-gallery-white p-3 rounded-lg border border-border-hairline">
+                <div className="text-[12px] text-ink-slate font-legal-serif whitespace-pre-line bg-gallery-white p-3 rounded-[4px] border border-border-hairline">
                   {parsedAttendanceNote.formattedNote}
                 </div>
 
@@ -415,7 +415,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                   </button>
                   <button
                     onClick={handleAppendAttendanceNoteToDraft}
-                    className="px-4 py-1.5 bg-ink text-white rounded-full-pill text-[12px] font-medium hover:bg-ink/85 transition-colors shadow-xs"
+                    className="px-4 py-1.5 bg-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-ink-slate transition-colors shadow-sm"
                   >
                     Append to Matter Draft
                   </button>

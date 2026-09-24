@@ -7,7 +7,6 @@ import {
   Plus, 
   ShieldCheck, 
   FileText, 
-  Sparkles,
   Lock,
   Layers
 } from 'lucide-react';
@@ -90,7 +89,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
       <div className="flex items-center gap-2 border-b border-border-hairline pb-2">
         <button
           onClick={() => setActiveScopeTab('matter_facts')}
-          className={`px-3 py-1.5 rounded-card-sm text-[13px] font-medium transition-colors ${
+          className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors ${
             activeScopeTab === 'matter_facts'
               ? 'bg-ink text-white'
               : 'text-ink-slate hover:text-ink hover:bg-gallery-mist'
@@ -100,7 +99,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
         </button>
         <button
           onClick={() => setActiveScopeTab('user_preferences')}
-          className={`px-3 py-1.5 rounded-card-sm text-[13px] font-medium transition-colors ${
+          className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors ${
             activeScopeTab === 'user_preferences'
               ? 'bg-ink text-white'
               : 'text-ink-slate hover:text-ink hover:bg-gallery-mist'
@@ -110,7 +109,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
         </button>
         <button
           onClick={() => setActiveScopeTab('workspace_playbooks')}
-          className={`px-3 py-1.5 rounded-card-sm text-[13px] font-medium transition-colors ${
+          className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors ${
             activeScopeTab === 'workspace_playbooks'
               ? 'bg-ink text-white'
               : 'text-ink-slate hover:text-ink hover:bg-gallery-mist'
@@ -120,30 +119,30 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
         </button>
         <button
           onClick={() => setActiveScopeTab('suggested')}
-          className={`px-3 py-1.5 rounded-card-sm text-[13px] font-medium transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors flex items-center gap-1.5 ${
             activeScopeTab === 'suggested'
               ? 'bg-proofline-ochre text-white'
               : 'text-proofline-ochre hover:bg-proofline-ochre/10'
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Layers className="w-3.5 h-3.5" />
           Pending Approvals ({allMemories.filter(m => m.reviewState === 'suggested').length})
         </button>
       </div>
 
       {/* Add Memory Form */}
       {activeScopeTab !== 'suggested' && (
-        <form onSubmit={handleAddMemory} className="p-4 bg-gallery-white border border-border-hairline rounded-card shadow-subtle flex gap-3">
+        <form onSubmit={handleAddMemory} className="p-4 bg-gallery-white border border-border-hairline rounded-[6px] shadow-subtle flex gap-3">
           <input
             type="text"
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
             placeholder={`Add explicit memory record to ${activeScopeTab.replace(/_/g, ' ')}...`}
-            className="flex-1 px-3 py-2 text-[13px] border border-border-hairline rounded-card-sm focus:outline-none focus:ring-1 focus:ring-proofline-blue bg-gallery-mist/30"
+            className="flex-1 px-3 py-2 text-[13px] border border-border-hairline rounded-[4px] focus:outline-none focus:ring-1 focus:ring-proofline-blue bg-gallery-mist/30"
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-ink text-white rounded-card-sm text-[13px] font-medium flex items-center gap-1.5 hover:bg-ink/85 transition-colors"
+            className="px-4 py-2 bg-ink text-white rounded-[4px] text-[13px] font-medium flex items-center gap-1.5 hover:bg-ink/85 transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>Record</span>
@@ -154,14 +153,14 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
       {/* Memory List */}
       <div className="space-y-3">
         {filteredMemories.length === 0 ? (
-          <div className="p-8 text-center bg-gallery-white border border-dashed border-border-hairline rounded-card text-ink-steel text-[13px]">
+          <div className="p-8 text-center bg-gallery-white border border-dashed border-border-hairline rounded-[6px] text-ink-steel text-[13px]">
             No memory records found under this scope.
           </div>
         ) : (
           filteredMemories.map((mem) => (
             <div
               key={mem.id}
-              className="p-4 bg-gallery-white border border-border-hairline rounded-card shadow-subtle flex items-start justify-between gap-4"
+              className="p-4 bg-gallery-white border border-border-hairline rounded-[6px] shadow-subtle flex items-start justify-between gap-4"
             >
               <div className="space-y-1.5 flex-1">
                 <div className="flex items-center gap-2 text-[11px]">
@@ -199,14 +198,14 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                   <>
                     <button
                       onClick={() => handleApprove(mem.id)}
-                      className="p-1.5 rounded-full bg-proofline-green/10 text-proofline-green hover:bg-proofline-green hover:text-white transition-colors"
+                      className="p-1.5 rounded-[4px] bg-proofline-green/10 text-proofline-green hover:bg-proofline-green hover:text-white transition-colors"
                       title="Approve Memory"
                     >
                       <Check className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleReject(mem.id)}
-                      className="p-1.5 rounded-full bg-proofline-crimson/10 text-proofline-crimson hover:bg-proofline-crimson hover:text-white transition-colors"
+                      className="p-1.5 rounded-[4px] bg-proofline-crimson/10 text-proofline-crimson hover:bg-proofline-crimson hover:text-white transition-colors"
                       title="Reject Memory"
                     >
                       <X className="w-4 h-4" />
@@ -215,7 +214,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                 ) : (
                   <button
                     onClick={() => handleReject(mem.id)}
-                    className="p-1.5 rounded-full text-ink-steel hover:text-proofline-crimson hover:bg-gallery-mist transition-colors"
+                    className="p-1.5 rounded-[4px] text-ink-steel hover:text-proofline-crimson hover:bg-gallery-mist transition-colors"
                     title="Delete Memory"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

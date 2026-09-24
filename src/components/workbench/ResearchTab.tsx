@@ -14,9 +14,9 @@ import {
   AlertTriangle,
   ArrowRight,
   Database,
-  Sparkles,
   Plus,
-  Check
+  Check,
+  RotateCw
 } from 'lucide-react';
 import type { Authority, LegalSourcePack, NetworkMode, Jurisdiction } from '../../types/index.ts';
 import { SourceCatalog } from '../../engine/research/sourceCatalog.ts';
@@ -101,7 +101,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
   return (
     <div className="space-y-6 max-w-[980px] mx-auto py-2">
       {/* Tab Navigation Header */}
-      <div className="bg-gallery-white border border-border-hairline p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+      <div className="bg-gallery-white border border-border-hairline p-5 rounded-[6px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="blue" size="sm">Legal Research &amp; Primary Law</Badge>
@@ -118,12 +118,12 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
         </div>
 
         {/* Sub-tab pills */}
-        <div className="flex items-center p-1 bg-gallery-paper rounded-full-pill border border-border-hairline shrink-0">
+        <div className="flex items-center p-1 bg-gallery-paper rounded-[4px] border border-border-hairline shrink-0">
           <button
             onClick={() => setActiveSubTab('authorities')}
-            className={`px-3.5 py-1.5 rounded-full-pill text-[12px] font-medium transition-colors ${
+            className={`px-3.5 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
               activeSubTab === 'authorities'
-                ? 'bg-gallery-white text-ink shadow-xs border border-border-hairline'
+                ? 'bg-gallery-white text-ink shadow-sm border border-border-hairline'
                 : 'text-ink-slate hover:text-ink'
             }`}
           >
@@ -131,9 +131,9 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
           </button>
           <button
             onClick={() => setActiveSubTab('query')}
-            className={`px-3.5 py-1.5 rounded-full-pill text-[12px] font-medium transition-colors flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors flex items-center gap-1.5 ${
               activeSubTab === 'query'
-                ? 'bg-gallery-white text-ink shadow-xs border border-border-hairline'
+                ? 'bg-gallery-white text-ink shadow-sm border border-border-hairline'
                 : 'text-ink-slate hover:text-ink'
             }`}
           >
@@ -142,9 +142,9 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
           </button>
           <button
             onClick={() => setActiveSubTab('catalog')}
-            className={`px-3.5 py-1.5 rounded-full-pill text-[12px] font-medium transition-colors ${
+            className={`px-3.5 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
               activeSubTab === 'catalog'
-                ? 'bg-gallery-white text-ink shadow-xs border border-border-hairline'
+                ? 'bg-gallery-white text-ink shadow-sm border border-border-hairline'
                 : 'text-ink-slate hover:text-ink'
             }`}
           >
@@ -164,7 +164,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 placeholder="Filter authorities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-full-pill pl-9 pr-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none shadow-xs"
+                className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] pl-9 pr-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none shadow-sm"
               />
             </div>
             <button
@@ -180,7 +180,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
             {filteredAuthorities.map((auth) => (
               <div 
                 key={auth.id}
-                className="bg-gallery-white border border-border-hairline rounded-xl p-4 shadow-xs space-y-2 hover:border-proofline-blue/40 transition-colors"
+                className="bg-gallery-white border border-border-hairline rounded-[6px] p-4 shadow-sm space-y-2 hover:border-proofline-blue/40 transition-colors"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -198,14 +198,14 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                     href={auth.officialUrl} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="text-[11px] text-proofline-blue hover:text-proofline-navy flex items-center gap-1 font-medium bg-proofline-blue/5 px-2.5 py-1 rounded-full-pill shrink-0"
+                    className="text-[11px] text-proofline-blue hover:text-proofline-navy flex items-center gap-1 font-medium bg-proofline-blue/5 px-2.5 py-1 rounded-[4px] shrink-0"
                   >
                     <span>View Gazette</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
 
-                <p className="text-[12.5px] text-ink-slate leading-relaxed">
+                <p className="text-[12.5px] text-ink-slate leading-relaxed font-legal-serif">
                   {auth.summary}
                 </p>
 
@@ -221,7 +221,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
 
       {/* Subtab 2: Query Primary Legal Repository */}
       {activeSubTab === 'query' && (
-        <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-5">
+        <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-sm space-y-5">
           <div>
             <h3 className="text-[15px] font-semibold text-ink">
               Search Primary Legal Repositories
@@ -231,7 +231,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
             </p>
           </div>
 
-          <div className="p-3 bg-gallery-paper rounded-xl border border-border-hairline flex items-center justify-between gap-3 text-[12px]">
+          <div className="p-3 bg-gallery-paper rounded-[4px] border border-border-hairline flex items-center justify-between gap-3 text-[12px]">
             <div className="flex items-center gap-2">
               {networkMode === 'offline' ? (
                 <>
@@ -257,7 +257,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 <select
                   value={selectedProvider}
                   onChange={(e) => setSelectedProvider(e.target.value)}
-                  className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-lg px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
                 >
                   <option value="src-uk-legislation">legislation.gov.uk (Official UK Acts)</option>
                   <option value="src-uk-cpr">Civil Procedure Rules (CPR)</option>
@@ -276,7 +276,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                     value={queryInput}
                     onChange={(e) => setQueryInput(e.target.value)}
                     placeholder="e.g. Consumer Rights Act 2015 section 20 reject or UCTA 1977 reasonableness"
-                    className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-lg px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                    className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
                   />
                   <button
                     onClick={() => {
@@ -286,7 +286,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                         setShowApprovalModal(true);
                       }
                     }}
-                    className="px-4 py-2 bg-proofline-blue text-white rounded-lg text-[12px] font-medium hover:bg-proofline-navy shrink-0 shadow-xs flex items-center gap-1.5"
+                    className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-navy shrink-0 shadow-sm flex items-center gap-1.5 transition-colors"
                   >
                     <Search className="w-3.5 h-3.5" />
                     <span>Search</span>
@@ -301,28 +301,28 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
               <button
                 type="button"
                 onClick={() => setQueryInput('Consumer Rights Act 2015 section 20 short-term right to reject')}
-                className="px-2.5 py-1 rounded-md bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink"
+                className="px-2.5 py-1 rounded-[4px] bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink transition-colors"
               >
                 CRA 2015 s.20 Rejection
               </button>
               <button
                 type="button"
                 onClick={() => setQueryInput('Unfair Contract Terms Act 1977 section 3 reasonableness')}
-                className="px-2.5 py-1 rounded-md bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink"
+                className="px-2.5 py-1 rounded-[4px] bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink transition-colors"
               >
                 UCTA 1977 s.3 Standard Terms
               </button>
               <button
                 type="button"
                 onClick={() => setQueryInput('Civil Procedure Rules Part 31 disclosure')}
-                className="px-2.5 py-1 rounded-md bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink"
+                className="px-2.5 py-1 rounded-[4px] bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink transition-colors"
               >
                 CPR Part 31 Standard Disclosure
               </button>
               <button
                 type="button"
                 onClick={() => setQueryInput('Housing Act 2004 section 214 deposit penalty')}
-                className="px-2.5 py-1 rounded-md bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink"
+                className="px-2.5 py-1 rounded-[4px] bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink transition-colors"
               >
                 Housing Act 2004 s.214 Deposit
               </button>
@@ -331,7 +331,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
 
           {/* Outgoing Query Approval Modal (Public Research Mode) */}
           {showApprovalModal && (
-            <div className="p-4 bg-gallery-paper border border-proofline-blue/30 rounded-xl space-y-3 animate-fadeIn">
+            <div className="p-4 bg-gallery-paper border border-proofline-blue/30 rounded-[4px] space-y-3">
               <div className="flex items-center gap-2 text-proofline-blue font-semibold text-[13px]">
                 <Globe className="w-4 h-4" />
                 <span>Outgoing Legal Query Approval Required</span>
@@ -339,7 +339,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
               <p className="text-[12px] text-ink-slate leading-relaxed">
                 Proofline requires explicit solicitor approval before transmitting any query outside your computer. Verify that the query contains zero private client identifiers.
               </p>
-              <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline font-mono text-[11px] text-ink">
+              <div className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline font-mono text-[11px] text-ink">
                 GET https://www.legislation.gov.uk/all/data.feed?title={encodeURIComponent(queryInput)}
               </div>
               <div className="flex items-center justify-end gap-2 pt-1">
@@ -351,7 +351,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 </button>
                 <button
                   onClick={handleExecuteApprovedQuery}
-                  className="px-3.5 py-1.5 bg-proofline-green text-white text-[12px] font-medium rounded-full-pill hover:bg-proofline-green/90 transition-colors"
+                  className="px-3.5 py-1.5 bg-proofline-green text-white text-[12px] font-medium rounded-[4px] hover:bg-proofline-green/90 transition-colors"
                 >
                   Approve &amp; Query Live API
                 </button>
@@ -361,8 +361,8 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
 
           {/* Loading Indicator */}
           {isQuerying && (
-            <div className="p-4 bg-gallery-paper rounded-xl border border-border-hairline flex items-center justify-center gap-2 text-[12px] text-ink-slate animate-pulse">
-              <Sparkles className="w-4 h-4 text-proofline-blue" />
+            <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline flex items-center justify-center gap-2 text-[12px] text-ink-slate">
+              <RotateCw className="w-4 h-4 text-proofline-blue animate-spin" />
               <span>Querying primary legislative records...</span>
             </div>
           )}
@@ -389,7 +389,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 const isAttached = attachedIds.has(res.id) || authorities.some(a => a.identifier === res.identifier);
 
                 return (
-                  <div key={res.id} className="p-4 bg-gallery-mist/50 border border-border-hairline rounded-xl space-y-2">
+                  <div key={res.id} className="p-4 bg-gallery-mist/50 border border-border-hairline rounded-[6px] space-y-2">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <span className="font-semibold text-[13px] text-ink">{res.identifier}</span>
@@ -398,14 +398,14 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                       
                       <div className="flex items-center gap-2 shrink-0">
                         {isAttached ? (
-                          <span className="text-[11px] font-medium text-proofline-green flex items-center gap-1 bg-proofline-green/10 px-2.5 py-1 rounded-full-pill">
+                          <span className="text-[11px] font-medium text-proofline-green flex items-center gap-1 bg-proofline-green/10 px-2.5 py-1 rounded-[4px]">
                             <Check className="w-3 h-3" />
                             <span>Attached to Matter</span>
                           </span>
                         ) : (
                           <button
                             onClick={() => handleAttachAuthority(res)}
-                            className="px-3 py-1 bg-proofline-blue text-white rounded-full-pill text-[11px] font-medium hover:bg-proofline-navy transition-colors flex items-center gap-1 shadow-xs"
+                            className="px-3 py-1 bg-proofline-blue text-white rounded-[4px] text-[11px] font-medium hover:bg-proofline-navy transition-colors flex items-center gap-1 shadow-sm"
                           >
                             <Plus className="w-3 h-3" />
                             <span>Attach to Matter</span>
@@ -422,7 +422,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                         </a>
                       </div>
                     </div>
-                    <p className="text-[12px] text-ink-slate leading-relaxed">{res.summary}</p>
+                    <p className="text-[12px] text-ink-slate leading-relaxed font-legal-serif">{res.summary}</p>
                     <div className="flex items-center justify-between text-[10px] text-ink-steel font-mono">
                       <span>{res.sectionParagraph}</span>
                       <span>{res.coverageCaveat}</span>
@@ -447,7 +447,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
               <select
                 value={selectedJurisdiction}
                 onChange={(e) => setSelectedJurisdiction(e.target.value)}
-                className="text-[12px] bg-gallery-white border border-border-hairline rounded-lg px-2.5 py-1 text-ink focus:outline-none"
+                className="text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] px-2.5 py-1 text-ink focus:outline-none"
               >
                 <option value="all">All Jurisdictions</option>
                 <option value="UK">United Kingdom</option>
@@ -462,7 +462,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
             {filteredPacks.map((pack) => (
               <div 
                 key={pack.id}
-                className="bg-gallery-white border border-border-hairline rounded-xl p-4 shadow-xs space-y-3"
+                className="bg-gallery-white border border-border-hairline rounded-[6px] p-4 shadow-sm space-y-3"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -472,11 +472,11 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                   <Badge variant="slate" size="sm">{pack.jurisdiction}</Badge>
                 </div>
 
-                <p className="text-[12px] text-ink-slate leading-relaxed">
+                <p className="text-[12px] text-ink-slate leading-relaxed font-legal-serif">
                   {pack.description}
                 </p>
 
-                <div className="p-2.5 bg-gallery-paper rounded-lg border border-border-hairline text-[11px] space-y-1">
+                <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline text-[11px] space-y-1">
                   <div className="flex items-center justify-between text-ink-steel">
                     <span>Indexed Records:</span>
                     <strong className="text-ink font-mono">{pack.recordCount.toLocaleString()}</strong>

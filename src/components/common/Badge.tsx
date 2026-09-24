@@ -16,24 +16,24 @@ export const Badge: React.FC<BadgeProps> = ({
   icon
 }) => {
   const variantStyles = {
-    blue: 'bg-[#0071e3]/10 text-[#0071e3] border-[#0071e3]/20',
-    ochre: 'bg-[#b64400]/10 text-[#b64400] border-[#b64400]/25 font-medium',
-    green: 'bg-[#2e7d32]/10 text-[#2e7d32] border-[#2e7d32]/25',
-    slate: 'bg-[#f5f5f7] text-[#707070] border-[#d6d6d6]',
-    ink: 'bg-[#1d1d1f] text-white border-transparent',
-    red: 'bg-[#d32f2f]/10 text-[#d32f2f] border-[#d32f2f]/25 font-medium',
-    neutral: 'bg-[#f5f5f7] text-[#1d1d1f] border-[#d6d6d6]'
+    blue: 'bg-blue-50/80 text-blue-800 border-blue-200/90 font-medium',
+    ochre: 'bg-amber-50/90 text-amber-950 border-amber-300/80 font-medium',
+    green: 'bg-emerald-50/80 text-emerald-900 border-emerald-200/90 font-medium',
+    slate: 'bg-slate-100/90 text-slate-700 border-slate-200 font-medium',
+    ink: 'bg-slate-900 text-slate-100 border-slate-850 font-medium',
+    red: 'bg-rose-50/90 text-rose-900 border-rose-200/90 font-medium',
+    neutral: 'bg-slate-50 text-slate-800 border-slate-200 font-medium'
   }[variant];
 
   const sizeStyles = {
-    sm: 'text-[11px] px-2 py-0.5 rounded-full-pill tracking-tight',
-    md: 'text-xs px-2.5 py-1 rounded-full-pill tracking-tight'
+    sm: 'text-[11px] px-1.5 py-0.5 rounded-[3px] tracking-tight',
+    md: 'text-xs px-2 py-0.5 rounded-[4px] tracking-tight'
   }[size];
 
   return (
-    <span className={`inline-flex items-center gap-1 border font-sans ${variantStyles} ${sizeStyles} ${className}`}>
+    <span className={`inline-flex items-center gap-1 border font-sans select-none ${variantStyles} ${sizeStyles} ${className}`}>
       {icon && <span className="shrink-0">{icon}</span>}
-      {children}
+      <span>{children}</span>
     </span>
   );
 };

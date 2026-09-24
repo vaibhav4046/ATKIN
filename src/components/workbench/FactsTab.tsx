@@ -197,7 +197,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
   return (
     <div className="space-y-5 max-w-[960px] mx-auto py-2">
       {/* Header and View Mode Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gallery-white border border-border-hairline p-5 rounded-2xl shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gallery-white border border-border-hairline p-5 rounded-[6px] shadow-xs">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="blue" size="sm">Evidence Ledger &amp; Preparation</Badge>
@@ -212,22 +212,22 @@ export const FactsTab: React.FC<FactsTabProps> = ({
         </div>
 
         {/* View Switcher Tabs */}
-        <div className="flex items-center p-1 bg-gallery-paper rounded-xl border border-border-hairline self-start sm:self-auto text-[12px]">
+        <div className="flex items-center p-1 bg-gallery-paper rounded-[4px] border border-border-hairline self-start sm:self-auto text-[12px]">
           <button
             onClick={() => setActiveView('claims')}
-            className={`px-3 py-1 rounded-lg font-medium transition-colors ${activeView === 'claims' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${activeView === 'claims' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             Claims List
           </button>
           <button
             onClick={() => setActiveView('matrix')}
-            className={`px-3 py-1 rounded-lg font-medium transition-colors ${activeView === 'matrix' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${activeView === 'matrix' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             Evidence Matrix
           </button>
           <button
             onClick={() => setActiveView('case_prep')}
-            className={`px-3 py-1 rounded-lg font-medium transition-colors ${activeView === 'case_prep' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors ${activeView === 'case_prep' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             Case Prep &amp; Inquiries
           </button>
@@ -238,13 +238,13 @@ export const FactsTab: React.FC<FactsTabProps> = ({
       {activeView === 'claims' && (
         <div className="space-y-4">
           {/* Filter Bar */}
-          <div className="flex items-center justify-between bg-gallery-white border border-border-hairline p-3.5 rounded-xl shadow-xs">
+          <div className="flex items-center justify-between bg-gallery-white border border-border-hairline p-3.5 rounded-[4px] shadow-xs">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-semibold text-ink-steel uppercase tracking-wider">Filter:</span>
               <select
                 value={kindFilter}
                 onChange={(e) => setKindFilter(e.target.value)}
-                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-lg px-2.5 py-1 text-ink focus:outline-none focus:border-proofline-blue"
+                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-2.5 py-1 text-ink focus:outline-none focus:border-proofline-blue"
               >
                 <option value="all">All Kinds</option>
                 <option value="fact">Facts Only</option>
@@ -255,7 +255,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-lg px-2.5 py-1 text-ink focus:outline-none focus:border-proofline-blue"
+                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-2.5 py-1 text-ink focus:outline-none focus:border-proofline-blue"
               >
                 <option value="all">All Statuses</option>
                 <option value="supported">Supported</option>
@@ -277,7 +277,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
               return (
                 <div
                   key={claim.id}
-                  className={`bg-gallery-white border rounded-2xl p-5 transition-all shadow-xs ${
+                  className={`bg-gallery-white border rounded-[6px] p-5 transition-all shadow-xs ${
                     isContested
                       ? 'border-proofline-ochre/40 ring-1 ring-proofline-ochre/20'
                       : 'border-border-hairline hover:border-proofline-blue/30'
@@ -381,7 +381,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                           </button>
                           <button
                             onClick={() => handleSaveNotes(claim.id)}
-                            className="px-3 py-1 bg-ink text-white rounded-full-pill text-[11px] font-medium"
+                            className="px-3 py-1 bg-ink text-white rounded-[4px] text-[11px] font-medium hover:bg-ink-slate transition-colors"
                           >
                             Save Note
                           </button>
@@ -402,22 +402,22 @@ export const FactsTab: React.FC<FactsTabProps> = ({
 
       {/* VIEW 2: EVIDENCE MATRIX */}
       {activeView === 'matrix' && (
-        <div className="bg-gallery-white border border-border-hairline rounded-card overflow-hidden shadow-xs">
-          <div className="p-4 border-b border-border-hairline bg-gallery-paper/50 flex items-center justify-between">
+        <div className="bg-white border border-border-hairline rounded-[6px] overflow-hidden shadow-subtle">
+          <div className="p-4 border-b border-border-hairline bg-canvas-subtle flex items-center justify-between">
             <div>
-              <h3 className="text-[14px] font-semibold text-ink">Reviewable Evidence Matrix</h3>
+              <h3 className="text-[13.5px] font-semibold text-ink">Reviewable Evidence Matrix</h3>
               <p className="text-[11px] text-ink-steel">Side-by-side analysis of propositions against supporting and contrary records.</p>
             </div>
-            <span className="text-[11px] font-mono text-ink-steel">{claims.length} rows</span>
+            <span className="text-[11px] font-mono text-ink-steel">{claims.length} propositions</span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-[12px] border-collapse">
               <thead>
-                <tr className="bg-gallery-paper border-b border-border-hairline text-ink-steel font-semibold uppercase text-[10px] tracking-wider">
+                <tr className="bg-canvas-subtle border-b border-border-hairline text-ink-steel font-semibold uppercase text-[10px] tracking-wider font-mono">
                   <th className="p-3 w-1/4">Factual Proposition</th>
                   <th className="p-3 w-1/5">Supporting Evidence</th>
-                  <th className="p-3 w-1/5">Contrary / Adverse Evidence</th>
+                  <th className="p-3 w-1/5">Contrary / Adverse Record</th>
                   <th className="p-3 w-1/5">Outstanding Inquiry</th>
                   <th className="p-3 w-1/6">Reviewer Note</th>
                 </tr>
@@ -428,11 +428,11 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                   const contraryEdges = claim.provenanceEdges.filter(e => e.type === 'contradicts');
 
                   return (
-                    <tr key={claim.id} className="hover:bg-gallery-mist/30 transition-colors">
+                    <tr key={claim.id} className="hover:bg-slate-50 transition-colors">
                       <td className="p-3 align-top">
                         <div className="font-medium text-ink leading-snug">{claim.statement}</div>
                         <div className="text-[10px] text-ink-steel font-mono mt-1">
-                          {claim.id} · <span className="capitalize">{claim.polarity}</span>
+                          {claim.id} &bull; <span className="capitalize">{claim.polarity}</span>
                         </div>
                       </td>
                       <td className="p-3 align-top space-y-1">
@@ -443,10 +443,11 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                             <button
                               key={e.id}
                               onClick={() => s && onSelectSpan(s)}
-                              className="block text-left text-[11px] text-proofline-blue hover:underline font-mono truncate max-w-[180px]"
+                              className="flex items-center gap-1 text-left text-[11px] text-proofline-blue hover:underline font-mono truncate max-w-[180px]"
                               title={e.rationale}
                             >
-                              ✓ {d ? d.filename : e.spanId}
+                              <ShieldCheck className="w-3 h-3 text-proofline-green shrink-0" />
+                              <span className="truncate">{d ? d.filename : e.spanId}</span>
                             </button>
                           );
                         })}
@@ -460,10 +461,11 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                               <button
                                 key={e.id}
                                 onClick={() => s && onSelectSpan(s)}
-                                className="block text-left text-[11px] text-proofline-ochre font-semibold hover:underline font-mono truncate max-w-[180px]"
+                                className="flex items-center gap-1 text-left text-[11px] text-amber-900 font-semibold hover:underline font-mono truncate max-w-[180px]"
                                 title={e.rationale}
                               >
-                                ⚡ {d ? d.filename : e.spanId}
+                                <AlertTriangle className="w-3 h-3 text-amber-700 shrink-0" />
+                                <span className="truncate">{d ? d.filename : e.spanId}</span>
                               </button>
                             );
                           })
@@ -473,7 +475,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                       </td>
                       <td className="p-3 align-top">
                         {claim.status === 'contested' ? (
-                          <span className="text-proofline-ochre font-medium text-[11px] block">
+                          <span className="text-amber-900 font-medium text-[11px] block bg-amber-50 px-2 py-0.5 rounded-[2px] border border-amber-200">
                             Reconcile onset date before court claim
                           </span>
                         ) : (
@@ -494,12 +496,12 @@ export const FactsTab: React.FC<FactsTabProps> = ({
 
       {/* VIEW 3: CASE PREPARATION & INQUIRIES */}
       {activeView === 'case_prep' && (
-        <div className="space-y-5">
+        <div className="space-y-4">
           {/* Document & Evidence Checklist */}
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-border-hairline/60 pb-3">
+          <div className="bg-white border border-border-hairline rounded-[6px] p-5 shadow-subtle space-y-4">
+            <div className="flex items-center justify-between border-b border-border-hairline pb-3">
               <div>
-                <h3 className="text-[14px] font-semibold text-ink">
+                <h3 className="text-[13.5px] font-semibold text-ink">
                   Case Preparation Document Checklist
                 </h3>
                 <p className="text-[11px] text-ink-steel">
@@ -516,21 +518,21 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                 <div 
                   key={item.id}
                   onClick={() => toggleChecklistItem(item.id)}
-                  className="p-3 bg-gallery-paper border border-border-hairline rounded-xl flex items-center justify-between cursor-pointer hover:bg-gallery-mist/50 transition-colors"
+                  className="p-3 bg-canvas-subtle border border-border-hairline rounded-[4px] flex items-center justify-between cursor-pointer hover:bg-slate-100 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <input
                       type="checkbox"
                       checked={item.status === 'verified'}
                       onChange={() => {}} // handled by parent onClick
-                      className="w-4 h-4 text-proofline-blue rounded cursor-pointer"
+                      className="w-4 h-4 text-proofline-blue rounded-[2px] cursor-pointer"
                     />
                     <div>
-                      <span className={`text-[13px] font-medium block ${item.status === 'verified' ? 'text-ink line-through opacity-70' : 'text-ink'}`}>
+                      <span className={`text-[12.5px] font-medium block ${item.status === 'verified' ? 'text-ink line-through opacity-70' : 'text-ink'}`}>
                         {item.title}
                       </span>
-                      <span className="text-[11px] text-ink-steel font-mono">
-                        Category: {item.category} · Source: {item.source}
+                      <span className="text-[10.5px] text-ink-steel font-mono">
+                        Category: {item.category} &bull; Source: {item.source}
                       </span>
                     </div>
                   </div>
@@ -544,9 +546,9 @@ export const FactsTab: React.FC<FactsTabProps> = ({
           </div>
 
           {/* Formulated Witness Questions */}
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-5 shadow-xs space-y-4">
-            <div className="border-b border-border-hairline/60 pb-3">
-              <h3 className="text-[14px] font-semibold text-ink">
+          <div className="bg-white border border-border-hairline rounded-[6px] p-5 shadow-subtle space-y-4">
+            <div className="border-b border-border-hairline pb-3">
+              <h3 className="text-[13.5px] font-semibold text-ink">
                 Formulated Evidence-Seeking Witness Inquiries
               </h3>
               <p className="text-[11px] text-ink-steel">
@@ -554,16 +556,16 @@ export const FactsTab: React.FC<FactsTabProps> = ({
               </p>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {witnessQuestions.map((q, idx) => (
-                <div key={q.id} className="p-4 bg-gallery-mist/50 border border-border-hairline rounded-xl space-y-2">
+                <div key={q.id} className="p-3.5 bg-canvas-subtle border border-border-hairline rounded-[4px] space-y-1.5">
                   <div className="flex items-start gap-2">
-                    <span className="font-mono text-[12px] font-bold text-proofline-blue">Q{idx + 1}.</span>
-                    <p className="text-[13px] font-medium text-ink leading-snug">
+                    <span className="font-mono text-[11.5px] font-bold text-proofline-blue">Q{idx + 1}.</span>
+                    <p className="text-[12.5px] font-medium text-ink leading-snug">
                       "{q.question}"
                     </p>
                   </div>
-                  <div className="pl-6 space-y-1 text-[11px]">
+                  <div className="pl-6 space-y-0.5 text-[11px]">
                     <div className="text-ink-slate">
                       <strong>Evidential Purpose:</strong> {q.purpose}
                     </div>

@@ -338,35 +338,35 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
   return (
     <div className="space-y-6 max-w-[920px] mx-auto py-2">
       {/* Tab Header */}
-      <div className="bg-gallery-white border border-border-hairline p-5 rounded-2xl shadow-xs">
-        <h2 className="text-[17px] font-semibold text-ink">
-          Matter Chronology &amp; Contradiction Comparison
+      <div className="bg-white border border-border-hairline p-5 rounded-[6px] shadow-subtle">
+        <h2 className="text-[16px] font-semibold text-ink">
+          Matter Chronology &amp; Adverse Contradiction Discovery
         </h2>
-        <p className="text-[13px] text-ink-slate mt-1">
-          Juxtaposes incident event dates against document creation timestamps to isolate evidential inconsistencies.
+        <p className="text-[12.5px] text-ink-slate mt-0.5">
+          Juxtaposes incident event dates against disclosed document timestamps to isolate evidential inconsistencies.
         </p>
       </div>
 
       {/* Side-by-Side Contradiction Card */}
       {contradictionCardData && (
-        <div className="bg-gallery-white border border-proofline-ochre/40 rounded-card p-6 shadow-sm ring-1 ring-proofline-ochre/20">
+        <div className="bg-white border border-amber-300 rounded-[6px] p-5 shadow-subtle">
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-6 h-6 rounded-full bg-proofline-ochre/15 text-proofline-ochre flex items-center justify-center">
+            <div className="w-6 h-6 rounded-[3px] bg-amber-100 text-amber-900 flex items-center justify-center">
               <AlertTriangle className="w-3.5 h-3.5" />
             </div>
-            <span className="text-[13px] font-semibold text-proofline-ochre uppercase tracking-wider">
+            <span className="text-[12px] font-mono font-semibold text-amber-900 uppercase tracking-wider">
               {contradictionCardData.title}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 mt-2">
             {/* Left Column */}
-            <div className="p-4 rounded-xl bg-gallery-paper border border-border-hairline space-y-2">
+            <div className="p-3.5 rounded-[4px] bg-canvas-subtle border border-border-hairline space-y-2">
               <div className="flex items-center justify-between">
                 <Badge variant="blue" size="sm">{contradictionCardData.left.badge}</Badge>
                 <span className="text-[11px] font-mono text-ink-steel">Date: {contradictionCardData.left.date}</span>
               </div>
-              <div className="text-[13px] font-medium text-ink">
+              <div className="text-[12.5px] font-medium text-ink font-mono">
                 {contradictionCardData.left.docName}
               </div>
               <blockquote className="text-[12px] text-ink-slate italic border-l-2 border-proofline-blue pl-2.5 my-1">
@@ -387,15 +387,15 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
             </div>
 
             {/* Right Column */}
-            <div className="p-4 rounded-xl bg-gallery-paper border border-proofline-ochre/30 space-y-2">
+            <div className="p-3.5 rounded-[4px] bg-canvas-subtle border border-amber-200 space-y-2">
               <div className="flex items-center justify-between">
                 <Badge variant="ochre" size="sm">{contradictionCardData.right.badge}</Badge>
                 <span className="text-[11px] font-mono text-ink-steel">Date: {contradictionCardData.right.date}</span>
               </div>
-              <div className="text-[13px] font-medium text-ink">
+              <div className="text-[12.5px] font-medium text-ink font-mono">
                 {contradictionCardData.right.docName}
               </div>
-              <blockquote className="text-[12px] text-ink-slate italic border-l-2 border-proofline-ochre pl-2.5 my-1">
+              <blockquote className="text-[12px] text-ink-slate italic border-l-2 border-amber-600 pl-2.5 my-1">
                 "{contradictionCardData.right.quote}"
               </blockquote>
               {contradictionCardData.right.spanId && (
@@ -404,7 +404,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                     const s = spansById.get(contradictionCardData!.right.spanId!);
                     if (s) onSelectSpan(s);
                   }}
-                  className="text-[11px] text-proofline-ochre hover:underline font-medium flex items-center gap-1 pt-1"
+                  className="text-[11px] text-amber-900 hover:underline font-medium flex items-center gap-1 pt-1"
                 >
                   <span>Inspect Source Span ({contradictionCardData.right.lineLabel})</span>
                   <ArrowRight className="w-3 h-3" />
@@ -414,8 +414,8 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
           </div>
 
           {/* Litigator Note */}
-          <div className="mt-4 pt-3 border-t border-border-hairline flex items-start gap-2.5 text-[12px] text-ink-slate bg-gallery-mist/50 p-3 rounded-xl">
-            <HelpCircle className="w-4 h-4 text-ink-steel shrink-0 mt-0.5" />
+          <div className="mt-3.5 pt-3 border-t border-border-hairline flex items-start gap-2 text-[12px] text-ink-slate bg-amber-50/60 p-3 rounded-[4px] border border-amber-200">
+            <HelpCircle className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
             <div>
               <span className="font-semibold text-ink block">{contradictionCardData.inquiryTitle}</span>
               <span>{contradictionCardData.inquiryBody}</span>
@@ -425,7 +425,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
       )}
 
       {/* Chronological Vertical Stepper */}
-      <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs">
+      <div className="bg-white border border-border-hairline rounded-[6px] p-5 shadow-subtle">
         <h3 className="text-[15px] font-semibold text-ink mb-6">
           Master Event Timeline
         </h3>

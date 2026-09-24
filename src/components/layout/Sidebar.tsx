@@ -11,7 +11,8 @@ import {
   Settings, 
   Plus, 
   RotateCcw,
-  ShieldCheck
+  ShieldCheck,
+  Briefcase
 } from 'lucide-react';
 import type { Matter } from '../../types/index.ts';
 
@@ -57,33 +58,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectMatter
 }) => {
   const navItems: Array<{ id: WorkbenchTab; label: string; icon: React.ReactNode; badge?: string | number; badgeColor?: string }> = [
-    { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { id: 'chat', label: 'Sovereign Copilot', icon: <FileSignature className="w-4 h-4 text-proofline-blue" /> },
-    { id: 'sources', label: 'Sources', icon: <FileText className="w-4 h-4" />, badge: counts.docs },
-    { id: 'facts', label: 'Fact Ledger', icon: <CheckSquare className="w-4 h-4" />, badge: counts.claims },
-    { id: 'timeline', label: 'Timeline & Conflicts', icon: <CalendarClock className="w-4 h-4" />, badge: counts.conflicts > 0 ? `${counts.conflicts} conflict` : undefined, badgeColor: 'bg-proofline-ochre/15 text-proofline-ochre' },
-    { id: 'contract', label: 'Contract & Playbook', icon: <FileText className="w-4 h-4 text-proofline-ochre" /> },
-    { id: 'graph', label: 'Evidence Graph', icon: <Network className="w-4 h-4" /> },
-    { id: 'research', label: 'Research & Law', icon: <BookOpen className="w-4 h-4" />, badge: counts.authorities },
-    { id: 'draft', label: 'Drafting Studio', icon: <FileSignature className="w-4 h-4" /> },
-    { id: 'review', label: 'Review Queue', icon: <AlertCircle className="w-4 h-4" />, badge: counts.reviewItems > 0 ? counts.reviewItems : undefined, badgeColor: 'bg-proofline-ochre text-white font-semibold' },
-    { id: 'memory', label: 'Scoped Memory', icon: <ShieldCheck className="w-4 h-4 text-proofline-green" /> },
-    { id: 'settings', label: 'Model & Diagnostics', icon: <Settings className="w-4 h-4" /> }
+    { id: 'overview', label: 'Matter Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { id: 'chat', label: 'Evidential Copilot', icon: <FileSignature className="w-4 h-4 text-proofline-blue" /> },
+    { id: 'sources', label: 'Primary Evidence', icon: <FileText className="w-4 h-4" />, badge: counts.docs },
+    { id: 'facts', label: 'Fact & Claim Ledger', icon: <CheckSquare className="w-4 h-4" />, badge: counts.claims },
+    { id: 'timeline', label: 'Chronology & Adverse', icon: <CalendarClock className="w-4 h-4" />, badge: counts.conflicts > 0 ? `${counts.conflicts} conflict` : undefined, badgeColor: 'bg-amber-100 text-amber-900 border border-amber-300' },
+    { id: 'contract', label: 'Contract & Playbooks', icon: <FileText className="w-4 h-4 text-proofline-ochre" /> },
+    { id: 'graph', label: 'Impact Simulator', icon: <Network className="w-4 h-4" /> },
+    { id: 'research', label: 'Statutes & Authorities', icon: <BookOpen className="w-4 h-4" />, badge: counts.authorities },
+    { id: 'draft', label: 'Drafting & Section 9', icon: <FileSignature className="w-4 h-4" /> },
+    { id: 'review', label: 'Review Queue', icon: <AlertCircle className="w-4 h-4" />, badge: counts.reviewItems > 0 ? counts.reviewItems : undefined, badgeColor: 'bg-rose-100 text-rose-900 border border-rose-300 font-semibold' },
+    { id: 'memory', label: 'Cryptographic Memory', icon: <ShieldCheck className="w-4 h-4 text-proofline-green" /> },
+    { id: 'settings', label: 'Model Runtime', icon: <Settings className="w-4 h-4" /> }
   ];
 
   return (
-    <aside className="w-[248px] bg-gallery-paper border-r border-border-hairline flex flex-col justify-between shrink-0 select-none min-h-[calc(100vh-108px)]">
+    <aside className="w-[240px] bg-canvas-subtle border-r border-border-hairline flex flex-col justify-between shrink-0 select-none min-h-[calc(100vh-106px)]">
       <div>
-        {/* Matter Switcher Header */}
-        <div className="p-3.5 border-b border-border-hairline">
+        {/* Matter Portfolio Switcher */}
+        <div className="p-3 border-b border-border-hairline bg-white">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-semibold tracking-wider text-ink-steel uppercase">
-              Matter Portfolio
+            <span className="text-[10px] font-semibold tracking-wider text-ink-steel uppercase">
+              Active Matter File
             </span>
             <button
               onClick={onNewMatter}
-              className="p-1 rounded hover:bg-gallery-mist text-ink-slate hover:text-ink transition-colors"
-              title="Create New Blank Matter"
+              className="p-1 rounded-[3px] hover:bg-canvas-subtle text-ink-steel hover:text-ink transition-colors"
+              title="Create New Matter File"
+              aria-label="New Matter"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -92,7 +94,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <select
             value={activeMatterId}
             onChange={(e) => onSelectMatter(e.target.value)}
-            className="w-full text-[13px] bg-gallery-white border border-border-hairline rounded-lg px-2.5 py-1.5 text-ink font-medium focus:border-proofline-blue focus:outline-none"
+            className="w-full text-[12.5px] bg-white border border-border-hairline rounded-[4px] px-2 py-1.5 text-ink font-medium focus-visible:outline-none focus:border-proofline-blue"
           >
             {matters.map((m) => (
               <option key={m.id} value={m.id}>
@@ -102,7 +104,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </select>
         </div>
 
-        {/* Navigation Tabs */}
+        {/* Workbench Section Tabs */}
         <nav className="p-2 space-y-0.5" aria-label="Workbench Sections">
           {navItems.map((item) => {
             const isActive = currentTab === item.id;
@@ -110,13 +112,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-colors ${
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-[4px] text-[12.5px] font-medium transition-colors ${
                   isActive
-                    ? 'bg-gallery-white text-ink shadow-subtle'
-                    : 'text-ink-slate hover:text-ink hover:bg-gallery-mist/70'
+                    ? 'bg-white text-ink border border-border-hairline shadow-subtle'
+                    : 'text-ink-slate hover:text-ink hover:bg-slate-200/50'
                 }`}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <span className={isActive ? 'text-proofline-blue' : 'text-ink-steel'}>
                     {item.icon}
                   </span>
@@ -124,7 +126,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
 
                 {item.badge !== undefined && (
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full-pill ${item.badgeColor || 'bg-gallery-mist text-ink-steel'}`}>
+                  <span className={`text-[10.5px] px-1.5 py-0.2 rounded-[3px] font-mono ${item.badgeColor || 'bg-slate-200/70 text-ink-slate'}`}>
                     {item.badge}
                   </span>
                 )}
@@ -134,19 +136,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Footer Actions & Data Sovereignty Badge */}
-      <div className="p-3 border-t border-border-hairline bg-gallery-mist/40 space-y-2.5">
+      {/* Footer Controls & Local Verification Invariant */}
+      <div className="p-3 border-t border-border-hairline bg-white space-y-2">
         <button
           onClick={onLoadSample}
-          className="w-full flex items-center justify-center gap-1.5 text-[12px] font-medium text-ink-slate hover:text-ink bg-gallery-white border border-border-hairline hover:bg-gallery-mist py-1.5 rounded-lg transition-colors shadow-xs"
+          className="w-full text-left text-[11px] text-ink-steel hover:text-ink hover:bg-canvas-subtle p-1.5 rounded-[4px] flex items-center gap-1.5 transition-colors"
+          title="Reload Bates v Post Office Horizon Litigation"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>Reset Active Matter</span>
+          <RotateCcw className="w-3 h-3 text-ink-steel" />
+          <span>Reload Landmark Litigation</span>
         </button>
 
-        <div className="flex items-start gap-1.5 text-[11px] text-ink-steel leading-tight">
-          <ShieldCheck className="w-3.5 h-3.5 text-proofline-green shrink-0 mt-0.5" />
-          <span>Local IndexedDB · 100% client storage · Zero cloud telemetry</span>
+        <div className="pt-2 border-t border-border-hairline/80 flex items-center gap-1.5 text-[10.5px] text-ink-steel font-mono">
+          <ShieldCheck className="w-3 h-3 text-proofline-green shrink-0" />
+          <span>IndexedDB · Zero Egress</span>
         </div>
       </div>
     </aside>

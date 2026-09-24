@@ -53,7 +53,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
   return (
     <div className="space-y-4 max-w-[960px] mx-auto py-2">
       {/* Header and View Mode Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gallery-white border border-border-hairline p-5 rounded-2xl shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gallery-white border border-border-hairline p-5 rounded-[6px] shadow-sm">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="blue" size="sm">Evidence Topology</Badge>
@@ -67,11 +67,11 @@ export const GraphTab: React.FC<GraphTabProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-gallery-paper p-1 rounded-full-pill border border-border-hairline self-start sm:self-auto text-[12px]">
+        <div className="flex items-center gap-1.5 bg-gallery-paper p-1 rounded-[4px] border border-border-hairline self-start sm:self-auto text-[12px]">
           <button
             onClick={() => setViewMode('visual')}
-            className={`px-3 py-1 rounded-full-pill font-medium transition-colors flex items-center gap-1 ${
-              viewMode === 'visual' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors flex items-center gap-1 ${
+              viewMode === 'visual' ? 'bg-gallery-white text-ink shadow-sm' : 'text-ink-slate hover:text-ink'
             }`}
           >
             <Network className="w-3.5 h-3.5" />
@@ -79,8 +79,8 @@ export const GraphTab: React.FC<GraphTabProps> = ({
           </button>
           <button
             onClick={() => setViewMode('list')}
-            className={`px-3 py-1 rounded-full-pill font-medium transition-colors flex items-center gap-1 ${
-              viewMode === 'list' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors flex items-center gap-1 ${
+              viewMode === 'list' ? 'bg-gallery-white text-ink shadow-sm' : 'text-ink-slate hover:text-ink'
             }`}
           >
             <List className="w-3.5 h-3.5" />
@@ -88,8 +88,8 @@ export const GraphTab: React.FC<GraphTabProps> = ({
           </button>
           <button
             onClick={() => setViewMode('impact')}
-            className={`px-3 py-1 rounded-full-pill font-medium transition-colors flex items-center gap-1 ${
-              viewMode === 'impact' ? 'bg-gallery-white text-ink shadow-xs' : 'text-ink-slate hover:text-ink'
+            className={`px-3 py-1 rounded-[4px] font-medium transition-colors flex items-center gap-1 ${
+              viewMode === 'impact' ? 'bg-gallery-white text-ink shadow-sm' : 'text-ink-slate hover:text-ink'
             }`}
           >
             <GitBranch className="w-3.5 h-3.5 text-proofline-ochre" />
@@ -102,7 +102,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
       {viewMode === 'visual' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Visual Topology Representation */}
-          <div className="md:col-span-2 bg-gallery-white border border-border-hairline rounded-card p-5 min-h-[460px] flex flex-col justify-between shadow-xs">
+          <div className="md:col-span-2 bg-gallery-white border border-border-hairline rounded-[6px] p-5 min-h-[460px] flex flex-col justify-between shadow-sm">
             <div className="space-y-4">
               <div className="flex items-center justify-between text-[11px] font-semibold text-ink-steel uppercase tracking-wider">
                 <span>Relational Topology Canvas</span>
@@ -110,7 +110,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
               </div>
 
               {/* Graphical Nodes Stage */}
-              <div className="p-4 bg-gallery-paper/60 rounded-xl border border-border-hairline space-y-4">
+              <div className="p-4 bg-gallery-paper/60 rounded-[4px] border border-border-hairline space-y-4">
                 {/* Documents Layer */}
                 <div>
                   <span className="text-[10px] font-mono text-ink-steel uppercase tracking-wider block mb-2">
@@ -121,9 +121,9 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                       <button
                         key={doc.id}
                         onClick={() => setSelectedNodeId(doc.id)}
-                        className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
+                        className={`px-3 py-1.5 rounded-[4px] border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
                           selectedNodeId === doc.id
-                            ? 'bg-ink text-white border-ink shadow-xs'
+                            ? 'bg-ink text-white border-ink shadow-sm'
                             : 'bg-gallery-white border-border-hairline text-ink hover:border-ink/40'
                         }`}
                       >
@@ -146,9 +146,9 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                         <button
                           key={claim.id}
                           onClick={() => setSelectedNodeId(claim.id)}
-                          className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
+                          className={`px-3 py-1.5 rounded-[4px] border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
                             selectedNodeId === claim.id
-                              ? 'bg-proofline-blue text-white border-proofline-blue shadow-xs'
+                              ? 'bg-proofline-blue text-white border-proofline-blue shadow-sm'
                               : isContested
                               ? 'bg-proofline-ochre/10 border-proofline-ochre/40 text-proofline-ochre'
                               : 'bg-gallery-white border-border-hairline text-ink hover:border-proofline-blue/40'
@@ -172,9 +172,9 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                       <button
                         key={auth.id}
                         onClick={() => setSelectedNodeId(auth.id)}
-                        className={`px-3 py-1.5 rounded-lg border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
+                        className={`px-3 py-1.5 rounded-[4px] border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
                           selectedNodeId === auth.id
-                            ? 'bg-proofline-green text-white border-proofline-green shadow-xs'
+                            ? 'bg-proofline-green text-white border-proofline-green shadow-sm'
                             : 'bg-gallery-white border-border-hairline text-ink hover:border-proofline-green/40'
                         }`}
                       >
@@ -190,15 +190,15 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             <div className="pt-3 border-t border-border-hairline flex items-center justify-between text-[11px] text-ink-steel">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded bg-proofline-blue/20 border border-proofline-blue" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-proofline-blue/20 border border-proofline-blue" />
                   <span>Claim</span>
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded bg-proofline-ochre/20 border border-proofline-ochre" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-proofline-ochre/20 border border-proofline-ochre" />
                   <span>Contested</span>
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded bg-proofline-green/20 border border-proofline-green" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-proofline-green/20 border border-proofline-green" />
                   <span>Statute</span>
                 </span>
               </div>
@@ -207,7 +207,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
           </div>
 
           {/* Node Inspector Panel (Right 1 col) */}
-          <div className="bg-gallery-white border border-border-hairline rounded-card p-5 flex flex-col justify-between shadow-xs">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-5 flex flex-col justify-between shadow-sm">
             <div>
               <div className="text-[11px] font-semibold text-ink-steel uppercase tracking-wider mb-2">
                 Selected Graph Element
@@ -225,7 +225,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                     {selectedClaim.statement}
                   </h4>
                   {selectedClaim.editorNotes && (
-                    <div className="text-[12px] text-ink-slate bg-gallery-mist p-2.5 rounded-lg">
+                    <div className="text-[12px] text-ink-slate bg-gallery-mist p-2.5 rounded-[4px]">
                       {selectedClaim.editorNotes}
                     </div>
                   )}
@@ -278,7 +278,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
 
       {/* VIEW 2: LINEAR LIST */}
       {viewMode === 'list' && (
-        <div className="bg-gallery-white border border-border-hairline rounded-card p-5 space-y-4 shadow-xs" role="region" aria-label="Accessible Evidence Network">
+        <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-5 space-y-4 shadow-sm" role="region" aria-label="Accessible Evidence Network">
           <div className="text-[13px] font-medium text-ink-steel">
             Linear accessible listing of all evidential nodes and relations:
           </div>
@@ -287,7 +287,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             {claims.map((claim) => (
               <div 
                 key={claim.id} 
-                className="p-3.5 rounded-xl border border-border-hairline bg-gallery-paper space-y-2"
+                className="p-3.5 rounded-[4px] border border-border-hairline bg-gallery-paper space-y-2"
                 tabIndex={0}
               >
                 <div className="flex items-center justify-between">
@@ -317,7 +317,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
 
       {/* VIEW 3: CHANGE IMPACT SIMULATOR */}
       {viewMode === 'impact' && (
-        <div className="bg-gallery-white border border-border-hairline rounded-card p-6 shadow-xs space-y-5">
+        <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-sm space-y-5">
           <div>
             <h3 className="text-[15px] font-semibold text-ink">
               Evidence Graph Change Impact Analysis
@@ -327,14 +327,14 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             </p>
           </div>
 
-          <div className="p-4 bg-gallery-paper rounded-xl border border-border-hairline space-y-3">
+          <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-3">
             <label className="block text-[11px] font-semibold text-ink-steel uppercase tracking-wider">
               Select Document to Simulate Amendment / Invalidation:
             </label>
             <select
               value={simulatedDocId}
               onChange={(e) => setSimulatedDocId(e.target.value)}
-              className="w-full text-[13px] bg-gallery-white border border-border-hairline rounded-lg px-3 py-2 text-ink font-medium focus:border-proofline-blue focus:outline-none"
+              className="w-full text-[13px] bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-2 text-ink font-medium focus:border-proofline-blue focus:outline-none"
             >
               {documents.map(d => (
                 <option key={d.id} value={d.id}>
@@ -345,7 +345,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
           </div>
 
           {/* Change Impact Report */}
-          <div className="border border-border-hairline rounded-xl p-5 space-y-4 bg-gallery-mist/30">
+          <div className="border border-border-hairline rounded-[4px] p-5 space-y-4 bg-gallery-mist/30">
             <div className="flex items-center justify-between border-b border-border-hairline/60 pb-3">
               <div className="flex items-center gap-2 text-proofline-ochre font-semibold text-[13px]">
                 <AlertTriangle className="w-4 h-4" />
@@ -355,17 +355,17 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[12px]">
-              <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline">
+              <div className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline">
                 <span className="text-ink-steel block text-[11px]">Direct Dependent Spans</span>
                 <span className="font-mono font-semibold text-ink text-[14px] mt-0.5">{affectedSpans.length} spans</span>
               </div>
 
-              <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline">
+              <div className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline">
                 <span className="text-ink-steel block text-[11px]">Dependent Assertions</span>
                 <span className="font-mono font-semibold text-proofline-ochre text-[14px] mt-0.5">{affectedClaims.length} claims</span>
               </div>
 
-              <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline">
+              <div className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline">
                 <span className="text-ink-steel block text-[11px]">Downstream Invalidation</span>
                 <span className="font-mono font-semibold text-proofline-crimson text-[14px] mt-0.5">Draft Brief Re-check</span>
               </div>
@@ -377,14 +377,14 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                 Impacted Factual Propositions Requiring Fee Earner Re-Verification:
               </span>
               {affectedClaims.map(c => (
-                <div key={c.id} className="p-3 bg-gallery-white rounded-lg border border-border-hairline flex items-center justify-between text-[12px]">
+                <div key={c.id} className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline flex items-center justify-between text-[12px]">
                   <span className="font-medium text-ink truncate max-w-[500px]">{c.statement}</span>
                   <Badge variant="ochre" size="sm">Requires Re-review</Badge>
                 </div>
               ))}
             </div>
 
-            <div className="p-3 bg-gallery-paper rounded-lg border border-border-hairline text-[11px] text-ink-slate flex items-start gap-2">
+            <div className="p-3 bg-gallery-paper rounded-[4px] border border-border-hairline text-[11px] text-ink-slate flex items-start gap-2">
               <ShieldCheck className="w-4 h-4 text-proofline-green shrink-0 mt-0.5" />
               <div>
                 <strong>Sovereign Graph Invariant:</strong> Modifying or deleting this source document triggers cascading invalidation across all dependent scoped memories and draft blocks, preventing stale evidence from appearing in court work product.
