@@ -17,13 +17,16 @@ import type { Matter } from '../../types/index.ts';
 
 export type WorkbenchTab = 
   | 'overview' 
+  | 'chat'
   | 'sources' 
   | 'facts' 
   | 'timeline' 
+  | 'contract'
   | 'graph' 
   | 'research' 
   | 'draft' 
   | 'review' 
+  | 'memory'
   | 'settings';
 
 interface SidebarProps {
@@ -55,13 +58,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navItems: Array<{ id: WorkbenchTab; label: string; icon: React.ReactNode; badge?: string | number; badgeColor?: string }> = [
     { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { id: 'chat', label: 'Sovereign Copilot', icon: <FileSignature className="w-4 h-4 text-proofline-blue" /> },
     { id: 'sources', label: 'Sources', icon: <FileText className="w-4 h-4" />, badge: counts.docs },
     { id: 'facts', label: 'Fact Ledger', icon: <CheckSquare className="w-4 h-4" />, badge: counts.claims },
     { id: 'timeline', label: 'Timeline & Conflicts', icon: <CalendarClock className="w-4 h-4" />, badge: counts.conflicts > 0 ? `${counts.conflicts} conflict` : undefined, badgeColor: 'bg-proofline-ochre/15 text-proofline-ochre' },
+    { id: 'contract', label: 'Contract & Playbook', icon: <FileText className="w-4 h-4 text-proofline-ochre" /> },
     { id: 'graph', label: 'Evidence Graph', icon: <Network className="w-4 h-4" /> },
     { id: 'research', label: 'Research & Law', icon: <BookOpen className="w-4 h-4" />, badge: counts.authorities },
     { id: 'draft', label: 'Drafting Studio', icon: <FileSignature className="w-4 h-4" /> },
     { id: 'review', label: 'Review Queue', icon: <AlertCircle className="w-4 h-4" />, badge: counts.reviewItems > 0 ? counts.reviewItems : undefined, badgeColor: 'bg-proofline-ochre text-white font-semibold' },
+    { id: 'memory', label: 'Scoped Memory', icon: <ShieldCheck className="w-4 h-4 text-proofline-green" /> },
     { id: 'settings', label: 'Model & Diagnostics', icon: <Settings className="w-4 h-4" /> }
   ];
 

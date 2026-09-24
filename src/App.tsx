@@ -14,6 +14,9 @@ import { ResearchTab } from './components/workbench/ResearchTab.tsx';
 import { DraftTab } from './components/workbench/DraftTab.tsx';
 import { ReviewTab } from './components/workbench/ReviewTab.tsx';
 import { SettingsTab } from './components/workbench/SettingsTab.tsx';
+import { ChatTab } from './components/workbench/ChatTab.tsx';
+import { MemoryTab } from './components/workbench/MemoryTab.tsx';
+import { ContractTab } from './components/workbench/ContractTab.tsx';
 
 import type { 
   Matter, 
@@ -24,7 +27,7 @@ import type {
   Draft, 
   ReviewItem, 
   ModelStatus,
-  DraftType
+  NetworkMode
 } from './types/index.ts';
 
 import { 
@@ -35,17 +38,48 @@ import {
   SAMPLE_REVIEW_ITEMS, 
   SAMPLE_DRAFT 
 } from './db/fixtures/consumerLaptop.ts';
+import { 
+  CONTRACT_MATTER, 
+  CONTRACT_DOCUMENTS, 
+  CONTRACT_SPANS, 
+  CONTRACT_CLAIMS, 
+  CONTRACT_REVIEWS, 
+  CONTRACT_DRAFT 
+} from './db/fixtures/contractMatter.ts';
+import { 
+  TENANCY_MATTER, 
+  TENANCY_DOCUMENTS, 
+  TENANCY_SPANS, 
+  TENANCY_CLAIMS, 
+  TENANCY_REVIEWS, 
+  TENANCY_DRAFT 
+} from './db/fixtures/tenancyMatter.ts';
 import { CRA_2015_AUTHORITIES } from './db/fixtures/authorities.ts';
-import { checkOllamaConnection, requestGemmaDraftBlock } from './engine/modelBridge.ts';
+import { checkOllamaConnection } from './engine/modelBridge.ts';
 import { generateDeterministicDraft, exportDraftAsMarkdown } from './engine/draftingEngine.ts';
 import { detectContradictions } from './engine/contradictionEngine.ts';
+import { MemoryEngine } from './engine/memory/memoryEngine.ts';
+import { NetworkBroker } from './engine/network/networkBroker.ts';
+import { LocalModelManager } from './engine/model/localModelManager.ts';
+import { vaultService } from './engine/vault/vaultService.ts';
+import { DocxExporter } from './engine/export/docxExporter.ts';
+import { BundleExchange } from './engine/collaboration/bundleExchange.ts';
+
+// Singletons for sovereign runtime
+const memoryEngine = new MemoryEngine();
+const networkBroker = new NetworkBroker('offline');
+const modelManager = new LocalModelManager();
 
 export function App() {
   const [activeView, setActiveView] = useState<'landing' | 'workbench'>('landing');
   const [currentTab, setCurrentTab] = useState<WorkbenchTab>('overview');
 
-  // Matter state
-  const [matters, setMatters] = useState<Matter[]>([SAMPLE_MATTER]);
+  // Multi-matter portfolio
+  const [matters, setMatters] = useState<Matter[]>([
+    SAMPLE_MATTER,
+    CONTRACT_MATTER,
+    TENANCY_MATTER
+  ]);
   const [activeMatterId, setActiveMatterId] = useState<string>(SAMPLE_MATTER.id);
 
   // Evidential state
@@ -55,6 +89,13 @@ export function App() {
   const [authorities, setAuthorities] = useState<Authority[]>(CRA_2015_AUTHORITIES);
   const [draft, setDraft] = useState<Draft>(SAMPLE_DRAFT);
   const [reviewItems, setReviewItems] = useState<ReviewItem[]>(SAMPLE_REVIEW_ITEMS);
+
+  // Sovereign Broker & Vault state
+  const [networkMode, setNetworkMode] = useState<NetworkMode>('offline');
+  const [isVaultLocked, setIsVaultLocked] = useState<boolean>(false);
+  const [isUnlockModalOpen, setIsUnlockModalOpen] = useState(false);
+  const [passphraseInput, setPassphraseInput] = useState('');
+  const [unlockError, setUnlockError] = useState('');
 
   // Inspector and modal state
   const [selectedSpan, setSelectedSpan] = useState<Span | null>(null);
@@ -72,7 +113,6 @@ export function App() {
 
   const activeMatter = matters.find(m => m.id === activeMatterId) || matters[0];
 
-  // Check Ollama on startup
   useEffect(() => {
     checkOllamaConnection().then(setModelStatus);
   }, []);
@@ -82,16 +122,35 @@ export function App() {
     setModelStatus(status);
   };
 
+  const handleSelectMatter = (matterId: string) => {
+    setActiveMatterId(matterId);
+
+    if (matterId === CONTRACT_MATTER.id) {
+      setDocuments(CONTRACT_DOCUMENTS);
+      setSpans(CONTRACT_SPANS);
+      setClaims(CONTRACT_CLAIMS);
+      setReviewItems(CONTRACT_REVIEWS);
+      setDraft(CONTRACT_DRAFT);
+      setSelectedSpan(CONTRACT_SPANS[0]);
+    } else if (matterId === TENANCY_MATTER.id) {
+      setDocuments(TENANCY_DOCUMENTS);
+      setSpans(TENANCY_SPANS);
+      setClaims(TENANCY_CLAIMS);
+      setReviewItems(TENANCY_REVIEWS);
+      setDraft(TENANCY_DRAFT);
+      setSelectedSpan(TENANCY_SPANS[0]);
+    } else {
+      setDocuments(SAMPLE_DOCUMENTS);
+      setSpans(SAMPLE_SPANS);
+      setClaims(SAMPLE_CLAIMS);
+      setReviewItems(SAMPLE_REVIEW_ITEMS);
+      setDraft(SAMPLE_DRAFT);
+      setSelectedSpan(SAMPLE_SPANS[0]);
+    }
+  };
+
   const handleLoadSampleMatter = () => {
-    setMatters([SAMPLE_MATTER]);
-    setActiveMatterId(SAMPLE_MATTER.id);
-    setDocuments(SAMPLE_DOCUMENTS);
-    setSpans(SAMPLE_SPANS);
-    setClaims(SAMPLE_CLAIMS);
-    setAuthorities(CRA_2015_AUTHORITIES);
-    setDraft(SAMPLE_DRAFT);
-    setReviewItems(SAMPLE_REVIEW_ITEMS);
-    setSelectedSpan(SAMPLE_SPANS[0]);
+    handleSelectMatter(SAMPLE_MATTER.id);
     setActiveView('workbench');
     setCurrentTab('overview');
   };
@@ -100,159 +159,203 @@ export function App() {
     e.preventDefault();
     if (!newTitle.trim()) return;
 
-    const newM: Matter = {
+    const newMatter: Matter = {
       id: `matter-${Date.now()}`,
       title: newTitle.trim(),
       jurisdiction: 'England and Wales',
-      clientAlias: newClient.trim() || 'Anonymous Client',
+      clientAlias: newClient.trim() || 'Confidential Client',
       status: 'active',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       isDemo: false
     };
 
-    setMatters(prev => [newM, ...prev]);
-    setActiveMatterId(newM.id);
+    setMatters(prev => [newMatter, ...prev]);
+    setActiveMatterId(newMatter.id);
     setDocuments([]);
     setSpans([]);
     setClaims([]);
     setReviewItems([]);
-    setDraft(generateDeterministicDraft(newM, [], [], [], 'matter_brief'));
+    setDraft({
+      id: `draft-${Date.now()}`,
+      matterId: newMatter.id,
+      type: 'matter_brief',
+      title: `Matter Assessment Brief — ${newMatter.title}`,
+      blocks: [],
+      generatedBy: 'deterministic_offline',
+      reviewStatus: 'needs_review',
+      updatedAt: new Date().toISOString()
+    });
+    setSelectedSpan(null);
     setIsNewMatterOpen(false);
     setNewTitle('');
     setNewClient('');
-    setActiveView('workbench');
     setCurrentTab('sources');
   };
 
-  const handleAddDocument = (newDoc: Document) => {
-    setDocuments(prev => [newDoc, ...prev]);
+  const handleChangeNetworkMode = (mode: NetworkMode) => {
+    networkBroker.setMode(mode);
+    setNetworkMode(mode);
   };
 
-  const handleUpdateClaimNotes = (claimId: string, notes: string) => {
-    setClaims(prev => prev.map(c => c.id === claimId ? { ...c, editorNotes: notes } : c));
-  };
-
-  const handleRegenerateDraft = async (type: DraftType, useModel: boolean) => {
-    if (useModel && modelStatus.state === 'connected') {
-      const proposal = await requestGemmaDraftBlock(
-        `Draft a ${type.replace('_', ' ')} based on the evidence.`,
-        spans.slice(0, 5),
-        modelStatus.modelTag
-      );
-
-      setDraft(prev => ({
-        ...prev,
-        type,
-        generatedBy: `local_gemma (${modelStatus.modelTag})`,
-        blocks: [
-          {
-            id: `blk-gemma-${Date.now()}`,
-            heading: 'Synthesis by Local Gemma 4',
-            text: proposal.proposedText,
-            claimIds: claims.map(c => c.id),
-            spanIds: spans.slice(0, 4).map(s => s.id),
-            reviewStatus: 'needs_review',
-            reviewReason: 'Generated by local model; requires solicitor verification.'
-          },
-          ...prev.blocks.slice(1)
-        ],
-        updatedAt: new Date().toISOString()
-      }));
+  const handleToggleVaultLock = () => {
+    if (!isVaultLocked) {
+      vaultService.lock();
+      setIsVaultLocked(true);
     } else {
-      const newD = generateDeterministicDraft(activeMatter, documents, spans, claims, type);
-      setDraft(newD);
+      setIsUnlockModalOpen(true);
+      setUnlockError('');
     }
+  };
+
+  const handleUnlockVault = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await vaultService.unlock(passphraseInput);
+      setIsVaultLocked(false);
+      setIsUnlockModalOpen(false);
+      setPassphraseInput('');
+      setUnlockError('');
+    } catch {
+      setUnlockError('Invalid vault passphrase. Decryption refused.');
+    }
+  };
+
+  const handleExportMarkdown = () => {
+    const md = DocxExporter.exportToMarkdown(draft, activeMatter, claims);
+    downloadFile(md, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Brief.md`, 'text/markdown');
+  };
+
+  const handleExportDocx = () => {
+    const docHtml = DocxExporter.exportToWordDocument(draft, activeMatter, claims);
+    downloadFile(docHtml, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Legal_Brief.doc`, 'application/msword');
+  };
+
+  const handleExportBundle = async () => {
+    const bundle = await BundleExchange.createPlainBundle({
+      matter: activeMatter,
+      documents,
+      spans,
+      claims,
+      drafts: [draft],
+      reviews: reviewItems,
+      memories: memoryEngine.getMemoriesForMatter(activeMatter.id)
+    });
+    const jsonStr = JSON.stringify(bundle, null, 2);
+    downloadFile(jsonStr, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Sovereign_Bundle.proofline`, 'application/json');
+  };
+
+  const downloadFile = (content: string, filename: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleAddClaim = (claim: Claim) => {
+    setClaims(prev => [claim, ...prev]);
+  };
+
+  const handleUpdateClaim = (updated: Claim) => {
+    setClaims(prev => prev.map(c => c.id === updated.id ? updated : c));
+  };
+
+  const handleDeleteClaim = (id: string) => {
+    setClaims(prev => prev.filter(c => c.id !== id));
   };
 
   const handleUpdateDraftBlock = (blockId: string, newText: string) => {
     setDraft(prev => ({
       ...prev,
-      blocks: prev.blocks.map(b => b.id === blockId ? { ...b, text: newText } : b),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      blocks: prev.blocks.map(b => b.id === blockId ? { ...b, text: newText } : b)
     }));
   };
 
   const handleApproveBlock = (blockId: string) => {
     setDraft(prev => ({
       ...prev,
-      blocks: prev.blocks.map(b => b.id === blockId ? { ...b, reviewStatus: 'verified', reviewReason: undefined } : b),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      blocks: prev.blocks.map(b => b.id === blockId ? { ...b, reviewStatus: 'verified' } : b)
     }));
   };
 
-  const handleResolveReviewItem = (id: string, note?: string) => {
-    setReviewItems(prev => prev.map(r => r.id === id ? { ...r, status: 'resolved', resolutionNote: note } : r));
+  const handleRegenerateDraft = () => {
+    const freshDraft = generateDeterministicDraft(activeMatter, documents, spans, claims);
+    setDraft(freshDraft);
+  };
+
+  const handleResolveReviewItem = (id: string) => {
+    setReviewItems(prev => prev.map(item => item.id === id ? { ...item, status: 'resolved' } : item));
   };
 
   const handleDismissReviewItem = (id: string) => {
-    setReviewItems(prev => prev.map(r => r.id === id ? { ...r, status: 'dismissed' } : r));
+    setReviewItems(prev => prev.map(item => item.id === id ? { ...item, status: 'dismissed' } : item));
   };
 
-  const handleExportMarkdown = () => {
-    const spansById = new Map(spans.map(s => [s.id, s]));
-    const docsById = new Map(documents.map(d => [d.id, d]));
-    const md = exportDraftAsMarkdown(draft, activeMatter, spansById, docsById);
-    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${activeMatter.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-draft.md`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const spansMap = new Map(spans.map(s => [s.id, s]));
+  const { contradictions } = detectContradictions(claims, spansMap);
+  const pendingReviewCount = reviewItems.filter(i => i.status === 'pending').length;
+
+  const counts = {
+    docs: documents.length,
+    claims: claims.length,
+    conflicts: contradictions.length,
+    reviewItems: pendingReviewCount,
+    authorities: authorities.length
   };
 
   const selectedDocument = selectedSpan ? documents.find(d => d.id === selectedSpan.documentId) || null : null;
-  const contestedCount = claims.filter(c => c.status === 'contested').length;
-  const pendingReviewCount = reviewItems.filter(r => r.status === 'pending').length;
 
   return (
-    <div className="min-h-screen bg-gallery-mist flex flex-col font-sans text-ink">
-      {/* 44px Quiet Global Navigation */}
+    <div className="min-h-screen bg-gallery-paper flex flex-col font-sans text-ink antialiased">
+      {/* Universal Global Header */}
       <GlobalNav
         activeView={activeView}
-        onOpenWorkbench={() => setActiveView('workbench')}
+        onOpenWorkbench={handleLoadSampleMatter}
         onLoadSample={handleLoadSampleMatter}
         onNavigateHome={() => setActiveView('landing')}
       />
 
       {activeView === 'landing' ? (
-        <LandingPage
-          onOpenWorkbench={() => setActiveView('workbench')}
-          onLoadSample={handleLoadSampleMatter}
-        />
+        <LandingPage onOpenWorkbench={handleLoadSampleMatter} onLoadSample={handleLoadSampleMatter} />
       ) : (
-        <div className="flex-1 flex flex-col pt-[44px]">
-          {/* 64px Top Rail */}
+        <div className="flex-1 flex flex-col">
+          {/* Top Context Rail */}
           <TopRail
             matter={activeMatter}
             modelStatus={modelStatus}
-            onExport={handleExportMarkdown}
+            networkMode={networkMode}
+            isVaultLocked={isVaultLocked}
+            onToggleVaultLock={handleToggleVaultLock}
+            onChangeNetworkMode={handleChangeNetworkMode}
+            onExportMarkdown={handleExportMarkdown}
+            onExportDocx={handleExportDocx}
+            onExportBundle={handleExportBundle}
             onOpenSettings={() => setCurrentTab('settings')}
           />
 
           {/* Workbench Body */}
           <div className="flex-1 flex overflow-hidden">
-            {/* 248px Left Sidebar */}
+            {/* Left 248px Navigation Sidebar */}
             <Sidebar
               currentTab={currentTab}
               onSelectTab={setCurrentTab}
-              counts={{
-                docs: documents.length,
-                claims: claims.length,
-                conflicts: contestedCount,
-                reviewItems: pendingReviewCount,
-                authorities: authorities.length
-              }}
+              counts={counts}
               onLoadSample={handleLoadSampleMatter}
               onNewMatter={() => setIsNewMatterOpen(true)}
               matters={matters}
               activeMatterId={activeMatterId}
-              onSelectMatter={setActiveMatterId}
+              onSelectMatter={handleSelectMatter}
             />
 
-            {/* Central Evidence Canvas */}
-            <main className="flex-1 overflow-y-auto p-6 transition-all">
+            {/* Central Work Area */}
+            <main className="flex-1 overflow-y-auto bg-gallery-paper">
               {currentTab === 'overview' && (
                 <OverviewTab
                   matter={activeMatter}
@@ -264,31 +367,57 @@ export function App() {
                 />
               )}
 
+              {currentTab === 'chat' && (
+                <ChatTab
+                  matterId={activeMatterId}
+                  documents={documents}
+                  spans={spans}
+                  memoryEngine={memoryEngine}
+                  modelManager={modelManager}
+                  networkBroker={networkBroker}
+                  onSelectSpan={setSelectedSpan}
+                />
+              )}
+
+              {currentTab === 'contract' && (
+                <ContractTab
+                  matterId={activeMatterId}
+                  documents={documents}
+                />
+              )}
+
+              {currentTab === 'memory' && (
+                <MemoryTab
+                  matterId={activeMatterId}
+                  memoryEngine={memoryEngine}
+                />
+              )}
+
               {currentTab === 'sources' && (
                 <SourcesTab
                   documents={documents}
                   spans={spans}
-                  selectedSpan={selectedSpan}
                   onSelectSpan={setSelectedSpan}
-                  onAddDocument={handleAddDocument}
+                  selectedSpan={selectedSpan}
+                  onAddDocument={(doc) => setDocuments(prev => [doc, ...prev])}
                 />
               )}
 
               {currentTab === 'facts' && (
                 <FactsTab
                   claims={claims}
-                  spans={spans}
                   documents={documents}
+                  spans={spans}
                   onSelectSpan={setSelectedSpan}
-                  onUpdateClaimNotes={handleUpdateClaimNotes}
+                  onUpdateClaimNotes={(id, notes) => setClaims(prev => prev.map(c => c.id === id ? { ...c, editorNotes: notes } : c))}
                 />
               )}
 
               {currentTab === 'timeline' && (
                 <TimelineTab
                   claims={claims}
-                  spans={spans}
                   documents={documents}
+                  spans={spans}
                   onSelectSpan={setSelectedSpan}
                 />
               )}
@@ -315,7 +444,7 @@ export function App() {
                   spans={spans}
                   modelStatus={modelStatus}
                   onSelectSpan={setSelectedSpan}
-                  onRegenerateDraft={handleRegenerateDraft}
+                  onRegenerateDraft={async () => { handleRegenerateDraft(); }}
                   onUpdateDraftBlock={handleUpdateDraftBlock}
                   onApproveBlock={handleApproveBlock}
                 />
@@ -344,6 +473,51 @@ export function App() {
               document={selectedDocument}
               onClose={() => setSelectedSpan(null)}
             />
+          </div>
+        </div>
+      )}
+
+      {/* Vault Unlock Passphrase Modal */}
+      {isUnlockModalOpen && (
+        <div className="fixed inset-0 bg-ink/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
+          <div className="bg-gallery-white border border-border-hairline rounded-card p-6 w-full max-w-[420px] shadow-stage space-y-4">
+            <h3 className="text-lg font-semibold text-ink">
+              Unlock Sovereign Vault
+            </h3>
+            <p className="text-[12.5px] text-ink-slate">
+              Enter your master passphrase to derive the AES-GCM-256 decryption key and rehydrate memory records.
+            </p>
+            <form onSubmit={handleUnlockVault} className="space-y-3.5">
+              <input
+                type="password"
+                placeholder="Enter vault passphrase..."
+                value={passphraseInput}
+                onChange={(e) => setPassphraseInput(e.target.value)}
+                className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-lg px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                required
+                autoFocus
+              />
+              {unlockError && (
+                <div className="text-[12px] text-proofline-crimson font-medium">
+                  {unlockError}
+                </div>
+              )}
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsUnlockModalOpen(false)}
+                  className="text-[12px] px-3.5 py-1.5 text-ink-slate hover:text-ink font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="text-[12px] px-4 py-1.5 bg-ink hover:bg-ink/85 text-white rounded-full-pill font-medium shadow-xs"
+                >
+                  Unlock Vault
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

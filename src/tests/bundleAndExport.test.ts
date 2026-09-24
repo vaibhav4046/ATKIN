@@ -1,0 +1,104 @@
+import { describe, it, expect } from 'vitest';
+import { BundleExchange } from '../engine/collaboration/bundleExchange.ts';
+import { DocxExporter } from '../engine/export/docxExporter.ts';
+import { IcsHandler } from '../engine/calendar/icsHandler.ts';
+import { DictationParser } from '../engine/media/dictationParser.ts';
+import { 
+  SAMPLE_MATTER, 
+  SAMPLE_DOCUMENTS, 
+  SAMPLE_SPANS, 
+  SAMPLE_CLAIMS, 
+  SAMPLE_DRAFT, 
+  SAMPLE_REVIEW_ITEMS 
+} from '../db/fixtures/consumerLaptop.ts';
+
+describe('Bundle Exchange, Export, Calendar & Dictation Suite', () => {
+  it('creates an unencrypted matter bundle with verifiable SHA-256 integrity hash', async () => {
+    const bundle = await BundleExchange.createPlainBundle({
+      matter: SAMPLE_MATTER,
+      documents: SAMPLE_DOCUMENTS,
+      spans: SAMPLE_SPANS,
+      claims: SAMPLE_CLAIMS,
+      drafts: [SAMPLE_DRAFT],
+      reviews: SAMPLE_REVIEW_ITEMS,
+      memories: []
+    });
+
+    expect(bundle.manifestVersion).toBe('1.0.0');
+    expect(bundle.integritySha256).toMatch(/^[a-f0-9]{64}$/);
+    const verified = await BundleExchange.verifyBundleIntegrity(bundle);
+    expect(verified).toBe(true);
+  });
+
+  it('encrypts matter bundle with password and successfully imports after roundtrip', async () => {
+    const bundle = await BundleExchange.createPlainBundle({
+      matter: SAMPLE_MATTER,
+      documents: SAMPLE_DOCUMENTS,
+      spans: SAMPLE_SPANS,
+      claims: SAMPLE_CLAIMS,
+      drafts: [SAMPLE_DRAFT],
+      reviews: SAMPLE_REVIEW_ITEMS,
+      memories: []
+    });
+
+    const pass = 'Vault-Export-Secret-2026!';
+    const pkg = await BundleExchange.exportEncryptedPackage(bundle, pass);
+    expect(pkg.format).toBe('proofline-encrypted-bundle-v1');
+    expect(pkg.cipherTextBase64).toBeDefined();
+
+    const recovered = await BundleExchange.importEncryptedPackage(pkg, pass);
+    expect(recovered.matter.id).toBe(SAMPLE_MATTER.id);
+    expect(recovered.documents.length).toBe(SAMPLE_DOCUMENTS.length);
+  });
+
+  it('exports Markdown and Word-compatible XML with full evidential grounding', () => {
+    const md = DocxExporter.exportToMarkdown(SAMPLE_DRAFT, SAMPLE_MATTER, SAMPLE_CLAIMS);
+    expect(md).toContain(`# ${SAMPLE_DRAFT.title}`);
+    expect(md).toContain('Evidential Grounding');
+    expect(md).toContain('CRA 2015');
+
+    const docxHtml = DocxExporter.exportToWordDocument(SAMPLE_DRAFT, SAMPLE_MATTER, SAMPLE_CLAIMS);
+    expect(docxHtml).toContain('w:WordDocument');
+    expect(docxHtml).toContain('Proofline Sovereign Copilot');
+  });
+
+  it('generates and parses RFC 5545 court calendar .ics events', () => {
+    const events = [
+      {
+        id: 'court-hearing-001',
+        matterId: SAMPLE_MATTER.id,
+        title: 'County Court Preliminary Hearing',
+        description: 'Small Claims Track directions hearing before District Judge.',
+        location: 'Birmingham Civil Justice Centre, Court 4',
+        startDate: '2026-10-15T10:00:00Z',
+        endDate: '2026-10-15T11:00:00Z',
+        priority: 'HIGH' as const
+      }
+    ];
+
+    const icsText = IcsHandler.generateIcs(events);
+    expect(icsText).toContain('BEGIN:VCALENDAR');
+    expect(icsText).toContain('SUMMARY:County Court Preliminary Hearing');
+    expect(icsText).toContain('PRIORITY:1');
+
+    const parsed = IcsHandler.parseIcs(icsText, SAMPLE_MATTER.id);
+    expect(parsed.length).toBe(1);
+    expect(parsed[0].title).toBe('County Court Preliminary Hearing');
+    expect(parsed[0].priority).toBe('HIGH');
+  });
+
+  it('parses audio dictation transcript into structured attendance note', () => {
+    const rawTranscript = `[00:01:10] [Solicitor]: Met with client Eleanor Vance regarding laptop power failure.
+[00:02:40] [Client]: The machine failed completely on 12 April while writing a brief.
+[00:03:15] [Solicitor]: Action: Request independent diagnostic inspection report from Apex by Friday.
+[00:04:00] [Solicitor]: Issue: Retailer alleging liquid ingress despite no evidence.`;
+
+    const note = DictationParser.parseToAttendanceNote(SAMPLE_MATTER.id, rawTranscript);
+    expect(note.matterId).toBe(SAMPLE_MATTER.id);
+    expect(note.attendees).toContain('Solicitor');
+    expect(note.attendees).toContain('Client');
+    expect(note.actionItems.length).toBeGreaterThanOrEqual(1);
+    expect(note.keyIssues.length).toBeGreaterThanOrEqual(1);
+    expect(note.formattedNote).toContain('ATTENDANCE NOTE');
+  });
+});
