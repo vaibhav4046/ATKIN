@@ -33,8 +33,8 @@ export const GraphTab: React.FC<GraphTabProps> = ({
   onSelectSpan
 }) => {
   const [viewMode, setViewMode] = useState<'visual' | 'list' | 'impact'>('visual');
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>('claim-client-failure-date');
-  const [simulatedDocId, setSimulatedDocId] = useState<string>('doc-receipt-8492');
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(() => claims[0]?.id || documents[0]?.id || null);
+  const [simulatedDocId, setSimulatedDocId] = useState<string>(() => documents[0]?.id || '');
 
   const spansById = new Map(spans.map(s => [s.id, s]));
   const docsById = new Map(documents.map(d => [d.id, d]));

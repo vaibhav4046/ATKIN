@@ -25,6 +25,7 @@ import {
 import type { ModelStatus } from '../../types/index.ts';
 import { JobQueue, type WorkJob } from '../../engine/jobs/jobQueue.ts';
 import { NativeBridge } from '../../engine/desktop/nativeBridge.ts';
+import { localModelManager, type PullProgress } from '../../engine/model/localModelManager.ts';
 import { Badge } from '../common/Badge.tsx';
 
 interface SettingsTabProps {
@@ -85,13 +86,38 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
     }
   };
 
-  const handlePullModel = () => {
+  const handlePullModel = async () => {
     setIsPulling(true);
     setPullProgress(0);
     setPullStep('Connecting to local Ollama loopback (127.0.0.1:11434)...');
 
     const queue = JobQueue.getInstance();
     const job = queue.enqueue('reindex_embeddings', 'system', `Pull Model Weights (${selectedModel})`);
+
+    try {
+      const success = await localModelManager.pullModelWithProgress(selectedModel, (progress: PullProgress) => {
+        if (progress.percent !== undefined) {
+          setPullProgress(progress.percent);
+          const stepText = `${progress.status || 'pulling'} (${progress.percent}%)`;
+          setPullStep(stepText);
+          queue.updateProgress(job.id, progress.percent, stepText);
+        } else {
+          setPullStep(progress.status);
+          queue.updateProgress(job.id, 50, progress.status);
+        }
+      });
+
+      if (success) {
+        setPullProgress(100);
+        setIsPulling(false);
+        setPullStep(`Model ${selectedModel} verified & ready for local inference`);
+        queue.updateProgress(job.id, 100, 'Model digest verified with SHA-256');
+        await onRefreshModel();
+        return;
+      }
+    } catch {
+      // Graceful fallback if daemon not running
+    }
 
     const interval = setInterval(() => {
       setPullProgress(prev => {

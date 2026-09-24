@@ -456,6 +456,11 @@ export function App() {
               {currentTab === 'chat' && (
                 <ChatTab
                   matterId={activeMatterId}
+                  matterTitle={activeMatter.title}
+                  matterJurisdiction={activeMatter.jurisdiction}
+                  claims={claims}
+                  authorities={authorities}
+                  reviewItems={reviewItems}
                   documents={documents}
                   spans={spans}
                   memoryEngine={memoryEngine}
@@ -494,6 +499,7 @@ export function App() {
 
               {currentTab === 'facts' && (
                 <FactsTab
+                  matterId={activeMatterId}
                   claims={claims}
                   documents={documents}
                   spans={spans}
@@ -504,9 +510,11 @@ export function App() {
 
               {currentTab === 'timeline' && (
                 <TimelineTab
+                  matterId={activeMatterId}
                   claims={claims}
                   documents={documents}
                   spans={spans}
+                  reviewItems={reviewItems}
                   onSelectSpan={setSelectedSpan}
                 />
               )}

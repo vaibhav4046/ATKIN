@@ -28,4 +28,29 @@ describe('LegalSearchEngine — Real Statutory Authorities Search', () => {
     expect(cpr).toBeDefined();
     expect(cpr?.summary).toContain('Standard disclosure');
   });
+
+  it('searches European Union AI Act and GDPR', async () => {
+    const { results: aiResults } = await engine.searchAuthorities('EU AI Act Human Oversight Art. 14', 'offline');
+    expect(aiResults.length).toBeGreaterThan(0);
+    const art14 = aiResults.find(r => r.identifier.includes('Art. 14'));
+    expect(art14).toBeDefined();
+    expect(art14?.summary).toContain('High-risk AI');
+
+    const { results: gdprResults } = await engine.searchAuthorities('GDPR Art 28 Processor', 'offline');
+    expect(gdprResults.length).toBeGreaterThan(0);
+    const gdpr = gdprResults.find(r => r.identifier.includes('GDPR'));
+    expect(gdpr).toBeDefined();
+  });
+
+  it('searches Delaware corporate law and Indian electronic evidence statute', async () => {
+    const { results: deResults } = await engine.searchAuthorities('Delaware 102(b)(7) Exculpation', 'offline');
+    expect(deResults.length).toBeGreaterThan(0);
+    const dgcl = deResults.find(r => r.identifier.includes('102(b)(7)'));
+    expect(dgcl).toBeDefined();
+
+    const { results: inResults } = await engine.searchAuthorities('BSA 2023 s.63 electronic records certificate', 'offline');
+    expect(inResults.length).toBeGreaterThan(0);
+    const bsa = inResults.find(r => r.identifier.includes('BSA'));
+    expect(bsa).toBeDefined();
+  });
 });

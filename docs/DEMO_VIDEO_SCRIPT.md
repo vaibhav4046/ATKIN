@@ -20,7 +20,7 @@
    - Matter 3: *Thorne v Oakridge Estates Ltd* (Tenancy disrepair containing the Canary Secret Token).
 3. **Inference & Runtimes**:
    - Local Ollama running `gemma4:e4b` on loopback `127.0.0.1:11434` with `OLLAMA_NO_CLOUD=1`.
-   - Terminal window minimized, ready to show passing Vitest test suite (45/45 passing across 13 test suites).
+   - Terminal window minimized, ready to show passing Vitest test suite (51/51 passing across 14 test suites).
 4. **Audio**:
    - Dedicated cardioid microphone, zero room echo, no background music or distracting audio.
 
@@ -170,9 +170,9 @@
 - **2:44**: Hold on final title card with GitHub URL: `github.com/vaibhav-lalwani/proofline`.
 
 #### Spoken Voiceover (Word-for-Word):
-> *"Finally, Proofline delivers real work product: Word documents with anchored evidential footnotes, RFC 5545 court calendar files, SRA 6-minute dictation attendance notes, and encrypted matter bundles.
+> *"Finally, Proofline delivers real work product: Word documents with anchored evidential footnotes, Civil Evidence Act 1995 Section 9 certificates, RFC 5545 court calendar files, SRA 6-minute dictation attendance notes, and encrypted matter bundles.
 > 
-> Backed by 39 passing automated tests and zero cloud dependencies, Proofline restores sovereignty and verifiable truth to legal practice.
+> Backed by 51 passing automated tests across 14 test suites and zero cloud dependencies, Proofline restores sovereignty and verifiable truth to legal practice.
 > 
 > Thank you."*
 
@@ -188,8 +188,8 @@
 | **Act 4: Contract Playbooks** | 1:20 – 1:45 | 25s | 58 words | 139 WPM | Net 30 vs Net 60 & uncapped indemnity redlines |
 | **Act 5: Impact Simulator & Prep** | 1:45 – 2:10 | 25s | 57 words | 137 WPM | Graph invalidation cascade & non-coaching questions |
 | **Act 6: Edge VRAM & Offline** | 2:10 – 2:30 | 20s | 51 words | 153 WPM | RTX 3050 VRAM breakdown & deterministic core |
-| **Act 7: Exports & Test Rigor** | 2:30 – 2:45 | 15s | 41 words | 164 WPM | Word XML, RFC 5545, 39/39 passing tests |
-| **TOTAL** | **0:00 – 2:45** | **165s** | **389 words** | **~137 WPM** | **Clean, measured delivery matching video runtime** |
+| **Act 7: Exports & Test Rigor** | 2:30 – 2:45 | 15s | 46 words | 164 WPM | Word XML, CEA 1995 s.9, RFC 5545, 51/51 passing tests |
+| **TOTAL** | **0:00 – 2:45** | **165s** | **394 words** | **~137 WPM** | **Clean, measured delivery matching video runtime** |
 
 ---
 
@@ -199,4 +199,4 @@
 2. **Cursor Discipline**: Do not circle the mouse erratically. Move the cursor directly to the target button, pause for 0.5 seconds, click, and allow the UI state transition to complete smoothly.
 3. **Screen Scaling**: Ensure desktop scaling is set to 100% or 125% so that the typography in the 28px rounded cards and text offset pills is pin-sharp on 1080p video players.
 4. **Export Inspection**: When demonstrating the Word XML and `.ics` calendar exports, open the generated `.ics` file briefly in a text editor or calendar app to prove compliance with RFC 5545.
-5. **Terminal Confirmation**: Ensure the `npm test` output showing 39 passing tests is zoomed in clearly in the terminal at 2:36.
+5. **Terminal Confirmation**: Ensure the `npm test` output showing 51 passing tests is zoomed in clearly in the terminal at 2:36.

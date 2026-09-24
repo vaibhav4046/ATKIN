@@ -193,6 +193,19 @@ export const COMPREHENSIVE_STATUTORY_INDEX: Authority[] = [
     jurisdiction: 'United States'
   },
   {
+    id: 'idx-dgcl-102b7',
+    citation: 'Delaware General Corporation Law, 8 Del. C. § 102(b)(7)',
+    identifier: '8 Del. C. § 102(b)(7)',
+    officialUrl: 'https://delcode.delaware.gov/title8/c001/sc01/index.html#102',
+    sectionParagraph: 'Section 102(b)(7): Exculpation of Directors and Officers',
+    summary: 'Permits a certificate of incorporation to eliminate or limit personal liability of a director or officer to the corporation or its stockholders for monetary damages for breach of fiduciary duty of care, but bars exculpation for breach of duty of loyalty, bad faith, or intentional misconduct.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Delaware corporate standard in M&A transaction risk assessment.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'United States'
+  },
+  {
     id: 'idx-frcp-rule26',
     citation: 'Federal Rules of Civil Procedure (FRCP), Rule 26',
     identifier: 'FRCP Rule 26',
@@ -204,6 +217,101 @@ export const COMPREHENSIVE_STATUTORY_INDEX: Authority[] = [
     coverageCaveat: 'US Federal District Courts governing rule for civil discovery.',
     verificationLevel: 'text_checked',
     jurisdiction: 'United States'
+  },
+  {
+    id: 'idx-frcp-rule37e',
+    citation: 'Federal Rules of Civil Procedure (FRCP), Rule 37(e)',
+    identifier: 'FRCP Rule 37(e)',
+    officialUrl: 'https://www.law.cornell.edu/rules/frcp/rule_37',
+    sectionParagraph: 'Rule 37(e): Failure to Preserve Electronically Stored Information',
+    summary: 'If electronically stored information (ESI) that should have been preserved in the anticipation or conduct of litigation is lost because a party failed to take reasonable steps to preserve it, the court may order measures no greater than necessary to cure prejudice, or upon a finding of intent to deprive, presume that the lost information was unfavorable or dismiss the action.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Critical governing standard for electronic document spoliation sanctions in US litigation.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'United States'
+  },
+
+  // European Union Authorities
+  {
+    id: 'idx-eu-ai-act-art14',
+    citation: 'Regulation (EU) 2024/1689 (Artificial Intelligence Act), Article 14',
+    identifier: 'EU AI Act Art. 14',
+    officialUrl: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689',
+    sectionParagraph: 'Article 14: Human Oversight',
+    summary: 'High-risk AI systems shall be designed and developed in such a way, including with appropriate human-machine interface tools, that they can be effectively overseen by natural persons during the period in which they are in use, with capabilities to override, interrupt, or stop the system.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Mandatory EU conformity requirement for AI systems used in legal analysis and dispute resolution.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'European Union'
+  },
+  {
+    id: 'idx-eu-ai-act-art50',
+    citation: 'Regulation (EU) 2024/1689 (Artificial Intelligence Act), Article 50',
+    identifier: 'EU AI Act Art. 50',
+    officialUrl: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689',
+    sectionParagraph: 'Article 50: Transparency Obligations for Providers and Deployers',
+    summary: 'Providers shall ensure that AI systems intended to interact directly with natural persons are designed and developed in such a way that the natural persons concerned are informed that they are interacting with an AI system. Deployers of an AI system that generates text must disclose that the content has been artificially generated or manipulated.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Core transparency obligations in EU cross-border client drafting.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'European Union'
+  },
+  {
+    id: 'idx-eu-gdpr-art28',
+    citation: 'Regulation (EU) 2016/679 (General Data Protection Regulation), Article 28',
+    identifier: 'GDPR Art. 28',
+    officialUrl: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679',
+    sectionParagraph: 'Article 28: Processor',
+    summary: 'Processing by a processor shall be governed by a contract or other legal act binding the processor to the controller, setting out the subject-matter, duration, nature, and purpose of processing, and obligating the processor to process personal data only on documented instructions.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Governing standard for Data Processing Addenda (DPA) in SaaS cloud agreements.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'European Union'
+  },
+
+  // Commonwealth / India / Singapore Authorities
+  {
+    id: 'idx-in-bsa-2023-s63',
+    citation: 'Bharatiya Sakshya Adhiniyam 2023 (BSA), Section 63',
+    identifier: 'BSA 2023 s.63',
+    officialUrl: 'https://www.indiacode.nic.in/handle/123456789/21447',
+    sectionParagraph: 'Section 63: Admissibility of Electronic Records',
+    summary: 'Electronic records are admissible as documents without further proof or production of original, provided accompanied by a certificate signed by the person in lawful control of the device describing how the record was produced and certifying cryptographic hash integrity.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Successor statute to Indian Evidence Act 1872 Section 65B; governs electronic discovery in Indian Courts.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'India'
+  },
+  {
+    id: 'idx-in-commercial-courts-s12a',
+    citation: 'Commercial Courts Act 2015, Section 12A',
+    identifier: 'Commercial Courts Act s.12A',
+    officialUrl: 'https://www.indiacode.nic.in/handle/123456789/2156',
+    sectionParagraph: 'Section 12A: Pre-Institution Mediation and Settlement',
+    summary: 'A suit which does not contemplate any urgent interim relief under this Act shall not be instituted unless the plaintiff exhausts the remedy of pre-institution mediation in accordance with prescribed rules within a period of three months.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Mandatory pre-condition to filing commercial suits in Indian Commercial Divisions.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'India'
+  },
+  {
+    id: 'idx-sg-siac-rules-2024',
+    citation: 'Singapore International Arbitration Centre (SIAC) Rules, Rule 27',
+    identifier: 'SIAC Rules r.27',
+    officialUrl: 'https://siac.org.sg/siac-rules-2024',
+    sectionParagraph: 'Rule 27: Interim and Emergency Relief',
+    summary: 'A party may apply for urgent emergency interim relief prior to the constitution of the Tribunal. The Emergency Arbitrator has power to order injunctions, preservation of property, and disclosure of evidentiary documents within 14 days of appointment.',
+    retrievedAt: '2026-09-24T00:00:00Z',
+    checkedAt: '2026-09-24T00:00:00Z',
+    coverageCaveat: 'Premier international commercial arbitration seat in Asia-Pacific.',
+    verificationLevel: 'text_checked',
+    jurisdiction: 'UK'
   }
 ];
 

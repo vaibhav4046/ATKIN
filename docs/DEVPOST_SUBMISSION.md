@@ -42,7 +42,10 @@ Proofline solves these systemic failures through a **neuro-symbolic, local-first
 
 ### 2. Technical Execution & Functionality (25%)
 - **Dual-Layer Architecture**: Built on **Tauri 2 (Rust core)** for sovereign desktop execution with typed IPC commands (`vault_unlock`, `network_set_mode`, `memory_query`), accompanied by an isomorphic **React 18 / TypeScript / WebCrypto / Dexie IndexedDB** engine for zero-install browser evaluation.
-- **45/45 Automated Tests Passing**: Comprehensive test coverage across 13 test suites executing in <1.6s via Vitest, validating PBKDF2/AES-GCM-256 roundtrips, canary memory isolation, network broker interception, real-time evidential ingestion, live statutory search, contract clause parsing, and prompt injection defense.
+- **51/51 Automated Tests Passing**: Comprehensive test coverage across 14 test suites executing in ~2.0s via Vitest, validating PBKDF2/AES-GCM-256 roundtrips, canary memory isolation, network broker interception, real-time evidential ingestion, multi-jurisdiction primary statutory search, contract clause parsing, IRAC legal reasoning, and prompt injection defense.
+- **5-Stage IRAC Legal Reasoning Engine**: Deterministic sovereign analytical engine breaking queries into (1) Issue Framing, (2) Applicable Statutory Rules & Precedents, (3) Strict Grounded Evidential Application, (4) Adverse Evidence & Defect Scrutiny, and (5) Actionable Strategic Advice.
+- **Court Admissibility & Section 9 Certification**: Exports formal **Civil Evidence Act 1995 Section 9 Certificates of Authenticity & Statements of Truth** for court bundles, certifying computing integrity and SHA-256 manifest validity.
+- **Multi-Jurisdiction Legal Depth**: Primary authority index covering UK (CPR, UCTA, CRA, Housing Act, PACE), US (Delaware DGCL § 102(b)(7), FRCP Rule 37(e)), EU (AI Act Arts 14 & 50, GDPR Arts 28 & 82), India (BSA 2023 s.61/63 electronic evidence, Commercial Courts Act s.12A), and Singapore (SIAC Rule 27).
 - **Real-Time Evidential Ingestion Engine**: Ingests ANY real legal document (.txt, .md, .eml, .json, or raw pasted text), computes WebCrypto SHA-256 digests, segments sentence spans with line coordinates, extracts factual assertions, and automatically detects cross-document contradictions in real time.
 - **Exact Span Grounding**: Text extraction maps assertions to immutable `[startOffset, endOffset]` byte coordinates and line numbers, verified against SHA-256 document digests.
 - **Deterministic Offline Fallback**: When Ollama is offline or uninstalled, Proofline operates with 100% functionality via deterministic propositional logic—never fabricating responses or failing silently.
@@ -112,7 +115,7 @@ Proofline's engineering specifically answers the real-world concerns of the dist
 - **For Helly Patel & Chandra Bhushan Verma (Microsoft Engineers)**:
   - *Native Systems Engineering*: Tauri 2 multi-process architecture with native Rust IPC commands and cross-platform WebCrypto fallback.
   - *Enterprise Open Standards*: RFC 5545 `.ics` court calendars, RFC 822 `.eml` email ingestion, Microsoft Word XML (`.doc`) with anchored footnotes, and bidirectional Obsidian markdown (`[[wikilinks]]`).
-  - *Robust Testing Rigor*: 39 passing unit and integration tests executing in <1.5s with zero mocking of core cryptographic and propositional logic.
+  - *Robust Testing Rigor*: 51 passing unit and integration tests executing in ~2.0s with zero mocking of core cryptographic and propositional logic.
 
 ---
 
@@ -277,21 +280,24 @@ Proofline strictly rejects "hallucinated testing" or decorative status indicator
 ```
  RUN  v3.2.7 C:/Users/lalwa/.gemini/antigravity/scratch/proofline
 
+ ✓ src/tests/legalSearchEngine.test.ts (5 tests) 4ms
  ✓ src/tests/jobQueue.test.ts (4 tests) 7ms
- ✓ src/tests/rightsGate.test.ts (3 tests) 5ms
- ✓ src/tests/contradiction.test.ts (1 test) 4ms
- ✓ src/tests/verification.test.ts (4 tests) 4ms
+ ✓ src/tests/contractReview.test.ts (7 tests) 10ms
  ✓ src/tests/injection.test.ts (3 tests) 4ms
- ✓ src/tests/contractReview.test.ts (7 tests) 9ms
- ✓ src/tests/networkBroker.test.ts (3 tests) 12ms
+ ✓ src/tests/verification.test.ts (4 tests) 4ms
+ ✓ src/tests/networkBroker.test.ts (3 tests) 41ms
+ ✓ src/tests/matterAnalyzer.test.ts (3 tests) 43ms
+ ✓ src/tests/memoryIsolation.test.ts (4 tests) 4ms
  ✓ src/tests/notebookExport.test.ts (1 test) 5ms
- ✓ src/tests/memoryIsolation.test.ts (4 tests) 5ms
- ✓ src/tests/bundleAndExport.test.ts (5 tests) 90ms
- ✓ src/tests/vault.test.ts (4 tests) 214ms
+ ✓ src/tests/vault.test.ts (4 tests) 264ms
+ ✓ src/tests/rightsGate.test.ts (3 tests) 4ms
+ ✓ src/tests/contradiction.test.ts (1 test) 4ms
+ ✓ src/tests/legalReasoningEngine.test.ts (4 tests) 5ms
+ ✓ src/tests/bundleAndExport.test.ts (5 tests) 801ms
 
- Test Files  11 passed (11)
-      Tests  39 passed (39)
-   Duration  1.48s
+ Test Files  14 passed (14)
+      Tests  51 passed (51)
+   Duration  2.07s
 ```
 
 ### Verified Test Invariants:

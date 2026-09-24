@@ -20,6 +20,7 @@ import type { Claim, Span, Document, ClaimKind, ClaimStatus } from '../../types/
 import { Badge } from '../common/Badge.tsx';
 
 interface FactsTabProps {
+  matterId?: string;
   claims: Claim[];
   spans: Span[];
   documents: Document[];
@@ -28,6 +29,7 @@ interface FactsTabProps {
 }
 
 export const FactsTab: React.FC<FactsTabProps> = ({
+  matterId = '',
   claims,
   spans,
   documents,
@@ -40,37 +42,132 @@ export const FactsTab: React.FC<FactsTabProps> = ({
   const [editingClaimId, setEditingClaimId] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
 
-  // Case prep checklist state
-  const [checklist, setChecklist] = useState<Array<{ id: string; title: string; category: string; status: 'verified' | 'pending'; source: string }>>([
-    { id: 'chk-1', title: 'VAT Purchase Invoice INV-8492', category: 'Document', status: 'verified', source: 'doc-receipt-8492' },
-    { id: 'chk-2', title: 'Carrier Delivery Confirmation (18 Jan 2026)', category: 'Document', status: 'verified', source: 'doc-receipt-8492' },
-    { id: 'chk-3', title: 'Telephony Support Call Audio / Transcript (#CALL-4491)', category: 'Outstanding Evidence', status: 'pending', source: 'Zenith CRM Request' },
-    { id: 'chk-4', title: 'Apex Diagnostic Engineering Inspection Report', category: 'Technical Report', status: 'verified', source: 'doc-service-report' },
-    { id: 'chk-5', title: 'Written Rejection Notice under CRA 2015 s.20', category: 'Pleading', status: 'pending', source: 'Letter Before Claim Draft' },
-    { id: 'chk-6', title: 'Bank Account Statement proving Debit Card Payment (£1,499.00)', category: 'Finance', status: 'verified', source: 'Client Records' }
-  ]);
+  // Dynamically compute case prep checklist based on active matter
+  const isBates = matterId === 'matter-bates-postoffice-2019' || claims.some(c => c.id.includes('bates'));
+  const isNova = matterId === 'matter-novacorp-meridian-2026' || claims.some(c => c.id.includes('msa'));
+  const isThorne = matterId === 'matter-thorne-tenancy-2026' || claims.some(c => c.id.includes('tenancy'));
 
-  // Client / Witness inquiries state
-  const witnessQuestions = [
-    {
-      id: 'q-1',
-      question: 'Between 8 April and 12 April 2026, did you use the laptop for daily work or leave it powered off?',
-      purpose: 'Reconcile adverse telephony log date against recollection of final failure',
-      source: 'Contradiction: Defect Onset Date (8 Apr vs 12 Apr)'
-    },
-    {
-      id: 'q-2',
-      question: 'Did the merchant support agent explicitly inform you that the manufacturer 1-year guarantee superseded your statutory rights?',
-      purpose: 'Establish potential Consumer Protection from Unfair Trading breach under CPR 2008',
-      source: 'Merchant Rejection Email (22 Apr 2026)'
-    },
-    {
-      id: 'q-3',
-      question: 'Was the £120 diagnostic inspection fee paid under express protest or reservation of rights?',
-      purpose: 'Support restitutionary claim for diagnostic expense under CRA 2015 s.23(2)',
-      source: 'Apex Service Invoice'
+  const initialChecklist = React.useMemo(() => {
+    if (isBates) {
+      return [
+        { id: 'chk-b-1', title: 'Standard Subpostmaster Contract (SPMC) Clause 12 text', category: 'Document', status: 'verified' as const, source: 'doc-bates-03' },
+        { id: 'chk-b-2', title: 'Fujitsu Episteme Problem Investigation Report (PIN-188)', category: 'Technical Report', status: 'verified' as const, source: 'doc-bates-02' },
+        { id: 'chk-b-3', title: 'Post Office Security Division Policy Directive Memo (2010)', category: 'Document', status: 'verified' as const, source: 'doc-bates-04' },
+        { id: 'chk-b-4', title: 'High Court Judgment (No. 6) Horizon Issues [2019] EWHC 3408', category: 'Pleading', status: 'verified' as const, source: 'doc-bates-01' },
+        { id: 'chk-b-5', title: 'Fujitsu Bracknell SSC Remote SQL Journal Modification Audit Logs', category: 'Outstanding Evidence', status: 'pending' as const, source: 'Fujitsu GLO Discovery' },
+        { id: 'chk-b-6', title: 'Subpostmaster Branch Cash Shortfall Accounting Ledgers', category: 'Finance', status: 'verified' as const, source: 'Client Branch Records' }
+      ];
     }
-  ];
+    if (isNova) {
+      return [
+        { id: 'chk-n-1', title: 'Master Cloud Services Agreement (Executed Copy)', category: 'Document', status: 'verified' as const, source: 'doc-msa-meridian-001' },
+        { id: 'chk-n-2', title: 'Schedule B Order Form & Payment Schedule', category: 'Document', status: 'verified' as const, source: 'doc-msa-meridian-001' },
+        { id: 'chk-n-3', title: 'Provider Monthly Invoices INV-2026-01 through 03', category: 'Finance', status: 'verified' as const, source: 'Billing Department' },
+        { id: 'chk-n-4', title: 'Written Discrepancy Notice regarding Net 60 Terms', category: 'Pleading', status: 'pending' as const, source: 'Legal Notice Draft' }
+      ];
+    }
+    if (isThorne) {
+      return [
+        { id: 'chk-t-1', title: 'Assured Shorthold Tenancy Agreement (Flat 4B)', category: 'Document', status: 'verified' as const, source: 'Tenancy Agreement' },
+        { id: 'chk-t-2', title: 'Tenancy Deposit Bank Transfer Receipt (£1,650)', category: 'Finance', status: 'verified' as const, source: 'Bank Statement' },
+        { id: 'chk-t-3', title: 'Tenancy Deposit Scheme Search Certificate (No Scheme Protection)', category: 'Outstanding Evidence', status: 'verified' as const, source: 'TDS Registry' },
+        { id: 'chk-t-4', title: 'MRICS Chartered Surveyor Damp & Mould Inspection Report', category: 'Technical Report', status: 'verified' as const, source: 'Survey Report' },
+        { id: 'chk-t-5', title: 'Managing Agent Written Refusal of Remedial Works', category: 'Document', status: 'verified' as const, source: 'Agent Emails' }
+      ];
+    }
+    return [
+      { id: 'chk-1', title: 'VAT Purchase Invoice INV-8492', category: 'Document', status: 'verified' as const, source: 'doc-receipt-8492' },
+      { id: 'chk-2', title: 'Carrier Delivery Confirmation (18 Jan 2026)', category: 'Document', status: 'verified' as const, source: 'doc-receipt-8492' },
+      { id: 'chk-3', title: 'Telephony Support Call Audio / Transcript (#CALL-4491)', category: 'Outstanding Evidence', status: 'pending' as const, source: 'Zenith CRM Request' },
+      { id: 'chk-4', title: 'Apex Diagnostic Engineering Inspection Report', category: 'Technical Report', status: 'verified' as const, source: 'doc-service-report' },
+      { id: 'chk-5', title: 'Written Rejection Notice under CRA 2015 s.20', category: 'Pleading', status: 'pending' as const, source: 'Letter Before Claim Draft' },
+      { id: 'chk-6', title: 'Bank Account Statement proving Debit Card Payment (£1,499.00)', category: 'Finance', status: 'verified' as const, source: 'Client Records' }
+    ];
+  }, [isBates, isNova, isThorne]);
+
+  const [checklist, setChecklist] = useState(initialChecklist);
+
+  React.useEffect(() => {
+    setChecklist(initialChecklist);
+  }, [initialChecklist]);
+
+  // Client / Witness inquiries state (SRA Non-Coaching Compliant)
+  const witnessQuestions = React.useMemo(() => {
+    if (isBates) {
+      return [
+        {
+          id: 'q-b-1',
+          question: 'Did Post Office auditors or helpline staff ever inform you that Fujitsu personnel could remotely adjust branch Riposte balances from Bracknell?',
+          purpose: 'Rebut presumption of mechanical computer reliability under Police and Criminal Evidence Act 1984 s.69',
+          source: 'Bates v Post Office [2019] EWHC 3408 § 134'
+        },
+        {
+          id: 'q-b-2',
+          question: 'When you contacted the Horizon helpline regarding unexplained cash discrepancies, were you told that no other branch had reported similar deficits?',
+          purpose: 'Establish institutional bad faith and deceptive inducement under Yam Seng [2013] EWHC 111',
+          source: 'Post Office Security Division Policy Directive Memo 2010'
+        },
+        {
+          id: 'q-b-3',
+          question: 'Did you personally authorize any adjusting journal entries that appeared on your balancing statements without local counter receipts?',
+          purpose: 'Prove lack of consent and invalidity of strict indemnity under UCTA 1977 s.3/s.11',
+          source: 'Fujitsu Episteme PIN-188 Audit Report'
+        }
+      ];
+    }
+    if (isNova) {
+      return [
+        {
+          id: 'q-n-1',
+          question: 'During contract negotiations, did Provider represent that Schedule B payment terms (Net 60) governed invoicing for compute services?',
+          purpose: 'Resolve ambiguity between Section 4.2 and Schedule B in favor of Customer',
+          source: 'MSA Section 4.2 vs Schedule B'
+        },
+        {
+          id: 'q-n-2',
+          question: 'Did Provider ever accept payment on 60-day terms without reservation or notice of breach?',
+          purpose: 'Establish course of dealing and waiver of strict Net 30 enforcement',
+          source: 'Invoicing History INV-2026'
+        }
+      ];
+    }
+    if (isThorne) {
+      return [
+        {
+          id: 'q-t-1',
+          question: 'On what specific dates did you communicate penetrating damp and mould issues to the landlord or managing agent?',
+          purpose: 'Establish landlord notice and breach period under Landlord and Tenant Act 1985 s.11',
+          source: 'Client Disrepair Log'
+        },
+        {
+          id: 'q-t-2',
+          question: 'Were you ever served with prescribed deposit information or scheme leaflets within 30 days of paying the deposit?',
+          purpose: 'Confirm statutory penalty entitlement under Housing Act 2004 s.214(4)',
+          source: 'TDS Verification Certificate'
+        }
+      ];
+    }
+    return [
+      {
+        id: 'q-1',
+        question: 'Between 8 April and 12 April 2026, did you use the laptop for daily work or leave it powered off?',
+        purpose: 'Reconcile adverse telephony log date against recollection of final failure',
+        source: 'Contradiction: Defect Onset Date (8 Apr vs 12 Apr)'
+      },
+      {
+        id: 'q-2',
+        question: 'Did the merchant support agent explicitly inform you that the manufacturer 1-year guarantee superseded your statutory rights?',
+        purpose: 'Establish potential Consumer Protection from Unfair Trading breach under CPR 2008',
+        source: 'Merchant Rejection Email (22 Apr 2026)'
+      },
+      {
+        id: 'q-3',
+        question: 'Was the £120 diagnostic inspection fee paid under express protest or reservation of rights?',
+        purpose: 'Support restitutionary claim for diagnostic expense under CRA 2015 s.23(2)',
+        source: 'Apex Service Invoice'
+      }
+    ];
+  }, [isBates, isNova, isThorne]);
 
   const spansById = new Map(spans.map(s => [s.id, s]));
   const docsById = new Map(documents.map(d => [d.id, d]));

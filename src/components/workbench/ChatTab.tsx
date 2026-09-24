@@ -32,7 +32,10 @@ import type {
   Document, 
   Span, 
   MemoryRecord,
-  AgenticTraceStep 
+  AgenticTraceStep,
+  Claim,
+  Authority,
+  ReviewItem
 } from '../../types/index.ts';
 import { ChatEngine } from '../../engine/chat/chatEngine.ts';
 import { MemoryEngine } from '../../engine/memory/memoryEngine.ts';
@@ -43,8 +46,13 @@ import { Badge } from '../common/Badge.tsx';
 
 interface ChatTabProps {
   matterId: string;
+  matterTitle?: string;
+  matterJurisdiction?: string;
   documents: Document[];
   spans: Span[];
+  claims?: Claim[];
+  authorities?: Authority[];
+  reviewItems?: ReviewItem[];
   memoryEngine: MemoryEngine;
   modelManager: LocalModelManager;
   networkBroker: NetworkBroker;
@@ -55,8 +63,13 @@ const chatEngine = new ChatEngine();
 
 export const ChatTab: React.FC<ChatTabProps> = ({
   matterId,
+  matterTitle,
+  matterJurisdiction,
   documents,
   spans,
+  claims = [],
+  authorities = [],
+  reviewItems = [],
   memoryEngine,
   modelManager,
   networkBroker,
@@ -102,9 +115,11 @@ export const ChatTab: React.FC<ChatTabProps> = ({
 
   const categorizedPrompts = {
     litigation: [
+      { label: 'Bates v Post Office Horizon Defect (PIN-188)', query: 'Analyze Fujitsu Problem Report PIN-188 and Post Office Clause 12 under UCTA 1977 s.3 and s.11 reasonableness.' },
+      { label: 'Cross-Examine Error Log Suppression', query: 'Evaluate Fujitsu PIN-188 discrepancy with Post Office witness statements claiming Horizon system integrity under CPR 1998.' },
       { label: 'Check 30-Day CRA 2015 Rejection Right', query: 'Does the claimant still have a short-term right to reject under Consumer Rights Act 2015 s.20 and s.22?' },
       { label: 'Draft CPR Annex B Letter of Claim', query: 'Draft a compliant Pre-Action Letter of Claim pursuant to CPR Practice Direction Annex B.' },
-      { label: 'Find Factual Contradictions in Evidence', query: 'Find all factual contradictions between seller communications and independent diagnostic findings.' },
+      { label: 'Find Factual Contradictions in Evidence', query: 'Find all factual contradictions between witness assertions and diagnostic findings.' },
       { label: 'Prepare Non-Coaching Witness Questions', query: 'Formulate open-ended, non-leading witness inquiries compliant with SRA non-coaching rules.' }
     ],
     contracts: [
@@ -135,8 +150,13 @@ export const ChatTab: React.FC<ChatTabProps> = ({
       await chatEngine.processUserQuery(
         {
           matterId,
+          matterTitle,
+          matterJurisdiction,
           documents,
           spans,
+          claims,
+          authorities,
+          reviewItems,
           memoryEngine,
           modelManager,
           networkBroker
@@ -216,7 +236,9 @@ export const ChatTab: React.FC<ChatTabProps> = ({
     setIsDictating(true);
     setTimeout(() => {
       let dictated = '';
-      if (matterId.includes('contract') || matterId.includes('novacorp')) {
+      if (matterId.includes('bates')) {
+        dictated = 'Attendance note with Alan Bates: Fujitsu PIN-188 engineering reports confirm remote accounting adjustments and Bug 188 duplication; Post Office Clause 12 fails reasonableness under UCTA 1977 s.3 and s.11.';
+      } else if (matterId.includes('contract') || matterId.includes('novacorp')) {
         dictated = 'Attendance note with General Counsel: Review Clause 8.1 uncapped customer indemnity against UK SaaS playbook standard and propose bilateral cap tied to 12 months fees.';
       } else if (matterId.includes('tenancy') || matterId.includes('thorne')) {
         dictated = 'Conference with tenant Thorne: Housing Act 2004 s.213 deposit was never protected in government tenancy deposit scheme; Section 21 notice is therefore invalid under Deregulation Act 2015.';
@@ -240,7 +262,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[13px] font-semibold text-ink">ChatGPT for Lawyers &bull; Sovereign Workspace</span>
+                <span className="text-[13px] font-semibold text-ink">Proofline Sovereign Counsel &bull; Evidential Workspace</span>
                 <span className="text-[10.5px] font-mono px-1.5 py-0.2 rounded bg-gallery-mist text-ink-slate">Gemma 4 Local</span>
               </div>
             </div>
