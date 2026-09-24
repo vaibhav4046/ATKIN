@@ -64,6 +64,8 @@ import { LocalModelManager } from './engine/model/localModelManager.ts';
 import { vaultService } from './engine/vault/vaultService.ts';
 import { DocxExporter } from './engine/export/docxExporter.ts';
 import { BundleExchange } from './engine/collaboration/bundleExchange.ts';
+import { NotebookExporter } from './engine/export/notebookExporter.ts';
+import { IcsHandler, type CalendarEvent } from './engine/calendar/icsHandler.ts';
 
 // Singletons for sovereign runtime
 const memoryEngine = new MemoryEngine();
@@ -245,6 +247,45 @@ export function App() {
     downloadFile(jsonStr, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Sovereign_Bundle.proofline`, 'application/json');
   };
 
+  const handleExportNotebook = () => {
+    const spanMap = new Map(spans.map(s => [s.id, s]));
+    const { contradictions } = detectContradictions(claims, spanMap);
+    const files = NotebookExporter.generateObsidianVault(
+      activeMatter,
+      documents,
+      claims,
+      contradictions,
+      authorities,
+      [draft]
+    );
+    let fullNotebook = `# Proofline Knowledge Notebook: ${activeMatter.title}\n\n`;
+    for (const f of files) {
+      fullNotebook += `\n<!-- ========================================== -->\n`;
+      fullNotebook += `<!-- FILE: ${f.relativePath} -->\n`;
+      fullNotebook += `<!-- ========================================== -->\n\n`;
+      fullNotebook += f.content;
+    }
+    downloadFile(fullNotebook, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Obsidian_Notebook.md`, 'text/markdown');
+  };
+
+  const handleExportCalendar = () => {
+    const events: CalendarEvent[] = [
+      {
+        id: `evt-${activeMatter.id}-1`,
+        matterId: activeMatter.id,
+        title: `Court Deadline: Letter Before Claim Expiry (${activeMatter.title})`,
+        description: `14-day statutory response window for ${activeMatter.title} expires pursuant to CPR Pre-Action Protocol.`,
+        startDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000 + 3600000).toISOString(),
+        location: 'County Court Money Claims Centre',
+        priority: 'HIGH',
+        category: 'statutory_deadline'
+      }
+    ];
+    const icsContent = IcsHandler.generateIcs(events);
+    downloadFile(icsContent, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Court_Deadlines.ics`, 'text/calendar');
+  };
+
   const downloadFile = (content: string, filename: string, mime: string) => {
     const blob = new Blob([content], { type: mime });
     const url = URL.createObjectURL(blob);
@@ -337,6 +378,8 @@ export function App() {
             onExportMarkdown={handleExportMarkdown}
             onExportDocx={handleExportDocx}
             onExportBundle={handleExportBundle}
+            onExportNotebook={handleExportNotebook}
+            onExportCalendar={handleExportCalendar}
             onOpenSettings={() => setCurrentTab('settings')}
           />
 
@@ -433,7 +476,11 @@ export function App() {
               )}
 
               {currentTab === 'research' && (
-                <ResearchTab authorities={authorities} />
+                <ResearchTab 
+                  authorities={authorities}
+                  networkMode={networkMode}
+                  onAddAuthority={(newAuth) => setAuthorities(prev => [newAuth, ...prev])}
+                />
               )}
 
               {currentTab === 'draft' && (
@@ -463,6 +510,9 @@ export function App() {
                 <SettingsTab
                   modelStatus={modelStatus}
                   onRefreshModel={handleRefreshModel}
+                  isVaultLocked={isVaultLocked}
+                  onToggleVaultLock={handleToggleVaultLock}
+                  onExportVaultBackup={handleExportBundle}
                 />
               )}
             </main>

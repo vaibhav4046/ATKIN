@@ -1,0 +1,31 @@
+[package]
+name = "proofline"
+version = "1.0.0"
+description = "Proofline — Sovereign Legal Copilot & Evidential Workbench"
+authors = ["Vaibhav Lalwani <v.lalwani@liverpool.ac.uk>"]
+edition = "2021"
+license = "Apache-2.0"
+
+[lib]
+name = "proofline_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0", features = ["tray-icon"] }
+tauri-plugin-shell = "2.0.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.38", features = ["full"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+aes-gcm = "0.10"
+pbkdf2 = { version = "0.12", features = ["simple"] }
+sha2 = "0.10"
+rand = "0.8"
+zeroize = { version = "1.8", features = ["zeroize_derive"] }
+reqwest = { version = "0.12", features = ["json", "stream"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1.0"
+dirs = "5.0"

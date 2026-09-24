@@ -10,7 +10,9 @@ import {
   SlidersHorizontal,
   ChevronDown,
   FileText,
-  Package
+  Package,
+  Calendar,
+  BookOpen
 } from 'lucide-react';
 import type { Matter, ModelStatus, NetworkMode } from '../../types/index.ts';
 import { Badge } from '../common/Badge.tsx';
@@ -25,6 +27,8 @@ interface TopRailProps {
   onExportMarkdown: () => void;
   onExportDocx: () => void;
   onExportBundle: () => void;
+  onExportNotebook: () => void;
+  onExportCalendar: () => void;
   onOpenSettings: () => void;
 }
 
@@ -38,6 +42,8 @@ export const TopRail: React.FC<TopRailProps> = ({
   onExportMarkdown,
   onExportDocx,
   onExportBundle,
+  onExportNotebook,
+  onExportCalendar,
   onOpenSettings
 }) => {
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
@@ -204,6 +210,20 @@ export const TopRail: React.FC<TopRailProps> = ({
               >
                 <Package className="w-3.5 h-3.5 text-proofline-green" />
                 <span>Encrypted Bundle (.proofline)</span>
+              </button>
+              <button
+                onClick={() => { onExportNotebook(); setIsExportMenuOpen(false); }}
+                className="w-full px-3 py-2 text-left hover:bg-gallery-mist flex items-center gap-2 text-ink"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-proofline-blue" />
+                <span>Knowledge Notebook (.md)</span>
+              </button>
+              <button
+                onClick={() => { onExportCalendar(); setIsExportMenuOpen(false); }}
+                className="w-full px-3 py-2 text-left hover:bg-gallery-mist flex items-center gap-2 text-ink"
+              >
+                <Calendar className="w-3.5 h-3.5 text-proofline-ochre" />
+                <span>Court Deadlines (.ics)</span>
               </button>
             </div>
           )}
