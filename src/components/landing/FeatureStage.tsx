@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { 
   FileText, 
-  AlertTriangle, 
   CheckCircle2, 
   ArrowRight,
   ShieldCheck,
-  FileCheck,
   Scale,
-  Binary,
   Hash
 } from 'lucide-react';
 import { Badge } from '../common/Badge.tsx';
@@ -22,48 +19,48 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
   const matterCases = {
     bates: {
       title: 'Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB)',
-      jurisdiction: 'England & Wales · High Court Queen\'s Bench Division',
-      statutoryRef: 'Civil Procedure Rules (CPR Part 31) · UCTA 1977 s.3 & s.11',
-      sourceDocName: 'FUJITSU_HORIZON_PIN188_BUG_REPORT.txt',
-      sourceDocDate: '14 Nov 2000',
-      sourceDocSha: 'e9b21f8a84cd3050123984fa0c8b',
-      excerptLine: 'Line 28: "Problem Incident PIN-188: System auto-generated £4,180 discrepancy in balancing screen. Bug 188 confirmed remote accounting alteration by Bracknell engineers without subpostmaster consent."',
-      clientDocName: 'POST_OFFICE_WITNESS_STATEMENT_PERKINS.txt',
-      clientDocDate: '12 Feb 2017',
-      clientDocSha: 'd41d8cd98f00b204e9800998ecf8',
-      clientExcerptLine: 'Line 14: "Horizon is robust and incapable of remote modification. No postmaster accounts have ever been adjusted without physical presence at the terminal counter."',
-      contradictionFinding: 'Direct evidential conflict: Fujitsu internal telemetry records remote writes into counter ledgers, refuting Post Office witness claims of system inviolability.',
-      admissibilityCert: 'CEA 1995 s.9 Certificate Validated (SHA-256 Digest Confirmed)'
+      jurisdiction: 'High Court of Justice · Queen\'s Bench Division · England & Wales',
+      statutoryRef: 'Civil Procedure Rules (CPR Part 31) · Unfair Contract Terms Act 1977 s.3 & s.11',
+      sourceDocName: 'Bates_v_Post_Office_No6_Horizon_Issues_2019_EWHC_3408.txt',
+      sourceDocDate: '16 Dec 2019',
+      sourceDocSha: '60b0b7a6b53e2cd3d4499f2c54e8a1c94dc07d22c0acf064e24d293d9429af67',
+      excerptLine: 'Para 549 (L21): "The evidence in this trial has made it clear that such remote access to branch accounts does exist; such remote access is possible by employees within Fujitsu; it does exist specifically by design; and it has been used in the past."',
+      clientDocName: 'Post_Office_Security_Division_Confidential_Memo_2010.txt',
+      clientDocDate: '24 Feb 2010',
+      clientDocSha: '6f9588665ea87c062779fa4f595c25dbcb28fa7a00f27471fbaf8a1fa18784ad',
+      clientExcerptLine: 'Para 3 (L12): "Under no circumstances should Fujitsu Known Error Logs, including PIN 188 or SSC remote access procedures, be disclosed in civil or criminal proceedings without prior review by senior management. Disclosing that Fujitsu can remotely alter accounts would fatally undermine our civil debt recovery actions"',
+      contradictionFinding: 'Direct evidential conflict: Mr Justice Fraser held at para 550 that Post Office statements denying remote access were specifically wrong in fact, directly contradicting internal memos ordering concealment of Fujitsu remote alteration capabilities.',
+      admissibilityCert: 'Verified Document Hash Recorded • CPR 32.14 Human Sign-off Required'
     },
     novacorp: {
-      title: 'NovaCorp Solutions Ltd v Meridian Cloud Technologies Ltd',
+      title: 'NovaCorp Solutions Inc v Meridian Cloud Technologies Ltd',
       jurisdiction: 'Commercial Court · England and Wales',
       statutoryRef: 'Unfair Contract Terms Act 1977 · Commercial Law',
-      sourceDocName: 'NOVACORP_MERIDIAN_SAAS_MSA_2026.txt',
+      sourceDocName: 'Meridian_Master_Cloud_Agreement_2026.pdf',
       sourceDocDate: '10 Feb 2026',
-      sourceDocSha: '7f9c2d14b8a21e4c98f01b34ad78',
-      excerptLine: 'Clause 4.2 (L48): "Invoices shall be payable within thirty (30) days from date of electronic dispatch."',
-      clientDocName: 'SCHEDULE_B_SERVICE_FEES_ADDENDUM.txt',
+      sourceDocSha: 'af14d77e7ae11632ad2decd7a9b49d0fd0005604d3dbe6500221a51557a08808',
+      excerptLine: 'Section 4.1 (L15): "Payment of undisputed fees shall be made within thirty (30) days from the date of Provider\'s invoice."',
+      clientDocName: 'Schedule_B_Service_Fees_Addendum.pdf',
       clientDocDate: '12 Feb 2026',
-      clientDocSha: '3a1c84f92d8e41a0b5c7198e3b2f',
-      clientExcerptLine: 'Section 3.1 (L12): "Customer shall remit all subscription balances on Net 60 terms following reconciliation."',
-      contradictionFinding: 'Commercial conflict: Clause 4.2 specifies Net 30 default terms, but Schedule B specifies Net 60. Creates billing default exposure of £240,000.',
-      admissibilityCert: 'SaaS Playbook Rule #4 Violation (Uncapped Liability Detected in Cl.8.1)'
+      clientDocSha: 'c8d19a2b53f47e61a90c1284d7e35b91a4c82e6051f93047a2e8b15d90c37e41',
+      clientExcerptLine: 'Section 2.1 (L8): "Customer shall remit aggregate subscription payments on Net 60 days terms following monthly telemetry reconciliation."',
+      contradictionFinding: 'Commercial term conflict: Master Agreement Section 4.1 specifies Net 30 payment terms, while Schedule B Addendum specifies Net 60. Creates conflicting contractual obligations and billing exposure.',
+      admissibilityCert: 'Playbook Rule Violation • Human Verification Required'
     },
     tenancy: {
       title: 'Thorne v Oakridge Estates Ltd',
       jurisdiction: 'County Court at Central London · Housing Disrepair',
       statutoryRef: 'Housing Act 2004 s.213 & s.214 · Deregulation Act 2015',
-      sourceDocName: 'TENANCY_AGREEMENT_FLAT_4B.txt',
+      sourceDocName: 'Assured_Shorthold_Tenancy_Agreement_Flat4B.pdf',
       sourceDocDate: '01 Sep 2025',
-      sourceDocSha: '5c28e9140d3a77f81b29a4cc910e',
-      excerptLine: 'Clause 5 (L31): "Security Deposit of £2,400 received on 01 Sep 2025 and held by Landlord in private Barclays business account."',
-      clientDocName: 'DPS_DEPOSIT_SCHEME_VERIFICATION_CERT.txt',
+      sourceDocSha: '5e4b2d18a90c37f81b29a4cc910e74f82c14b8a21e4c98f01b34ad78e9b21f8a',
+      excerptLine: 'Clause 5.1 (L14): "The Tenant pays a deposit of £2,400 to be held in the Landlord\'s designated bank account as security for the performance of the Tenant\'s obligations."',
+      clientDocName: 'DPS_Deposit_Protection_Scheme_Search_Certificate.pdf',
       clientDocDate: '20 Nov 2025',
-      clientDocSha: '912a7f804b1c2e88a9df3014e218',
-      clientExcerptLine: 'Registry Audit (L8): "No protected deposit records registered for Thorne / Flat 4B within statutory 30-day window."',
-      contradictionFinding: 'Statutory non-compliance: Deposit was never protected in government DPS scheme within 30 days. Triggers mandatory 1x-3x deposit penalty under s.214.',
-      admissibilityCert: 'Housing Act 2004 s.214 Statutory Presumption Triggered'
+      clientDocSha: '9f2b8a4c1e78d3050123984fa0c8be9b21f8a84cd3050123984fa0c8b912a7f8',
+      clientExcerptLine: 'Search Result (L6): "No record of tenancy deposit protection found for Flat 4B, 18 Oakridge Terrace within statutory 30-day window following 01 September 2025."',
+      contradictionFinding: 'Statutory non-compliance: AST Clause 5.1 records deposit receipt, but DPS search confirms deposit was never protected within statutory 30-day window, triggering Housing Act 2004 s.214 financial penalties.',
+      admissibilityCert: 'Statutory Discrepancy Verified • 1x–3x Deposit Compensation Claim'
     }
   };
 
@@ -75,32 +72,32 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
       <div className="bg-canvas-subtle border-b border-border-hairline px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-ink-steel font-mono">
-            Interactive Matter Exhibit:
+            Sample Matter Exhibit:
           </span>
           <div className="flex items-center gap-1 bg-white border border-border-hairline p-0.5 rounded-[4px]">
             <button
               onClick={() => setActiveMatterCase('bates')}
-              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors ${
+              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors cursor-pointer ${
                 activeMatterCase === 'bates'
                   ? 'bg-ink text-white'
                   : 'text-ink-slate hover:text-ink'
               }`}
             >
-              Bates v Post Office
+              Bates v Post Office [2019]
             </button>
             <button
               onClick={() => setActiveMatterCase('novacorp')}
-              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors ${
+              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors cursor-pointer ${
                 activeMatterCase === 'novacorp'
                   ? 'bg-ink text-white'
                   : 'text-ink-slate hover:text-ink'
               }`}
             >
-              NovaCorp B2B SaaS MSA
+              NovaCorp Cloud MSA
             </button>
             <button
               onClick={() => setActiveMatterCase('tenancy')}
-              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors ${
+              className={`px-2.5 py-1 text-[11.5px] font-medium rounded-[3px] transition-colors cursor-pointer ${
                 activeMatterCase === 'tenancy'
                   ? 'bg-ink text-white'
                   : 'text-ink-slate hover:text-ink'
@@ -113,10 +110,10 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
 
         <div className="flex items-center gap-2">
           <Badge variant="green" size="sm">
-            Deterministic Evidential Gate
+            Deterministic Grounding Active
           </Badge>
           <Badge variant="ochre" size="sm">
-            Adverse Discrepancy Active
+            Adverse Discrepancy Flagged
           </Badge>
         </div>
       </div>
@@ -124,7 +121,7 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
       {/* Exhibit Header */}
       <div className="px-6 py-4 border-b border-border-hairline bg-white flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
-          <h3 className="text-base font-semibold text-ink">
+          <h3 className="text-base font-semibold text-ink font-serif">
             {active.title}
           </h3>
           <div className="flex flex-wrap items-center gap-2 text-[12px] text-ink-steel mt-1 font-mono">
@@ -136,7 +133,7 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
 
         <button
           onClick={onOpenWorkbench}
-          className="self-start md:self-auto px-3.5 py-1.5 bg-proofline-blue hover:bg-blue-700 text-white text-[12px] font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-subtle"
+          className="self-start md:self-auto px-3.5 py-1.5 bg-proofline-blue hover:bg-proofline-navy text-white text-[12px] font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-subtle cursor-pointer"
         >
           <span>Open in Full Workbench</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -145,11 +142,11 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
 
       {/* Side-by-Side Dual Exhibit Comparison */}
       <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-hairline bg-white">
-        {/* Exhibit 1: Opposing / Technical Evidence */}
+        {/* Exhibit 1: Judicial / Master Record */}
         <div className="p-5 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-amber-900 bg-amber-50 px-2 py-0.5 rounded-[3px] border border-amber-200">
-              Exhibit A &bull; Disclosed Technical Telemetry
+              Exhibit A &bull; Contemporaneous Disclosure / Judgment
             </span>
             <span className="text-[11px] text-ink-steel font-mono">
               Date: {active.sourceDocDate}
@@ -165,19 +162,19 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
             {active.excerptLine}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-ink-steel font-mono pt-1">
-            <span>SHA-256: {active.sourceDocSha}...</span>
-            <span className="text-proofline-green font-medium flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3" /> Byte Verified
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-ink-steel font-mono pt-1">
+            <span className="truncate max-w-[280px]" title={active.sourceDocSha}>SHA-256: {active.sourceDocSha.slice(0, 16)}...{active.sourceDocSha.slice(-8)}</span>
+            <span className="text-proofline-green font-medium flex items-center gap-1 shrink-0">
+              <CheckCircle2 className="w-3 h-3" /> Verifiable Digest
             </span>
           </div>
         </div>
 
-        {/* Exhibit 2: Client / Witness Record */}
+        {/* Exhibit 2: Client / Opposing Record */}
         <div className="p-5 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-blue-900 bg-blue-50 px-2 py-0.5 rounded-[3px] border border-blue-200">
-              Exhibit B &bull; Witness Deposition / Primary Agreement
+              Exhibit B &bull; Opposing Representation / Search Record
             </span>
             <span className="text-[11px] text-ink-steel font-mono">
               Date: {active.clientDocDate}
@@ -193,10 +190,10 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
             {active.clientExcerptLine}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-ink-steel font-mono pt-1">
-            <span>SHA-256: {active.clientDocSha}...</span>
-            <span className="text-proofline-green font-medium flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3" /> Byte Verified
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-ink-steel font-mono pt-1">
+            <span className="truncate max-w-[280px]" title={active.clientDocSha}>SHA-256: {active.clientDocSha.slice(0, 16)}...{active.clientDocSha.slice(-8)}</span>
+            <span className="text-proofline-green font-medium flex items-center gap-1 shrink-0">
+              <CheckCircle2 className="w-3 h-3" /> Verifiable Digest
             </span>
           </div>
         </div>
@@ -214,8 +211,8 @@ export const FeatureStage: React.FC<FeatureStageProps> = ({ onOpenWorkbench }) =
           </p>
         </div>
 
-        <div className="shrink-0 flex items-center gap-1.5 text-proofline-green bg-emerald-50 px-3 py-1.5 rounded-[4px] border border-emerald-200 font-mono text-[11px]">
-          <ShieldCheck className="w-3.5 h-3.5" />
+        <div className="shrink-0 flex items-center gap-1.5 text-ink-slate bg-white px-3 py-1.5 rounded-[4px] border border-border-hairline font-mono text-[11px]">
+          <ShieldCheck className="w-3.5 h-3.5 text-proofline-green" />
           <span>{active.admissibilityCert}</span>
         </div>
       </div>

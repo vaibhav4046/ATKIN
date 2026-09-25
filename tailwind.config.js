@@ -63,27 +63,25 @@ export default {
       },
       fontFamily: {
         sans: [
+          '"IBM Plex Sans"',
           '-apple-system',
           'BlinkMacSystemFont',
-          'Segoe UI',
+          '"Segoe UI"',
           'Roboto',
-          'Helvetica Neue',
-          'Arial',
           'sans-serif'
         ],
         serif: [
-          'Charter',
           'Newsreader',
+          'Charter',
           'Georgia',
           'Cambria',
           '"Times New Roman"',
           'serif'
         ],
         editorial: [
-          'Charter',
           'Newsreader',
+          'Charter',
           'Georgia',
-          'Cambria',
           'serif'
         ],
         mono: [

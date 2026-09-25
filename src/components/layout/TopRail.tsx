@@ -51,11 +51,11 @@ export const TopRail: React.FC<TopRailProps> = ({
   const [isNetMenuOpen, setIsNetMenuOpen] = useState(false);
 
   return (
-    <div className="h-[58px] bg-white border-b border-border-hairline px-6 flex items-center justify-between sticky top-[48px] z-40 select-none">
+    <div className="h-[58px] bg-white border-b border-border-hairline px-6 flex items-center justify-between sticky top-[52px] z-40 select-none">
       <div className="flex items-center gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-[15px] font-semibold text-ink tracking-tight">
+            <h1 className="text-[15px] font-semibold text-ink tracking-tight font-serif">
               {matter.title}
             </h1>
             <Badge variant="slate" size="sm">
@@ -66,14 +66,18 @@ export const TopRail: React.FC<TopRailProps> = ({
                 {matter.matterType.toUpperCase()}
               </Badge>
             )}
-            {matter.isDemo && (
-              <Badge variant="ochre" size="sm">
-                Sample
+            {(matter.isDemo || matter.id.includes('bates') || matter.id.includes('contract') || matter.id.includes('tenancy')) ? (
+              <span className="bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
+                Sample Matter
+              </span>
+            ) : (
+              <Badge variant="green" size="sm">
+                Private Matter
               </Badge>
             )}
           </div>
-          <div className="text-[11px] text-ink-steel mt-0.5">
-            Client: <span className="text-ink font-medium">{matter.clientAlias}</span> · Sovereign Vault Encrypted
+          <div className="text-[11px] text-ink-steel mt-0.5 font-mono">
+            Client: <span className="text-ink font-medium">{matter.clientAlias}</span> · Browser-Local Storage
           </div>
         </div>
       </div>
