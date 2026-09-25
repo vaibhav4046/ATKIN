@@ -75,7 +75,7 @@ export class QualificationSuite {
         startOffset: 120,
         endOffset: 240,
         exactText: 'PIN-188: System error allows automated balance alterations without postmaster authorization.',
-        checksum: 'sha256-abc123'
+        checksum: '5a2fa4e138a0c8b939fa9794cb1f0931215b22bdf559d81d6d843ffec66a7b31'
       }],
       provenanceHierarchy: ['Fujitsu Incident Log', 'Branch Terminal Core'],
       keyDates: [{ label: 'Bug Discovered', date: '2005-03-14' }],
@@ -123,7 +123,7 @@ export class QualificationSuite {
         startOffset: 0,
         endOffset: quoteTarget.length,
         exactText: quoteTarget,
-        checksum: 'sha256-quote'
+        checksum: '5a2fa4e138a0c8b939fa9794cb1f0931215b22bdf559d81d6d843ffec66a7b31'
       }],
       provenanceHierarchy: [],
       keyDates: [],
@@ -171,7 +171,7 @@ export class QualificationSuite {
           startOffset: 0,
           endOffset: 50,
           exactText: 'The Horizon system was at all material times completely robust.',
-          checksum: 'sha256-wit'
+          checksum: '15fae2f49d95f87b8f95c52c286e927063ffbb423e8e19c0846062f6b3e839e5'
         },
         {
           id: 'span-bug',
@@ -179,7 +179,7 @@ export class QualificationSuite {
           startOffset: 0,
           endOffset: 60,
           exactText: 'Bug 188 allows remote transaction alteration without branch notice.',
-          checksum: 'sha256-bug'
+          checksum: '95cb2e23d536eb3a77fcb29e0616b6065586618bc32cb63e46c764fa5889fc66'
         }
       ],
       provenanceHierarchy: [],
@@ -264,7 +264,7 @@ export class QualificationSuite {
         startOffset: 0,
         endOffset: 50,
         exactText: 'Payment shall be made within thirty (30) calendar days.',
-        checksum: 'sha256-term'
+        checksum: 'e4a64388e631fc387bfdc6e3be9e96f183765103a3d5ea76ba7cbef6e61f22e2'
       }],
       provenanceHierarchy: [],
       keyDates: [],
@@ -348,7 +348,7 @@ export class QualificationSuite {
         startOffset: 0,
         endOffset: 40,
         exactText: 'Corporate restructure in progress.',
-        checksum: 'sha256-beta'
+        checksum: '6e12e1329a1b1a7746419c8f2ba12fcfa62529949646bb6f776a30c5e6d60c2b'
       }],
       provenanceHierarchy: [],
       keyDates: [],

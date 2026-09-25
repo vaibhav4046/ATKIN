@@ -110,7 +110,7 @@ export const CONTRACT_SPANS: Span[] = [
     startOffset: offPayment30.startOffset,
     endOffset: offPayment30.endOffset,
     exactText: offPayment30.exactText,
-    checksum: 'sha256-pay30-simulated',
+    checksum: '569a40f51a4fa9c080ad13a9e85afa07eac473eb72cdd4de42efbac095d4f375',
     text: offPayment30.exactText
   },
   {
@@ -119,7 +119,7 @@ export const CONTRACT_SPANS: Span[] = [
     startOffset: offPayment60.startOffset,
     endOffset: offPayment60.endOffset,
     exactText: offPayment60.exactText,
-    checksum: 'sha256-pay60-simulated',
+    checksum: '5149cee2f0fda69ded0bfa24e7ece97646369f375dc53276c32368cc437d11cc',
     text: offPayment60.exactText
   },
   {
@@ -128,7 +128,7 @@ export const CONTRACT_SPANS: Span[] = [
     startOffset: offIndemnity.startOffset,
     endOffset: offIndemnity.endOffset,
     exactText: offIndemnity.exactText,
-    checksum: 'sha256-indemnity-simulated',
+    checksum: 'f14bc7df01aa91b1dbeb43c99a6b8a942f3657a3d1efc1d59b4cefa1e2925261',
     text: offIndemnity.exactText
   },
   {
@@ -137,7 +137,7 @@ export const CONTRACT_SPANS: Span[] = [
     startOffset: offLiabilityCap.startOffset,
     endOffset: offLiabilityCap.endOffset,
     exactText: offLiabilityCap.exactText,
-    checksum: 'sha256-liability-simulated',
+    checksum: 'a27588cd708371cef8370bbf23271c94076c2e9b77791710355631d1586ac161',
     text: offLiabilityCap.exactText
   },
   {
@@ -146,7 +146,7 @@ export const CONTRACT_SPANS: Span[] = [
     startOffset: offDelaware.startOffset,
     endOffset: offDelaware.endOffset,
     exactText: offDelaware.exactText,
-    checksum: 'sha256-delaware-simulated',
+    checksum: 'af14d77e7ae11632ad2decd7a9b49d0fd0005604d3dbe6500221a51557a08808',
     text: offDelaware.exactText
   }
 ];

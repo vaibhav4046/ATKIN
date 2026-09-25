@@ -138,7 +138,7 @@ export const TENANCY_SPANS: Span[] = [
     startOffset: offGutter.startOffset,
     endOffset: offGutter.endOffset,
     exactText: offGutter.exactText,
-    checksum: 'sha256-gutter-simulated',
+    checksum: 'c120cd160b00a49eeb7ada175355979ac3917ae063a0ee72c9df5174f4f7a35f',
     text: offGutter.exactText
   },
   {
@@ -147,7 +147,7 @@ export const TENANCY_SPANS: Span[] = [
     startOffset: offSurveyCausation.startOffset,
     endOffset: offSurveyCausation.endOffset,
     exactText: offSurveyCausation.exactText,
-    checksum: 'sha256-survey-cause-simulated',
+    checksum: 'b3b6d2507bb44299d507b635b2f2586838e59691314cc6c86940f3dc70d01060',
     text: offSurveyCausation.exactText
   },
   {
@@ -156,7 +156,7 @@ export const TENANCY_SPANS: Span[] = [
     startOffset: offLandlordBlame.startOffset,
     endOffset: offLandlordBlame.endOffset,
     exactText: offLandlordBlame.exactText,
-    checksum: 'sha256-landlord-blame-simulated',
+    checksum: 'e8c4837c75a1e8775d94f088059f408466da39a474b2640d68d4d2f763fa628c',
     text: offLandlordBlame.exactText
   },
   {
@@ -165,7 +165,7 @@ export const TENANCY_SPANS: Span[] = [
     startOffset: offS11.startOffset,
     endOffset: offS11.endOffset,
     exactText: offS11.exactText,
-    checksum: 'sha256-s11-simulated',
+    checksum: 'ae165869c5291ab7a233a19865e6b1db1103e9bca44cf1ac7ad0a488a3f7d431',
     text: offS11.exactText
   }
 ];

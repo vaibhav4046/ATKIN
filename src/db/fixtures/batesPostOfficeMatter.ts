@@ -19,8 +19,8 @@ export const BATES_MATTER: Matter = {
   status: 'active',
   createdAt: '2019-12-16T10:00:00Z',
   updatedAt: '2026-09-24T00:00:00Z',
-  isDemo: false,
-  notes: 'Landmark High Court Group Litigation Order (GLO) concerning Horizon IT accounting discrepancies, software bugs (Call 188), remote access, and contract unfairness under UCTA 1977.'
+  isDemo: true,
+  notes: 'Demonstration Case Study: Verbatim judicial findings from Mr Justice Fraser in Bates & Others v Post Office Ltd (No 6: Horizon Issues) [2019] EWHC 3408 (QB) regarding remote access, transaction duplication, and evidence disclosure.'
 };
 
 // Raw Authentic Judgment Excerpt from Mr Justice Fraser
@@ -38,21 +38,19 @@ POST OFFICE LIMITED (Defendant)
 
 JUDGMENT (NO. 6) "HORIZON ISSUES"
 
-[Extract paras 120-136, 928-935]
+[Extract paras 176-177, 549-550, 929-930]
 
-120. The claimants in this Group Litigation are subpostmasters, former subpostmasters, and Crown post office employees. The Post Office alleged shortfalls in their branch accounts, suspended them, terminated their contracts, and in many instances commenced civil recovery proceedings or private criminal prosecutions.
+176. He had also said that "during the course of resolving the software issues, we would frequently access a Post Office counter IT system remotely".
 
-121. The central factual issue in this trial is whether the Horizon IT system, developed and operated by Fujitsu on behalf of Post Office Ltd, was capable of causing, and did cause, unexplained shortfalls and discrepancies in branch accounting records.
+177. His use of "frequently" and "routine" are, in my judgment, subjective, and as explained above in terms of "tiny fraction", subjective terms are not entirely helpful. What he meant by this is it was not unusual for this to occur. It is difficult to judge, at the remove of 15 years from when Mr Roll left Fujitsu, just how often something that he remembers as frequently or routine in fact occurred.
 
-134. Having heard the evidence of Fujitsu engineers, including Mr Gerald Barnes and Mr Richard Roll, I find as a matter of fact that Fujitsu personnel operating from the Customer Support Centre at Bracknell possessed and frequently exercised the capability of remotely altering branch account balances, cash figures, and transaction records, without the knowledge, authorization, or consent of the individual subpostmaster.
+549. It may therefore be that the Post Office itself fell into error as a result of information provided to it by Fujitsu on this important matter. It may be that some within the Post Office were themselves surprised by these revelations prior to, and during, the Horizon Issues trial. There is no need for me to speculate on this, and I do not do so. Certainly Mr Godeseth did not appear to have known about this for very long. Whatever the origin of this, and whether it came from Fujitsu, internally, being less than frank with the Post Office or not, the effect is that the Post Office has made specific and factually incorrect statements about what could be done with, or to, branch accounts in terms of remote access without the knowledge of the SPM. The evidence in this trial has made it clear that such remote access to branch accounts does exist; such remote access is possible by employees within Fujitsu; it does exist specifically by design; and it has been used in the past.
 
-135. The Post Office repeatedly asserted to subpostmasters, to Parliament, and to the Courts in criminal prosecutions that remote access to alter branch accounts was technically impossible. This assertion was false.
+550. It follows that the previously stated public position of the Post Office to the contrary, in the statements to which I have referred above, is specifically wrong in fact.
 
-136. Furthermore, I find that Known Error Log entries, specifically Bug 188 (also recorded as Call 188 and Episteme Problem 188), caused transactions to duplicate during transmission timeouts, creating phantom shortfalls of £2,000 or more in branch cash balances which the terminal operator had no means of identifying or correcting.
+929. This approach by the Post Office has amounted, in reality, to bare assertions and denials that ignore what has actually occurred, at least so far as the witnesses called before me in the Horizon Issues trial are concerned. It amounts to the 21st century equivalent of maintaining that the earth is flat.
 
-928. Standard Subpostmaster Contract (SPMC) Clause 12 purports to hold the subpostmaster strictly liable to make good any deficiency in branch accounts, irrespective of whether the subpostmaster caused it or whether it arose from software failure in Horizon.
-
-929. In my judgment, the relationship between Post Office and subpostmasters is a relational contract giving rise to an implied duty of good faith. Clause 12, interpreted as imposing strict liability without Post Office being required to prove that Horizon was operating correctly, fails the requirement of reasonableness under Section 3 and Section 11 of the Unfair Contract Terms Act 1977.`.replace(/\r\n/g, '\n');
+930. When real world examples such as Mr Latif's are put together with the expert evidence that I have accepted — or even with Dr Worden's lower figure for accepted bugs of 11 different ones — it can be seen that this institutional obstinacy by the Post Office amounts to little more than repeated assertions that the Horizon system (both Legacy and Online) cannot be to blame for the claimants' experiences, coupled with (for some) challenges to the claimants' witnesses because the Post Office simply cannot accept their factual accounts. The findings that I have made, on the evidence in the Horizon Issues trial, show that the reality is rather different, and the existence of the bugs, errors and defects that I have found to exist do have the effect explained by Mr Coyne.`.replace(/\r\n/g, '\n');
 
 // Internal Fujitsu Bug 188 Problem Investigation Report
 const DOC_FUJITSU_BUG188_RAW = `FUJITSU SERVICES - SOFTWARE PROBLEM INVESTIGATION REPORT
@@ -104,13 +102,30 @@ Subject: Horizon Evidence Strategy in Contested Subpostmaster Prosecutions
 
 3. Under no circumstances should Fujitsu Known Error Logs, including PIN 188 or SSC remote access procedures, be disclosed in civil or criminal proceedings without prior review by senior management. Disclosing that Fujitsu can remotely alter accounts would fatally undermine our civil debt recovery actions and existing convictions.`.replace(/\r\n/g, '\n');
 
+// Helper for exact offset and line derivation
+function getBatesOffsets(rawText: string, exactSnippet: string) {
+  const start = rawText.indexOf(exactSnippet);
+  if (start === -1) {
+    throw new Error(`Snippet not found in text: "${exactSnippet.slice(0, 30)}..."`);
+  }
+  const lineStart = (rawText.slice(0, start).match(/\n/g) || []).length + 1;
+  const lineEnd = (rawText.slice(0, start + exactSnippet.length).match(/\n/g) || []).length + 1;
+  return {
+    startOffset: start,
+    endOffset: start + exactSnippet.length,
+    exactText: exactSnippet,
+    lineStart,
+    lineEnd
+  };
+}
+
 export const BATES_DOCUMENTS: Document[] = [
   {
     id: 'doc-bates-01',
     matterId: BATES_MATTER_ID,
     filename: 'Bates_v_Post_Office_No6_Horizon_Issues_2019_EWHC_3408.txt',
     mime: 'text/plain',
-    sha256: 'e892cfa71295b9a4c8032bb269d7a2283921b79f8290e219ba4882199f182cba',
+    sha256: '60b0b7a6b53e2cd3d4499f2c54e8a1c94dc07d22c0acf064e24d293d9429af67',
     importedAt: '2026-09-24T00:00:00Z',
     sourceDate: '2019-12-16',
     extractionStatus: 'success',
@@ -123,7 +138,7 @@ export const BATES_DOCUMENTS: Document[] = [
     matterId: BATES_MATTER_ID,
     filename: 'Fujitsu_Services_PIN188_Problem_Investigation_Report.txt',
     mime: 'text/plain',
-    sha256: '921ba4801128c894172f88a912bb490192a7812938b81293774819a8271bb842',
+    sha256: 'c4d7c3e1f6d2c50ecbfe4add27550057761f8353c018704d076e6129e0a9eab4',
     importedAt: '2026-09-24T00:00:00Z',
     sourceDate: '2005-10-14',
     extractionStatus: 'success',
@@ -136,7 +151,7 @@ export const BATES_DOCUMENTS: Document[] = [
     matterId: BATES_MATTER_ID,
     filename: 'Post_Office_Standard_Subpostmaster_Contract_SPMC_Sec12.txt',
     mime: 'text/plain',
-    sha256: 'a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0',
+    sha256: 'f7ddbd49699993e3ffc5640eefba2a4a150003e72514057cb8a738104ea6eef0',
     importedAt: '2026-09-24T00:00:00Z',
     sourceDate: '2001-01-01',
     extractionStatus: 'success',
@@ -149,7 +164,7 @@ export const BATES_DOCUMENTS: Document[] = [
     matterId: BATES_MATTER_ID,
     filename: 'Post_Office_Security_Division_Confidential_Memo_2010.txt',
     mime: 'text/plain',
-    sha256: 'f87a912bca819283746192830192837461928301928374619283019283746192',
+    sha256: '966dc9fd6845b5d3f8cb0dbe112310874f0b657768d886c71e384276242b2fef',
     importedAt: '2026-09-24T00:00:00Z',
     sourceDate: '2010-02-24',
     extractionStatus: 'success',
@@ -159,86 +174,104 @@ export const BATES_DOCUMENTS: Document[] = [
   }
 ];
 
+const SNIP_BATES_01 = 'The evidence in this trial has made it clear that such remote access to branch accounts does exist; such remote access is possible by employees within Fujitsu; it does exist specifically by design; and it has been used in the past.';
+const SNIP_BATES_02 = 'It follows that the previously stated public position of the Post Office to the contrary, in the statements to which I have referred above, is specifically wrong in fact.';
+const SNIP_BATES_03 = 'This approach by the Post Office has amounted, in reality, to bare assertions and denials that ignore what has actually occurred, at least so far as the witnesses called before me in the Horizon Issues trial are concerned. It amounts to the 21st century equivalent of maintaining that the earth is flat.';
+const SNIP_BATES_04 = 'When a branch terminal experiences a local network timeout during receipt batch transmission to the Riposte central datastore, the counter retry handler initiates an automated re-send. If the initial packet was written to the central database before the local drop, the batch is committed twice.';
+const SNIP_BATES_05 = "Fujitsu SSC engineers routinely rectify these balancing errors by manually injecting journal entries directly into the branch Riposte table via SQL scripts from Bracknell without the subpostmaster's terminal displaying any notification";
+const SNIP_BATES_06 = 'In the event of any deficiency, loss, or shortfall appearing in the branch accounts or balancing statements produced by the Horizon computer terminal, the Subpostmaster shall on demand make good the entire deficiency to Post Office Limited immediately.';
+const SNIP_BATES_07 = 'It remains the official policy and corporate defense posture of Post Office Ltd that Horizon is an automated, robust, and reliable computer system within the presumption of Section 69 of the Police and Criminal Evidence Act 1984.';
+const SNIP_BATES_08 = 'Under no circumstances should Fujitsu Known Error Logs, including PIN 188 or SSC remote access procedures, be disclosed in civil or criminal proceedings without prior review by senior management. Disclosing that Fujitsu can remotely alter accounts would fatally undermine our civil debt recovery actions';
+
+const offBates01 = getBatesOffsets(DOC_JUDGMENT_RAW, SNIP_BATES_01);
+const offBates02 = getBatesOffsets(DOC_JUDGMENT_RAW, SNIP_BATES_02);
+const offBates03 = getBatesOffsets(DOC_JUDGMENT_RAW, SNIP_BATES_03);
+const offBates04 = getBatesOffsets(DOC_FUJITSU_BUG188_RAW, SNIP_BATES_04);
+const offBates05 = getBatesOffsets(DOC_FUJITSU_BUG188_RAW, SNIP_BATES_05);
+const offBates06 = getBatesOffsets(DOC_SPMC_CONTRACT_RAW, SNIP_BATES_06);
+const offBates07 = getBatesOffsets(DOC_POL_INVESTIGATION_MEMO_RAW, SNIP_BATES_07);
+const offBates08 = getBatesOffsets(DOC_POL_INVESTIGATION_MEMO_RAW, SNIP_BATES_08);
+
 export const BATES_SPANS: Span[] = [
   {
     id: 'span-bates-01',
     documentId: 'doc-bates-01',
-    startOffset: 651,
-    endOffset: 955,
-    exactText: 'Having heard the evidence of Fujitsu engineers, including Mr Gerald Barnes and Mr Richard Roll, I find as a matter of fact that Fujitsu personnel operating from the Customer Support Centre at Bracknell possessed and frequently exercised the capability of remotely altering branch account balances',
-    checksum: '651-955-fujitsu-remote',
-    lineStart: 25,
-    lineEnd: 27
+    startOffset: offBates01.startOffset,
+    endOffset: offBates01.endOffset,
+    exactText: offBates01.exactText,
+    checksum: 'dae6387a0fabeaf92516450ac5c6b094db37de2032222db49d29cf88f1107e0f',
+    lineStart: offBates01.lineStart,
+    lineEnd: offBates01.lineEnd
   },
   {
     id: 'span-bates-02',
     documentId: 'doc-bates-01',
-    startOffset: 1110,
-    endOffset: 1290,
-    exactText: 'The Post Office repeatedly asserted to subpostmasters, to Parliament, and to the Courts in criminal prosecutions that remote access to alter branch accounts was technically impossible. This assertion was false.',
-    checksum: '1110-1290-assertion-false',
-    lineStart: 29,
-    lineEnd: 31
+    startOffset: offBates02.startOffset,
+    endOffset: offBates02.endOffset,
+    exactText: offBates02.exactText,
+    checksum: '71e7483614a1a484828217e6e16cbef86e39a11aa69c81eb2ff07b0692671e36',
+    lineStart: offBates02.lineStart,
+    lineEnd: offBates02.lineEnd
   },
   {
     id: 'span-bates-03',
     documentId: 'doc-bates-01',
-    startOffset: 1300,
-    endOffset: 1580,
-    exactText: 'Known Error Log entries, specifically Bug 188 (also recorded as Call 188 and Episteme Problem 188), caused transactions to duplicate during transmission timeouts, creating phantom shortfalls of £2,000 or more in branch cash balances',
-    checksum: '1300-1580-bug188-duplicate',
-    lineStart: 33,
-    lineEnd: 35
+    startOffset: offBates03.startOffset,
+    endOffset: offBates03.endOffset,
+    exactText: offBates03.exactText,
+    checksum: '87a00255b4bdd5a19cc7707516dc169144de2efd879fa6aa58b3e21262fe1b27',
+    lineStart: offBates03.lineStart,
+    lineEnd: offBates03.lineEnd
   },
   {
     id: 'span-bates-04',
     documentId: 'doc-bates-02',
-    startOffset: 340,
-    endOffset: 600,
-    exactText: 'When a branch terminal experiences a local network timeout during receipt batch transmission to the Riposte central datastore, the counter retry handler initiates an automated re-send. If the initial packet was written to the central database before the local drop, the batch is committed twice.',
-    checksum: '340-600-packet-committed-twice',
-    lineStart: 10,
-    lineEnd: 12
+    startOffset: offBates04.startOffset,
+    endOffset: offBates04.endOffset,
+    exactText: offBates04.exactText,
+    checksum: 'b204fa8e8a2fbf751bed81b274e2e2a8b93c7b89cb27713cf500024d7026927f',
+    lineStart: offBates04.lineStart,
+    lineEnd: offBates04.lineEnd
   },
   {
     id: 'span-bates-05',
     documentId: 'doc-bates-02',
-    startOffset: 890,
-    endOffset: 1120,
-    exactText: 'Fujitsu SSC engineers routinely rectify these balancing errors by manually injecting journal entries directly into the branch Riposte table via SQL scripts from Bracknell without the subpostmaster\'s terminal displaying any notification',
-    checksum: '890-1120-manually-injecting-journal',
-    lineStart: 18,
-    lineEnd: 20
+    startOffset: offBates05.startOffset,
+    endOffset: offBates05.endOffset,
+    exactText: offBates05.exactText,
+    checksum: '894fc1537f72c71064d2127889b85ff49a607f098fdb4972c37d1cc86a7506d8',
+    lineStart: offBates05.lineStart,
+    lineEnd: offBates05.lineEnd
   },
   {
     id: 'span-bates-06',
     documentId: 'doc-bates-03',
-    startOffset: 320,
-    endOffset: 610,
-    exactText: 'In the event of any deficiency, loss, or shortfall appearing in the branch accounts or balancing statements produced by the Horizon computer terminal, the Subpostmaster shall on demand make good the entire deficiency to Post Office Limited immediately.',
-    checksum: '320-610-make-good-deficiency',
-    lineStart: 10,
-    lineEnd: 12
+    startOffset: offBates06.startOffset,
+    endOffset: offBates06.endOffset,
+    exactText: offBates06.exactText,
+    checksum: '422e246a10630609196d352bdde0d9549a462b6f0b1dde0e1a944a898a0e17dc',
+    lineStart: offBates06.lineStart,
+    lineEnd: offBates06.lineEnd
   },
   {
     id: 'span-bates-07',
     documentId: 'doc-bates-04',
-    startOffset: 480,
-    endOffset: 720,
-    exactText: 'It remains the official policy and corporate defense posture of Post Office Ltd that Horizon is an automated, robust, and reliable computer system within the presumption of Section 69 of the Police and Criminal Evidence Act 1984.',
-    checksum: '480-720-robust-reliable-presumption',
-    lineStart: 9,
-    lineEnd: 11
+    startOffset: offBates07.startOffset,
+    endOffset: offBates07.endOffset,
+    exactText: offBates07.exactText,
+    checksum: 'fa685559d078f89bc455dda7d91445977f7d2795902a2d1682e1849c4d7a1f62',
+    lineStart: offBates07.lineStart,
+    lineEnd: offBates07.lineEnd
   },
   {
     id: 'span-bates-08',
     documentId: 'doc-bates-04',
-    startOffset: 730,
-    endOffset: 1060,
-    exactText: 'Under no circumstances should Fujitsu Known Error Logs, including PIN 188 or SSC remote access procedures, be disclosed in civil or criminal proceedings without prior review by senior management. Disclosing that Fujitsu can remotely alter accounts would fatally undermine our civil debt recovery actions',
-    checksum: '730-1060-fatal-disclosure-risk',
-    lineStart: 13,
-    lineEnd: 15
+    startOffset: offBates08.startOffset,
+    endOffset: offBates08.endOffset,
+    exactText: offBates08.exactText,
+    checksum: '87294f5f3effd92a52fc956f62cbdd11d78d59fc6af2f2a28ad00d89c691e36e',
+    lineStart: offBates08.lineStart,
+    lineEnd: offBates08.lineEnd
   }
 ];
 
@@ -258,7 +291,7 @@ export const BATES_CLAIMS: Claim[] = [
         spanId: 'span-bates-01',
         type: 'supports',
         author: 'human',
-        rationale: 'Fraser J finding of fact in Bates v Post Office No 6 [2019] EWHC 3408 at para 134.',
+        rationale: 'Fraser J finding of fact in Bates v Post Office No 6 [2019] EWHC 3408 at para 549.',
         reviewState: 'approved',
         createdAt: '2026-09-24T00:00:00Z'
       },
@@ -291,7 +324,7 @@ export const BATES_CLAIMS: Claim[] = [
         spanId: 'span-bates-02',
         type: 'supports',
         author: 'human',
-        rationale: 'Judicial finding at para 135 establishing Post Office assertion was false.',
+        rationale: 'Judicial finding at para 550 establishing Post Office assertion was specifically wrong in fact.',
         reviewState: 'approved',
         createdAt: '2026-09-24T00:00:00Z'
       },
@@ -311,7 +344,7 @@ export const BATES_CLAIMS: Claim[] = [
         spanId: 'span-bates-01',
         type: 'contradicts',
         author: 'rule',
-        rationale: 'Direct evidentiary conflict between Post Office assertion of impossibility and Fraser J finding of routine remote access.',
+        rationale: 'Direct evidentiary conflict between Post Office assertion of impossibility and Fraser J finding of routine remote access at para 549.',
         reviewState: 'approved',
         createdAt: '2026-09-24T00:00:00Z'
       }
@@ -334,7 +367,7 @@ export const BATES_CLAIMS: Claim[] = [
         spanId: 'span-bates-03',
         type: 'supports',
         author: 'human',
-        rationale: 'Fraser J judgment para 136 finding Bug 188 created phantom shortfalls.',
+        rationale: 'Fraser J finding at para 929 that Post Office denials of system bugs amounted to maintaining the earth is flat.',
         reviewState: 'approved',
         createdAt: '2026-09-24T00:00:00Z'
       },
@@ -423,8 +456,8 @@ export const BATES_AUTHORITIES: Authority[] = [
     citation: 'Bates and Others v Post Office Ltd (No 6: Horizon Issues) [2019] EWHC 3408 (QB)',
     identifier: '[2019] EWHC 3408 (QB)',
     officialUrl: 'https://caselaw.nationalarchives.gov.uk/ewhc/qb/2019/3408',
-    sectionParagraph: 'Paras 134-136, 928-935',
-    summary: 'Found as a fact that Fujitsu had remote access to branch accounts, that Bug 188 caused phantom accounting deficits, and that SPMC Clause 12 failed the test of reasonableness under UCTA 1977.',
+    sectionParagraph: 'Paras 176-177, 549-550, 929-933',
+    summary: 'Found as a fact that Fujitsu possessed and used remote access to alter branch accounts (paras 549-550), that Post Office denials were false (para 550), and that bare assertions ignoring software reality amounted to maintaining the earth is flat (para 929).',
     retrievedAt: '2026-09-24T00:00:00Z',
     checkedAt: '2026-09-24T00:00:00Z',
     coverageCaveat: 'Landmark High Court precedent on software reliability in contractual disputes.',
@@ -468,7 +501,7 @@ export const BATES_DRAFT: Draft = {
     {
       id: 'block-bates-01',
       heading: '1. Executive Summary & Factual Matrix',
-      text: 'The claimants, comprising Alan Bates and 550 former subpostmasters, were subjected to summary termination, debt recovery, and criminal prosecution by Post Office Ltd arising from alleged cash discrepancies in the Horizon computer system. As established in the judgment of Mr Justice Fraser in Bates v Post Office Ltd [2019] EWHC 3408 (QB), Fujitsu engineering staff at Bracknell maintained unnotified remote write access to branch accounts [Doc: Bates_v_Post_Office_No6_Horizon_Issues_2019_EWHC_3408.txt § 25-27]. Furthermore, technical records establish that Horizon Bug 188 (PIN 188) systematically duplicated transaction receipts upon packet timeout, creating phantom shortfalls of £2,000 or greater [Doc: Fujitsu_Services_PIN188_Problem_Investigation_Report.txt § 10-12].',
+      text: 'The claimants, comprising Alan Bates and 550 former subpostmasters, were subjected to summary termination, debt recovery, and criminal prosecution by Post Office Ltd arising from alleged cash discrepancies in the Horizon computer system. As established in the judgment of Mr Justice Fraser in Bates v Post Office Ltd [2019] EWHC 3408 (QB) at para 549, Fujitsu engineering staff at Bracknell maintained unnotified remote write access to branch accounts [Doc: Bates_v_Post_Office_No6_Horizon_Issues_2019_EWHC_3408.txt § L21]. Furthermore, technical records establish that Horizon Bug 188 (PIN 188) systematically duplicated transaction receipts upon packet timeout, creating phantom shortfalls of £2,000 or greater [Doc: Fujitsu_Services_PIN188_Problem_Investigation_Report.txt § L10].',
       spanIds: ['span-bates-01', 'span-bates-03', 'span-bates-04'],
       claimIds: ['claim-bates-01', 'claim-bates-03'],
       reviewStatus: 'verified'
@@ -476,7 +509,7 @@ export const BATES_DRAFT: Draft = {
     {
       id: 'block-bates-02',
       heading: '2. Adverse Contradiction: Suppression of Remote Access Capability',
-      text: 'A fundamental contradiction exists between the Post Office\'s public defense posture and its contemporaneous internal intelligence. While Post Office Ltd represented to the High Court and to Parliament that remote account modification was impossible [Doc: Bates_v_Post_Office_No6_Horizon_Issues_2019_EWHC_3408.txt § 29-31], internal Security Division memos explicitly cautioned that disclosing Fujitsu Known Error Logs would "fatally undermine" debt recovery actions [Doc: Post_Office_Security_Division_Confidential_Memo_2010.txt § 13-15]. This constitutes a severe breach of standard disclosure obligations under CPR Part 31.',
+      text: 'A fundamental contradiction exists between the Post Office\'s public defense posture and its contemporaneous internal intelligence. While Post Office Ltd represented to the High Court and to Parliament that remote account modification was impossible, Fraser J found this assertion specifically wrong in fact at para 550 [Doc: Bates_v_Post_Office_No6_Horizon_Issues_2019_EWHC_3408.txt § L23], directly contradicting internal Security Division memos cautioning that disclosing Fujitsu Known Error Logs would "fatally undermine" debt recovery actions [Doc: Post_Office_Security_Division_Confidential_Memo_2010.txt § L12]. This constitutes a severe breach of standard disclosure obligations under CPR Part 31.',
       spanIds: ['span-bates-02', 'span-bates-07', 'span-bates-08'],
       claimIds: ['claim-bates-02'],
       reviewStatus: 'verified'
@@ -484,7 +517,7 @@ export const BATES_DRAFT: Draft = {
     {
       id: 'block-bates-03',
       heading: '3. Statutory Contract Defense: Unfair Contract Terms Act 1977',
-      text: 'Post Office Ltd relies upon Clause 12 of the Standard Subpostmaster Contract (SPMC), which purports to impose strict liability on the subpostmaster to make good any deficiency on demand [Doc: Post_Office_Standard_Subpostmaster_Contract_SPMC_Sec12.txt § 10-12]. Because this was a standard business contract and the relationship was relational, Clause 12 is subject to Section 3 of the Unfair Contract Terms Act 1977. Imposing absolute liability without demonstrating computer integrity fails the test of reasonableness under UCTA s.11.',
+      text: 'Post Office Ltd relies upon Clause 12 of the Standard Subpostmaster Contract (SPMC), which purports to impose strict liability on the subpostmaster to make good any deficiency on demand [Doc: Post_Office_Standard_Subpostmaster_Contract_SPMC_Sec12.txt § L9]. Because this was a standard business contract and the relationship was relational, Clause 12 is subject to Section 3 of the Unfair Contract Terms Act 1977. Imposing absolute liability without demonstrating computer integrity fails the test of reasonableness under UCTA s.11.',
       spanIds: ['span-bates-06'],
       claimIds: ['claim-bates-04'],
       reviewStatus: 'verified'

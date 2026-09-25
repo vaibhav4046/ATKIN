@@ -80,7 +80,7 @@ describe('Proofline IndexedDB Persistence Service', () => {
       startOffset: 0,
       endOffset: 73,
       exactText: 'Clause 8.1: Customer indemnity shall be capped at 100% of aggregate fees.',
-      checksum: 'sha256-c1'
+      checksum: '2b7bc5a4b13ef4c861219b21f92e59df9e38d7bf903d6d02d18cead888c3a504'
     };
 
     const claim: Claim = {

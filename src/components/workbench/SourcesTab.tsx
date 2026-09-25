@@ -461,9 +461,37 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                 </div>
               </div>
 
+              {/* Local File Picker */}
+              <div className="flex items-center gap-2 p-2.5 bg-canvas-subtle border border-dashed border-border-hairline rounded-[4px]">
+                <Upload className="w-4 h-4 text-proofline-blue shrink-0" />
+                <label className="text-[11.5px] text-ink-steel cursor-pointer flex-1 flex items-center justify-between">
+                  <span>
+                    <strong className="text-proofline-blue hover:underline">Choose local file from disk</strong> (.txt, .md, .json, .eml, .csv, .log)
+                  </span>
+                  <span className="text-[10px] text-ink-muted uppercase font-mono">100% Client-Side</span>
+                  <input
+                    type="file"
+                    accept=".txt,.md,.json,.eml,.csv,.log,.text"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setIngestFilename(file.name);
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          const content = event.target?.result as string;
+                          if (content) setIngestText(content);
+                        };
+                        reader.readAsText(file);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+
               <div>
                 <label className="block text-[10.5px] font-semibold text-ink-steel uppercase tracking-wider mb-1 font-mono">
-                  Document Text Content
+                  Document Text Content (Paste or Auto-Filled from File)
                 </label>
                 <textarea
                   rows={7}

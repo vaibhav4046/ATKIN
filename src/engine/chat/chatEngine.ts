@@ -96,14 +96,19 @@ export class ChatEngine {
     let isLocalRuntime = false;
     let modelTagUsed = 'proofline-sovereign-irac';
 
-    // 3. Attempt local LLM call if Ollama is running and model connected
+    // 3. Attempt local LLM call if Ollama is running and model connected,
+    // provided evidential abstention was not triggered
     const modelStatus = await modelManager.checkHealth();
-    if (modelStatus.state === 'connected') {
+    if (modelStatus.state === 'connected' && reasoningOutput.sourcesUsed.length > 0) {
       try {
+        const relevantSpansForLlm = reasoningOutput.sourcesUsed
+          .map(su => spans.find(s => s.id === su.spanId))
+          .filter((s): s is EvidenceSpan => Boolean(s));
+
         const sysPrompt = this.buildSystemPrompt(
           activeMemories, 
           documents, 
-          spans.slice(0, 6), 
+          relevantSpansForLlm, 
           claims, 
           authorities, 
           matterJurisdiction
@@ -181,7 +186,7 @@ export class ChatEngine {
     const authContext = authorities.slice(0, 4).map(a => `[Authority]: ${a.identifier} - ${a.citation}: ${a.summary}`).join('\n');
 
     return `You are Proofline, an air-gapped sovereign legal copilot operating under ${jurisdiction} law.
-You operate with the highest standards of evidence grounding (SRA Principles, CPR 1998, and Civil Evidence Act 1995).
+You operate with the highest standards of evidence grounding under Civil Procedure Rules (CPR Parts 31 & 32) and the SRA Code of Conduct.
 NEVER fabricate citations, precedents, or factual claims.
 Every assertion must be tied to the provided evidence spans.
 

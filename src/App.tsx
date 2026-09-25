@@ -26,6 +26,7 @@ import type {
   Claim, 
   Authority, 
   Draft, 
+  DraftBlock,
   ReviewItem, 
   ModelStatus,
   NetworkMode
@@ -131,6 +132,7 @@ export function App() {
   const [isNewMatterOpen, setIsNewMatterOpen] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newClient, setNewClient] = useState('');
+  const [isOfflineBannerDismissed, setIsOfflineBannerDismissed] = useState(false);
 
   // Local model state
   const [modelStatus, setModelStatus] = useState<ModelStatus>({
@@ -193,12 +195,56 @@ export function App() {
       setReviewItems(BATES_REVIEWS);
       setDraft(BATES_DRAFT);
       setSelectedSpan(BATES_SPANS[0]);
+    } else if (matterId === CONTRACT_MATTER.id) {
+      setDocuments(CONTRACT_DOCUMENTS);
+      setSpans(CONTRACT_SPANS);
+      setClaims(CONTRACT_CLAIMS);
+      setAuthorities(COMMERCIAL_CONTRACT_AUTHORITIES);
+      setReviewItems(CONTRACT_REVIEWS);
+      setDraft(CONTRACT_DRAFT);
+      setSelectedSpan(CONTRACT_SPANS[0]);
+    } else if (matterId === TENANCY_MATTER.id) {
+      setDocuments(TENANCY_DOCUMENTS);
+      setSpans(TENANCY_SPANS);
+      setClaims(TENANCY_CLAIMS);
+      setAuthorities(TENANCY_HOUSING_AUTHORITIES);
+      setReviewItems(TENANCY_REVIEWS);
+      setDraft(TENANCY_DRAFT);
+      setSelectedSpan(TENANCY_SPANS[0]);
+    } else if (matterId === SAMPLE_MATTER.id) {
+      setDocuments(SAMPLE_DOCUMENTS);
+      setSpans(SAMPLE_SPANS);
+      setClaims(SAMPLE_CLAIMS);
+      setAuthorities(CRA_2015_AUTHORITIES);
+      setReviewItems(SAMPLE_REVIEW_ITEMS);
+      setDraft(SAMPLE_DRAFT);
+      setSelectedSpan(SAMPLE_SPANS[0]);
     } else {
       // Clean empty state for user-created matters
       setDocuments([]);
       setSpans([]);
       setClaims([]);
+      setAuthorities([]);
       setReviewItems([]);
+      setDraft({
+        id: `draft-${matterId}`,
+        matterId,
+        title: 'Draft Assessment',
+        type: 'matter_brief',
+        blocks: [
+          {
+            id: `blk-${Date.now()}-1`,
+            heading: 'Initial Legal Assessment & Case Strategy',
+            text: 'Enter draft pleadings, statutory claims, or client advice here. Click text to edit.',
+            claimIds: [],
+            spanIds: [],
+            reviewStatus: 'verified'
+          }
+        ],
+        generatedBy: 'deterministic',
+        reviewStatus: 'needs_review',
+        updatedAt: new Date().toISOString()
+      });
       setSelectedSpan(null);
     }
   };
@@ -257,7 +303,16 @@ export function App() {
       matterId: newMatter.id,
       type: 'matter_brief',
       title: `Matter Assessment Brief — ${newMatter.title}`,
-      blocks: [],
+      blocks: [
+        {
+          id: `blk-${Date.now()}-1`,
+          heading: 'Initial Legal Assessment & Case Strategy',
+          text: 'Enter draft pleadings, statutory claims, or client advice here. Click text to edit.',
+          claimIds: [],
+          spanIds: [],
+          reviewStatus: 'verified'
+        }
+      ],
       generatedBy: 'deterministic_offline',
       reviewStatus: 'needs_review',
       updatedAt: new Date().toISOString()
@@ -411,6 +466,18 @@ export function App() {
     });
   };
 
+  const handleAppendDraftBlock = (block: DraftBlock) => {
+    setDraft(prev => {
+      const updated = {
+        ...prev,
+        updatedAt: new Date().toISOString(),
+        blocks: [...prev.blocks, block]
+      };
+      saveDraftToDB(updated);
+      return updated;
+    });
+  };
+
   const handleApproveBlock = (blockId: string) => {
     setDraft(prev => {
       const updated = {
@@ -494,6 +561,33 @@ export function App() {
             onExportCalendar={handleExportCalendar}
             onOpenSettings={() => setCurrentTab('settings')}
           />
+
+          {/* Honest Sovereign Mode / Local LLM Status Banner */}
+          {modelStatus.state !== 'connected' && !isOfflineBannerDismissed && (
+            <div className="bg-[#FAF8F5] border-b border-border-hairline px-4 py-2 flex items-center justify-between text-[12px] text-ink-slate shadow-xs shrink-0">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-proofline-ochre inline-block shrink-0 animate-pulse" />
+                <span>
+                  <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong> — Local Ollama endpoint offline. Proofline is operating in 100% deterministic, zero-hallucination evidential mode with SHA-256 verifiable citations.
+                </span>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <button
+                  onClick={() => setCurrentTab('settings')}
+                  className="text-proofline-blue hover:text-proofline-navy font-medium underline cursor-pointer"
+                >
+                  Configure Local Model
+                </button>
+                <button
+                  onClick={() => setIsOfflineBannerDismissed(true)}
+                  className="text-ink-muted hover:text-ink text-xs px-1.5 py-0.5 rounded cursor-pointer"
+                  title="Dismiss banner"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Workbench Body */}
           <div className="flex-1 flex overflow-hidden">
@@ -628,6 +722,7 @@ export function App() {
                   onRegenerateDraft={async () => { handleRegenerateDraft(); }}
                   onUpdateDraftBlock={handleUpdateDraftBlock}
                   onApproveBlock={handleApproveBlock}
+                  onAppendDraftBlock={handleAppendDraftBlock}
                 />
               )}
 

@@ -99,7 +99,7 @@ describe('Production Slices (Slices 1 to 7 Verification)', () => {
       });
 
       expect(result.clientConsentRecorded).toBe(true);
-      expect(result.audioSha256).toContain('sha256-audio');
+      expect(result.audioSha256).toMatch(/^[a-f0-9]{64}$/);
       expect(result.words.length).toBeGreaterThan(0);
 
       // Verify transcript editing

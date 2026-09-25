@@ -212,7 +212,7 @@ export const TopRail: React.FC<TopRailProps> = ({
                 <FileText className="w-3.5 h-3.5 text-proofline-blue shrink-0" />
                 <div>
                   <div className="font-medium">Court Brief (Markdown)</div>
-                  <div className="text-[11px] text-ink-steel">With CEA 1995 s.9 Certificate of Authenticity</div>
+                  <div className="text-[11px] text-ink-steel">With CPR 32.14 Statement of Truth &amp; Evidential Index</div>
                 </div>
               </button>
               <button

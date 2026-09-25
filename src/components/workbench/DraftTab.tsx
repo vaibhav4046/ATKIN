@@ -170,6 +170,31 @@ export const DraftTab: React.FC<DraftTabProps> = ({
             </button>
           </div>
 
+          {/* Add Section Button */}
+          <button
+            onClick={() => {
+              const newBlock: DraftBlock = {
+                id: `blk-${Date.now()}`,
+                heading: `Section ${draft.blocks.length + 1}: Legal Analysis`,
+                text: 'Enter draft pleadings, statutory submissions, or client advice here. Click text to edit.',
+                claimIds: [],
+                spanIds: [],
+                reviewStatus: 'verified'
+              };
+              if (onAppendDraftBlock) {
+                onAppendDraftBlock(newBlock);
+              } else {
+                draft.blocks.push(newBlock);
+              }
+              handleStartEdit(newBlock.id, newBlock.text);
+            }}
+            className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-gallery-paper border border-border-hairline hover:bg-gallery-mist text-ink transition-colors flex items-center gap-1.5 shadow-sm"
+            title="Add a new section to this draft"
+          >
+            <Plus className="w-3.5 h-3.5 text-proofline-blue" />
+            <span>Add Section</span>
+          </button>
+
           {/* Dictation / Attendance Note Studio Button */}
           <button
             onClick={() => setIsDictationModalOpen(true)}
@@ -202,6 +227,41 @@ export const DraftTab: React.FC<DraftTabProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Empty State for New Matters */}
+      {draft.blocks.length === 0 && (
+        <div className="bg-gallery-white border border-dashed border-border-hairline rounded-[6px] p-8 text-center space-y-4 shadow-sm">
+          <div className="max-w-md mx-auto space-y-2">
+            <FileSignature className="w-8 h-8 text-ink-steel mx-auto" />
+            <h3 className="text-base font-semibold text-ink">No Draft Sections in this Matter Yet</h3>
+            <p className="text-xs text-ink-slate">
+              Ingest source evidence in the <strong>Sources</strong> tab, or add a blank section below to start drafting client advice or court pleadings directly.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              const newBlock: DraftBlock = {
+                id: `blk-${Date.now()}`,
+                heading: 'Initial Legal Assessment & Case Strategy',
+                text: 'Enter draft pleadings, statutory claims, or client advice here. Click text to edit.',
+                claimIds: [],
+                spanIds: [],
+                reviewStatus: 'verified'
+              };
+              if (onAppendDraftBlock) {
+                onAppendDraftBlock(newBlock);
+              } else {
+                draft.blocks.push(newBlock);
+              }
+              handleStartEdit(newBlock.id, newBlock.text);
+            }}
+            className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-navy transition-colors shadow-sm inline-flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Create Initial Section</span>
+          </button>
+        </div>
+      )}
 
       {/* Draft Content Blocks */}
       <div className="space-y-4">
@@ -240,6 +300,17 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                       <span>Approve Block</span>
                     </button>
                   )}
+
+                  {!isEditing && (
+                    <button
+                      onClick={() => handleStartEdit(block.id, block.text)}
+                      className="text-[11px] font-medium text-ink-slate hover:text-ink flex items-center gap-1 px-2.5 py-1 rounded-[3px] border border-border-hairline hover:bg-gallery-mist transition-colors"
+                      title="Edit this section"
+                    >
+                      <Edit3 className="w-3 h-3 text-proofline-blue" />
+                      <span>Edit Section</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -261,7 +332,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
                     className="w-full text-[14px] bg-gallery-paper border border-border-hairline rounded-[4px] p-3 text-ink focus:border-proofline-blue focus:outline-none font-legal-serif leading-relaxed"
-                    rows={4}
+                    rows={5}
                   />
                   <div className="flex justify-end gap-2">
                     <button
@@ -279,44 +350,58 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="text-[14px] text-ink leading-relaxed font-legal-serif whitespace-pre-line bg-gallery-paper/30 p-4 rounded-[4px] border border-border-hairline/40">
+                <div 
+                  onClick={() => handleStartEdit(block.id, block.text)}
+                  className="text-[14px] text-ink leading-relaxed font-legal-serif whitespace-pre-line bg-gallery-paper/30 p-4 rounded-[4px] border border-border-hairline/40 cursor-pointer hover:border-proofline-blue/50 hover:bg-gallery-paper/60 transition-colors group relative"
+                  title="Click to edit section text"
+                >
                   {block.text}
+                  <div className="hidden group-hover:flex items-center gap-1 text-[11px] text-proofline-blue font-sans absolute top-2 right-2 bg-white px-2 py-0.5 rounded-[3px] border border-proofline-blue/30 shadow-xs">
+                    <Edit3 className="w-3 h-3" />
+                    <span>Click to Edit</span>
+                  </div>
                 </div>
               )}
 
               {/* Citation Anchors Footer */}
-              {block.spanIds.length > 0 && (
-                <div className="pt-3 border-t border-border-hairline/70 flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-ink-steel font-mono">
-                    <span className="font-semibold text-ink-slate">Anchors:</span>
-                    {block.spanIds.map((sid) => {
-                      const span = spansById.get(sid);
-                      const doc = span ? docsById.get(span.documentId) : undefined;
-                      return (
-                        <button
-                          key={sid}
-                          onClick={() => span && onSelectSpan(span)}
-                          className="px-2 py-0.5 rounded-[3px] bg-gallery-mist border border-border-hairline text-ink hover:border-proofline-blue hover:text-proofline-blue transition-colors flex items-center gap-1"
-                        >
-                          <FileText className="w-2.5 h-2.5" />
-                          <span>{doc?.filename || sid}</span>
-                          {span?.lineStart && <span>#L{span.lineStart}</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {!isEditing && (
-                    <button
-                      onClick={() => handleStartEdit(block.id, block.text)}
-                      className="text-[11px] text-ink-slate hover:text-ink font-medium flex items-center gap-1"
-                    >
-                      <Edit3 className="w-3 h-3" />
-                      <span>Edit Block</span>
-                    </button>
+              <div className="pt-3 border-t border-border-hairline/70 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-ink-steel font-mono">
+                  {block.spanIds.length > 0 ? (
+                    <>
+                      <span className="font-semibold text-ink-slate">Anchors:</span>
+                      {block.spanIds.map((sid) => {
+                        const span = spansById.get(sid);
+                        const doc = span ? docsById.get(span.documentId) : undefined;
+                        return (
+                          <button
+                            key={sid}
+                            onClick={() => span && onSelectSpan(span)}
+                            className="px-2 py-0.5 rounded-[3px] bg-gallery-mist border border-border-hairline text-ink hover:border-proofline-blue hover:text-proofline-blue transition-colors flex items-center gap-1"
+                          >
+                            <FileText className="w-2.5 h-2.5" />
+                            <span>{doc?.filename || sid}</span>
+                            {span?.lineStart && <span>#L{span.lineStart}</span>}
+                          </button>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-ink-muted italic font-sans">
+                      Direct practitioner entry · Click text or Edit Section to modify.
+                    </span>
                   )}
                 </div>
-              )}
+
+                {!isEditing && (
+                  <button
+                    onClick={() => handleStartEdit(block.id, block.text)}
+                    className="text-[11px] text-ink-slate hover:text-ink font-medium flex items-center gap-1"
+                  >
+                    <Edit3 className="w-3 h-3" />
+                    <span>Edit Block</span>
+                  </button>
+                )}
+              </div>
             </div>
           );
         })}
