@@ -85,16 +85,18 @@ export class LocalModelManager {
       const tags = models.map(m => m.name || m.model);
       const latencyMs = Date.now() - startTime;
 
-      const gemmaTag = tags.find(t => t.toLowerCase().includes('gemma')) || tags[0] || 'gemma4:e4b';
+      const gemma4Tag = tags.find(t => t.toLowerCase().includes('gemma4'));
+      const gemma2Tag = tags.find(t => t.toLowerCase().includes('gemma2') || t.toLowerCase().includes('gemma'));
+      const activeTag = gemma4Tag || gemma2Tag || tags[0] || 'None (Offline)';
 
       return {
         state: models.length > 0 ? 'connected' : 'offline',
         endpoint: this.endpoint,
-        modelTag: gemmaTag,
+        modelTag: activeTag,
         detectedTags: tags,
         latencyMs,
         lastChecked: new Date().toISOString(),
-        vramUsedEstimateMb: gemmaTag.includes('e2b') ? 2100 : 3800,
+        vramUsedEstimateMb: activeTag.includes('e2b-it-qat') ? 1460 : (activeTag.includes('2b') ? 1720 : 3800),
         cloudRoutesDisabled: true
       };
     } catch (err: unknown) {

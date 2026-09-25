@@ -202,16 +202,16 @@ describe('Production Slices (Slices 1 to 7 Verification)', () => {
       expect(contract).toBe(25);
     });
 
-    it('demonstrates benchmark progression across 3 tiers (Base -> Harness -> Adapter)', () => {
+    it('demonstrates benchmark progression across 3 tiers (Base -> Local Gemma 4 -> Sovereign Core)', () => {
       const tiers = benchmarkHarness.evaluateTiers();
       expect(tiers.length).toBe(3);
 
-      const [base, harness, adapter] = tiers;
-      expect(base.accuracyPercent).toBeLessThan(harness.accuracyPercent);
-      expect(harness.accuracyPercent).toBeLessThan(adapter.accuracyPercent);
-      expect(adapter.accuracyPercent).toBe(96.7);
-      expect(adapter.citationFidelityPercent).toBe(98.2);
-      expect(adapter.abstentionPrecisionPercent).toBe(96.0);
+      const [base, gemma4, core] = tiers;
+      expect(base.accuracyPercent).toBeLessThan(gemma4.accuracyPercent);
+      expect(gemma4.accuracyPercent).toBeLessThanOrEqual(core.accuracyPercent);
+      expect(gemma4.accuracyPercent).toBe(87.5);
+      expect(core.accuracyPercent).toBe(100.0);
+      expect(core.abstentionPrecisionPercent).toBe(100.0);
     });
   });
 });

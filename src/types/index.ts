@@ -691,7 +691,7 @@ export interface BenchmarkTask {
 }
 
 export interface BenchmarkRunScore {
-  evaluatedTier: 'base_model' | 'harness_rag' | 'adapter_engine';
+  evaluatedTier: 'base_model' | 'harness_rag' | 'adapter_engine' | 'local_gemma4' | 'sovereign_core';
   totalTasks: number;
   passedTasks: number;
   accuracyPercent: number;

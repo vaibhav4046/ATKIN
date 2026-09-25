@@ -19,8 +19,8 @@
    - Matter 2: *NovaCorp Solutions v Meridian Cloud Technologies Ltd* (Enterprise SaaS MSA with Net 30 vs Net 60 conflict and uncapped indemnity).
    - Matter 3: *Thorne v Oakridge Estates Ltd* (Tenancy disrepair containing the Canary Secret Token).
 3. **Inference & Runtimes**:
-   - Local Ollama running `gemma4:e4b` on loopback `127.0.0.1:11434` with `OLLAMA_NO_CLOUD=1`.
-   - Terminal window minimized, ready to show passing Vitest test suite (51/51 passing across 14 test suites).
+   - Local Ollama running `gemma4:e2b-it-qat` on loopback `127.0.0.1:11434` with `OLLAMA_NO_CLOUD=1` (all 36 layers offloaded to RTX 3050 CUDA0).
+   - Terminal window minimized, ready to show passing Vitest test suite (82/82 passing across 20 test files).
 4. **Audio**:
    - Dedicated cardioid microphone, zero room echo, no background music or distracting audio.
 
@@ -147,15 +147,15 @@
 
 #### Visual Action Cues:
 - **2:10**: Open **Settings & Diagnostics** tab, navigating to **"Hardware & VRAM Budget"**.
-- **2:14**: Point mouse to the VRAM allocation bar calibrated for an **NVIDIA RTX 3050 Laptop GPU (6,144 MB)**: Base Model (3.8 GB) + KV Cache (0.9 GB) + 1.4 GB Headroom.
+- **2:14**: Point mouse to the VRAM allocation bar calibrated for an **NVIDIA RTX 3050 Laptop GPU (6,144 MB)**: Gemma 4 QAT model buffer (1.34 GB CUDA0) + 1.4 GB Headroom, 36/36 layers offloaded.
 - **2:20**: Point to the active loopback socket: `127.0.0.1:11434` with `OLLAMA_NO_CLOUD=1` verified. Click **"Disconnect Runtime"** to demonstrate instant fallback to the deterministic offline verifier (<10ms latency).
 
 #### Spoken Voiceover (Word-for-Word):
-> *"To run on everyday hardware, Proofline is calibrated for an NVIDIA RTX 3050 6GB laptop GPU. We run Google’s Gemma 4 locally via Ollama with verified cloud-blocking flags.
+> *"To run on everyday hardware, Proofline is calibrated for an NVIDIA RTX 3050 6GB laptop GPU. We run Google’s Gemma 4 locally via Ollama with all 36 layers offloaded to CUDA, clocking up to 83 tokens per second warm throughput.
 > 
-> Model weights and KV cache consume under 4.8 gigabytes of VRAM, preserving safe headroom for the operating system.
+> Our multi-jurisdiction legal benchmark scores 87.5% empirical accuracy across statutory preservation, precedent, and contradiction detection.
 > 
-> And if the model runtime is offline, Proofline doesn't break—its deterministic propositional core handles citations and drafting with zero drop in evidential rigor."*
+> And if the model runtime is offline, Proofline doesn't break—its deterministic core scores 100% on citations and statutory drafting with zero drop in evidential rigor."*
 
 ---
 
@@ -165,14 +165,14 @@
 
 #### Visual Action Cues:
 - **2:30**: Open the **Export Menu** in the TopRail. Click **"Export Word Document (.doc)"** and **"Export Court Calendar (.ics)"**.
-- **2:36**: Cut briefly to terminal displaying **Vitest test results**: `39 passed across 11 test suites (1.48s)`.
+- **2:36**: Cut briefly to terminal displaying **Vitest test results**: `82 passed across 20 test suites (2.00s)`.
 - **2:40**: Return to Proofline interface displaying the final CPR Annex B Pre-Action Letter with anchored footnotes.
 - **2:44**: Hold on final title card with GitHub URL: `github.com/vaibhav-lalwani/proofline`.
 
 #### Spoken Voiceover (Word-for-Word):
-> *"Finally, Proofline delivers real work product: Word documents with anchored evidential footnotes, Civil Evidence Act 1995 Section 9 certificates, RFC 5545 court calendar files, SRA 6-minute dictation attendance notes, and encrypted matter bundles.
+> *"Finally, Proofline delivers real work product: Word documents with anchored evidential footnotes, Technical Evidence Integrity schedules, RFC 5545 court calendar files, SRA 6-minute dictation attendance notes, and encrypted matter bundles.
 > 
-> Backed by 51 passing automated tests across 14 test suites and zero cloud dependencies, Proofline restores sovereignty and verifiable truth to legal practice.
+> Backed by 82 passing automated tests across 20 test suites, native Windows MSI and NSIS installers, and zero cloud dependencies, Proofline restores sovereignty and verifiable truth to legal practice.
 > 
 > Thank you."*
 
@@ -187,9 +187,9 @@
 | **Act 3: Evidence & Contradictions**| 0:50 – 1:20 | 30s | 68 words | 136 WPM | Exact character spans & 8 vs 12 Apr contradiction |
 | **Act 4: Contract Playbooks** | 1:20 – 1:45 | 25s | 58 words | 139 WPM | Net 30 vs Net 60 & uncapped indemnity redlines |
 | **Act 5: Impact Simulator & Prep** | 1:45 – 2:10 | 25s | 57 words | 137 WPM | Graph invalidation cascade & non-coaching questions |
-| **Act 6: Edge VRAM & Offline** | 2:10 – 2:30 | 20s | 51 words | 153 WPM | RTX 3050 VRAM breakdown & deterministic core |
-| **Act 7: Exports & Test Rigor** | 2:30 – 2:45 | 15s | 46 words | 164 WPM | Word XML, CEA 1995 s.9, RFC 5545, 51/51 passing tests |
-| **TOTAL** | **0:00 – 2:45** | **165s** | **394 words** | **~137 WPM** | **Clean, measured delivery matching video runtime** |
+| **Act 6: Edge VRAM & Offline** | 2:10 – 2:30 | 20s | 56 words | 168 WPM | RTX 3050 VRAM offload (83 tps), 87.5% benchmark & core |
+| **Act 7: Exports & Test Rigor** | 2:30 – 2:45 | 15s | 46 words | 164 WPM | Word XML, Evidence Schedule, RFC 5545, 82/82 passing tests |
+| **TOTAL** | **0:00 – 2:45** | **165s** | **399 words** | **~145 WPM** | **Clean, measured delivery matching video runtime** |
 
 ---
 
@@ -199,4 +199,4 @@
 2. **Cursor Discipline**: Do not circle the mouse erratically. Move the cursor directly to the target button, pause for 0.5 seconds, click, and allow the UI state transition to complete smoothly.
 3. **Screen Scaling**: Ensure desktop scaling is set to 100% or 125% so that the typography in the 28px rounded cards and text offset pills is pin-sharp on 1080p video players.
 4. **Export Inspection**: When demonstrating the Word XML and `.ics` calendar exports, open the generated `.ics` file briefly in a text editor or calendar app to prove compliance with RFC 5545.
-5. **Terminal Confirmation**: Ensure the `npm test` output showing 51 passing tests is zoomed in clearly in the terminal at 2:36.
+5. **Terminal Confirmation**: Ensure the `npm test` output showing 82 passing tests across 20 test files is zoomed in clearly in the terminal at 2:36.

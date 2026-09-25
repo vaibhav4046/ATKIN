@@ -44,13 +44,26 @@ export async function checkOllamaConnection(endpoint = OLLAMA_DEFAULT_URL): Prom
     const models = Array.isArray(data.models) ? data.models.map((m: { name?: string; model?: string }) => m.name || m.model || '') : [];
     const latencyMs = Date.now() - startTime;
 
-    // Detect Gemma 4 variants: e2b, e4b, 12b, 26b
-    const gemmaTag = models.find((m: string) => m.toLowerCase().includes('gemma')) || models[0] || 'gemma4:e4b';
+    if (models.length === 0) {
+      return {
+        state: 'offline',
+        endpoint,
+        modelTag: 'None (No models installed)',
+        detectedTags: [],
+        errorMessage: 'Ollama is running but no models are installed. Run "ollama pull gemma4:e2b-it-qat" or "ollama pull gemma2:2b".',
+        lastChecked: new Date().toISOString()
+      };
+    }
+
+    // Detect installed local models: prioritize gemma4, then gemma2, then first available
+    const gemma4Model = models.find((m: string) => m.toLowerCase().includes('gemma4'));
+    const gemma2Model = models.find((m: string) => m.toLowerCase().includes('gemma2') || m.toLowerCase().includes('gemma'));
+    const activeModelTag = gemma4Model || gemma2Model || models[0];
 
     return {
-      state: models.length > 0 ? 'connected' : 'offline',
+      state: 'connected',
       endpoint,
-      modelTag: gemmaTag,
+      modelTag: activeModelTag,
       detectedTags: models,
       latencyMs,
       lastChecked: new Date().toISOString()
@@ -78,7 +91,7 @@ export interface ModelDraftProposal {
 export async function requestGemmaDraftBlock(
   prompt: string,
   contextSpans: Span[],
-  modelTag = 'gemma4:e4b',
+  modelTag = 'gemma4:e2b-it-qat',
   endpoint = OLLAMA_DEFAULT_URL
 ): Promise<ModelDraftProposal> {
   const spansContext = contextSpans

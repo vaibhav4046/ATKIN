@@ -1,0 +1,92 @@
+[
+  {
+    "step": "1. Create Matter",
+    "status": "PASS",
+    "detail": "Created matter \"Vance v Apex Tech Ltd (Laptop Hardware Failure)\" [ID: matter-judge-live-1790311099571]",
+    "timestamp": "2026-09-25T04:38:19.571Z"
+  },
+  {
+    "step": "2. Import Local Source",
+    "status": "PASS",
+    "detail": "Ingested \"Invoice_and_Service_Log_INV-2025-88412.txt\" (SHA-256: 5d1c0a1c5977dc67...)",
+    "timestamp": "2026-09-25T04:38:19.571Z"
+  },
+  {
+    "step": "3. Evidential Span Extraction",
+    "status": "PASS",
+    "detail": "Extracted character span [146..186] -> \"Purchase & Delivery Date: 14 August 2025\"",
+    "timestamp": "2026-09-25T04:38:19.571Z"
+  },
+  {
+    "step": "4. Ask Question & Derive Claim",
+    "status": "PASS",
+    "detail": "Claim grounded to span: \"The buyer is entitled to exercise the short-term right to reject under Consumer Rights Act 2015 s.22 within the 30-day statutory window.\" (Anchored to CRA 2015 s.22)",
+    "timestamp": "2026-09-25T04:38:19.571Z"
+  },
+  {
+    "step": "5. Draft Legal Document",
+    "status": "PASS",
+    "detail": "Drafted \"Particulars of Rejection & Demand for Full Refund\" with citation links to [claim-cra-s22]",
+    "timestamp": "2026-09-25T04:38:19.571Z"
+  },
+  {
+    "step": "6. Alter Evidence Source",
+    "status": "PASS",
+    "detail": "Altered purchase date from 14 Aug 2025 to 14 Jan 2025 (SHA-256 changed to e17bc9d9d9b228ae...)",
+    "timestamp": "2026-09-25T04:38:19.571Z"
+  },
+  {
+    "step": "7. Cascade Invalidation Flag",
+    "status": "PASS",
+    "detail": "Original span text missing at offset [146..186]. Claim marked: STALE. Draft block marked: STALE.",
+    "timestamp": "2026-09-25T04:38:19.572Z"
+  },
+  {
+    "step": "8. Regenerate & Review Draft",
+    "status": "PASS",
+    "detail": "Regenerated draft block under CRA 2015 s.23 (Repair/Replacement remedy). Staleness cleared.",
+    "timestamp": "2026-09-25T04:38:19.572Z"
+  },
+  {
+    "step": "9. Physical Deliverables Export",
+    "status": "PASS",
+    "detail": "Exported Word XML (.doc), Markdown Brief (.md), and Sovereign Bundle (.proofline)",
+    "timestamp": "2026-09-25T04:38:19.573Z"
+  },
+  {
+    "step": "10. Close & Reopen App",
+    "status": "PASS",
+    "detail": "Re-hydrated matter \"Vance v Apex Tech Ltd (Laptop Hardware Failure)\" with intact draft revisions.",
+    "timestamp": "2026-09-25T04:38:19.582Z"
+  },
+  {
+    "step": "Negative 1: Empty Matter Query",
+    "status": "PASS",
+    "detail": "Coverage: 0.0%. Triggered Evidential Deficit Notice. Refused to speculate.",
+    "timestamp": "2026-09-25T04:38:19.582Z"
+  },
+  {
+    "step": "Negative 2: Adversarial Injection",
+    "status": "PASS",
+    "detail": "Neutralized directive payload. Ingested as inert literal string.",
+    "timestamp": "2026-09-25T04:38:19.582Z"
+  },
+  {
+    "step": "Negative 3: Revoked Network Egress",
+    "status": "PASS",
+    "detail": "Egress blocked by hardware policy broker. Zero bytes sent.",
+    "timestamp": "2026-09-25T04:38:19.582Z"
+  },
+  {
+    "step": "Negative 4: Tampered Bundle Recovery",
+    "status": "PASS",
+    "detail": "Detected ciphertext bit modification. Refused corrupted bundle.",
+    "timestamp": "2026-09-25T04:38:19.582Z"
+  },
+  {
+    "step": "Negative 5: Cross-Matter Isolation",
+    "status": "PASS",
+    "detail": "Queried Matter B for Matter A canary token. Records returned: 0.",
+    "timestamp": "2026-09-25T04:38:19.582Z"
+  }
+]

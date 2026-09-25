@@ -241,74 +241,79 @@ export const ChatTab: React.FC<ChatTabProps> = ({
     setTimeout(() => setCopiedMsgId(null), 2000);
   };
 
-  const handleVoiceDictation = async () => {
-    setIsDictating(true);
+  // Sovereign Dictation Intake Studio Modal State
+  const [isDictationModalOpen, setIsDictationModalOpen] = useState(false);
+  const [dictationText, setDictationText] = useState('');
+  const [dictationSpeaker, setDictationSpeaker] = useState('Solicitor');
+  const [allowBrowserMic, setAllowBrowserMic] = useState(false);
 
+  const handleVoiceDictation = () => {
+    setIsDictationModalOpen(true);
+  };
+
+  const handleStartBrowserSpeech = () => {
     const SpeechRec = (window as unknown as { SpeechRecognition?: any; webkitSpeechRecognition?: any }).SpeechRecognition ||
                       (window as unknown as { SpeechRecognition?: any; webkitSpeechRecognition?: any }).webkitSpeechRecognition;
 
-    if (SpeechRec) {
-      try {
-        const recognition = new SpeechRec();
-        recognition.continuous = false;
-        recognition.interimResults = true;
-        recognition.lang = 'en-GB';
-
-        setVoiceStatus('Listening to microphone (real-time offline speech input)...');
-
-        recognition.onresult = (event: any) => {
-          let transcript = '';
-          for (let i = 0; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-          }
-          setInputQuery(transcript);
-        };
-
-        recognition.onerror = async () => {
-          // Fallback to offline speech engine
-          await runOfflineSpeechEngineFallback();
-        };
-
-        recognition.onend = () => {
-          setIsDictating(false);
-          setVoiceStatus('Microphone dictation captured · SRA 6-min billing recorded');
-          setTimeout(() => setVoiceStatus(null), 4000);
-        };
-
-        recognition.start();
-        return;
-      } catch {
-        // Fall back to engine
-      }
+    if (!SpeechRec) {
+      alert('Browser SpeechRecognition API is not supported in this environment. Please paste your audio transcript directly.');
+      return;
     }
 
-    await runOfflineSpeechEngineFallback();
+    try {
+      setIsDictating(true);
+      const recognition = new SpeechRec();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = 'en-GB';
+
+      setVoiceStatus('Listening via browser speech recognition (Notice: vendor cloud processing may occur)...');
+
+      recognition.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setDictationText(prev => prev ? `${prev} ${transcript}` : transcript);
+      };
+
+      recognition.onerror = () => {
+        setIsDictating(false);
+        setVoiceStatus('Browser speech recognition encountered an error. Please paste text directly.');
+      };
+
+      recognition.onend = () => {
+        setIsDictating(false);
+        setVoiceStatus('Speech captured. Review text below before submitting.');
+      };
+
+      recognition.start();
+    } catch {
+      setIsDictating(false);
+    }
   };
 
-  const runOfflineSpeechEngineFallback = async () => {
-    setVoiceStatus('Processing sovereign attendance note audio (zero cloud egress)...');
+  const handleSubmitDictation = async () => {
+    if (!dictationText.trim()) return;
 
-    let dictated = '';
-    if (matterId.includes('bates')) {
-      dictated = 'Attendance note with Alan Bates: Fujitsu PIN-188 engineering reports confirm remote accounting adjustments and Bug 188 duplication; Post Office Clause 12 fails reasonableness under UCTA 1977 s.3 and s.11 inter alia.';
-    } else if (matterId.includes('contract') || matterId.includes('novacorp')) {
-      dictated = 'Attendance note with General Counsel: Review Clause 8.1 uncapped customer indemnity against UK SaaS playbook standard and propose bilateral cap mutatis mutandis.';
-    } else if (matterId.includes('tenancy') || matterId.includes('thorne')) {
-      dictated = 'Conference with tenant Thorne: Housing Act 2004 s.213 deposit was never protected in government tenancy deposit scheme; Section 21 notice is invalid under Deregulation Act 2015.';
-    } else {
-      dictated = 'Attendance note with claimant Vance: Laptop screen failure manifested on day 24 post-delivery; prima facie 30-day short-term right to reject under CRA 2015 s.22 is intact.';
-    }
+    setVoiceStatus('Processing sovereign attendance note and calculating SRA billing units...');
+
+    // Calculate approximate duration based on word count (avg 130 words per minute)
+    const wordCount = dictationText.trim().split(/\s+/).length;
+    const estimatedSeconds = Math.max(30, Math.round((wordCount / 130) * 60));
 
     const txResult = await localSpeechEngine.processOfflineAudio({
       matterId,
-      audioBlob: new ArrayBuffer(512),
+      audioBlob: new ArrayBuffer(0),
       clientConsentRecorded: true,
-      overrideTranscript: dictated
+      speakerTag: dictationSpeaker,
+      overrideTranscript: dictationText.trim()
     });
 
     setInputQuery(txResult.fullText);
-    setIsDictating(false);
-    setVoiceStatus(`Offline ASR Complete · ${txResult.durationSeconds}s · SRA Billing: ${txResult.billingUnits6Min} Unit (6-min convention) · Latin Glossary Verified`);
+    setIsDictationModalOpen(false);
+    setDictationText('');
+    setVoiceStatus(`Attendance Note Processed · ~${estimatedSeconds}s · SRA Billing: ${txResult.billingUnits6Min} Unit(s) (6-min convention) · SHA-256 Verified`);
     setTimeout(() => setVoiceStatus(null), 5000);
   };
 
@@ -652,6 +657,81 @@ export const ChatTab: React.FC<ChatTabProps> = ({
           <div className="px-4 py-2 border-t border-border-hairline bg-canvas-subtle flex items-center justify-between text-[10.5px] text-ink-steel font-mono">
             <span>SRA Principle 1 &amp; 2 Audited</span>
             <span>Local Cryptographic Storage</span>
+          </div>
+        </div>
+      )}
+
+      {/* Dictation & Attendance Note Intake Modal */}
+      {isDictationModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+          <div className="bg-white border border-border-hairline rounded-[6px] shadow-modal max-w-xl w-full p-5 flex flex-col gap-4 animate-in fade-in duration-150">
+            <div className="flex items-center justify-between border-b border-border-hairline pb-3">
+              <div className="flex items-center gap-2">
+                <Mic className="w-4 h-4 text-proofline-blue" />
+                <h3 className="text-[14px] font-semibold text-ink">Dictation &amp; Attendance Note Intake Studio</h3>
+              </div>
+              <button
+                onClick={() => setIsDictationModalOpen(false)}
+                className="text-ink-steel hover:text-ink text-[16px] leading-none"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Sovereign Privacy Notice */}
+            <div className="p-3 bg-canvas-subtle border border-border-hairline rounded-[4px] text-[11px] text-ink-slate leading-relaxed">
+              <strong className="text-ink block mb-0.5">Sovereign Privacy Boundary Notice:</strong>
+              Standard browser speech recognition routes audio streams to vendor cloud servers. To guarantee zero cloud egress on confidential matters, paste dictaphone transcripts directly. SRA 6-minute billing units and Latin legal glossary references are calculated locally on the host.
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between text-[11.5px] text-ink font-medium">
+                <span>Attendance Note Transcript / Dictation Text</span>
+                <span className="text-[10.5px] text-ink-steel font-mono">
+                  {dictationText.trim() ? `${dictationText.trim().split(/\s+/).length} words` : '0 words'}
+                </span>
+              </div>
+              <textarea
+                value={dictationText}
+                onChange={(e) => setDictationText(e.target.value)}
+                placeholder="Paste client conference transcript, dictaphone export, or type attendance note here (e.g. 'Conference attended with client. Reviewed Fujitsu PIN-188 report; agreed to file CPR Part 31 request...')."
+                rows={5}
+                className="w-full p-3 border border-border-hairline rounded-[4px] text-[12px] font-mono leading-relaxed focus:outline-none focus:border-proofline-blue"
+              />
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-border-hairline">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleStartBrowserSpeech}
+                  disabled={isDictating}
+                  className="px-2.5 py-1.5 bg-canvas-subtle hover:bg-slate-100 border border-border-hairline rounded-[4px] text-[11px] text-ink-slate flex items-center gap-1.5"
+                  title="Record audio via browser SpeechRecognition (vendor cloud processing may occur)"
+                >
+                  <Mic className={`w-3.5 h-3.5 ${isDictating ? 'text-rose-600 animate-pulse' : ''}`} />
+                  <span>{isDictating ? 'Listening...' : 'Record via Browser'}</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsDictationModalOpen(false)}
+                  className="px-3 py-1.5 bg-canvas-subtle hover:bg-slate-100 border border-border-hairline rounded-[4px] text-[11px] text-ink-steel"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmitDictation}
+                  disabled={!dictationText.trim()}
+                  className="px-3.5 py-1.5 bg-ink hover:bg-ink-light disabled:opacity-40 text-white rounded-[4px] text-[11.5px] font-medium transition-colors"
+                >
+                  Insert Attendance Note
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -27,7 +27,7 @@ Proofline solves these systemic failures through a **neuro-symbolic, local-first
 - **Deterministic Citation Gate**: Every factual proposition links to an exact character and line span with an identical SHA-256 checksum. Hallucinated assertions are mathematically barred from entering work product.
 - **Declarative Contract Playbooks**: Automated clause extraction, Net 30 vs. Net 60 conflict detection, uncapped indemnity flagging, and instant redline generation.
 - **Cascading Change Impact Simulator**: Simulates downstream evidential fallout when documents are modified, automatically invalidating dependent claims and drafts.
-- **Local Gemma 4 on Edge Hardware**: Executes Google's Gemma 4 (`gemma4:e4b` / `gemma4:e2b`) over local loopback (`127.0.0.1:11434`) within a strict 6GB VRAM budget, with 100% pure deterministic offline fallback.
+- **Local Gemma 4 on Edge Hardware**: Executes Google's Gemma 4 (`gemma4:e2b-it-qat`) over local loopback (`127.0.0.1:11434`) with all 36 repeating layers offloaded to an NVIDIA RTX 3050 Laptop GPU (82.95 tokens/second warm throughput, 87.5% legal benchmark pass rate across 8 multi-jurisdiction tasks, and 100% pure deterministic offline fallback).
 - **Production-Grade Legal Exports**: Word XML (`.doc`) with anchored footnotes, RFC 5545 court calendar (`.ics`), SRA 6-minute dictation parser, bidirectional Obsidian notebook (`[[wikilinks]]`), and password-encrypted `.proofline` bundles.
 
 ---
@@ -36,15 +36,15 @@ Proofline solves these systemic failures through a **neuro-symbolic, local-first
 
 ### 1. Real-World Impact & Feasibility (25%)
 - **Regulatory Compliance by Design**: Directly addresses the Solicitors Regulation Authority (SRA) 2024–2026 guidance on generative AI misuse, providing fee earners with audit-ready provenance rather than unverified chat completions.
-- **Immediate Desktop Utility**: Zero cloud infrastructure, zero per-seat subscription overhead, and zero API token costs. A sole practitioner, pro bono legal clinic, or large law firm can deploy Proofline instantly on existing laptop hardware.
+- **Immediate Desktop Utility**: Zero cloud infrastructure, zero per-seat subscription overhead, and zero API token costs. A sole practitioner, pro bono legal clinic, or large law firm can deploy Proofline instantly on existing laptop hardware via native MSI/NSIS installers.
 - **End-to-End Civil Matter Workflow**: Built with authentic landmark litigation files (Bates and Others v Post Office Ltd [2019] EWHC 3408 Horizon IT litigation with Fujitsu Call 188 bug logs and Fraser J findings, B2B SaaS Master Services Agreement, and residential tenancy disrepair).
 - **Audit-Ready Court Deliverables**: Generates formal CPR Annex B Pre-Action Letters Before Claim, SRA file-audit attendance notes, and court deadline calendars without manual re-keying.
 
 ### 2. Technical Execution & Functionality (25%)
 - **Dual-Layer Architecture**: Built on **Tauri 2 (Rust core)** for sovereign desktop execution with typed IPC commands (`vault_unlock`, `network_set_mode`, `memory_query`), accompanied by an isomorphic **React 18 / TypeScript / WebCrypto / Dexie IndexedDB** engine for zero-install browser evaluation.
-- **51/51 Automated Tests Passing**: Comprehensive test coverage across 14 test suites executing in ~2.0s via Vitest, validating PBKDF2/AES-GCM-256 roundtrips, canary memory isolation, network broker interception, real-time evidential ingestion, multi-jurisdiction primary statutory search, contract clause parsing, IRAC legal reasoning, and prompt injection defense.
+- **82/82 Automated Tests Passing**: Comprehensive test coverage across 20 test suites executing in ~2.0s via Vitest, validating PBKDF2/AES-GCM-256 roundtrips, canary memory isolation, network broker interception, real-time evidential ingestion, multi-jurisdiction primary statutory search, contract clause parsing, IRAC legal reasoning, and prompt injection defense.
 - **5-Stage IRAC Legal Reasoning Engine**: Deterministic sovereign analytical engine breaking queries into (1) Issue Framing, (2) Applicable Statutory Rules & Precedents, (3) Strict Grounded Evidential Application, (4) Adverse Evidence & Defect Scrutiny, and (5) Actionable Strategic Advice.
-- **Court Admissibility & Section 9 Certification**: Exports formal **Civil Evidence Act 1995 Section 9 Certificates of Authenticity & Statements of Truth** for court bundles, certifying computing integrity and SHA-256 manifest validity.
+- **Court Admissibility & Technical Evidence Integrity**: Exports formal **Technical Evidence Integrity & Provenance Schedules** with SHA-256 manifests and span coordinates, explicitly warning that statutory Statements of Truth (CPR 32.14 / Civil Evidence Act 1995 s.9) require human legal practitioner sign-off.
 - **Multi-Jurisdiction Legal Depth**: Primary authority index covering UK (CPR, UCTA, CRA, Housing Act, PACE), US (Delaware DGCL § 102(b)(7), FRCP Rule 37(e)), EU (AI Act Arts 14 & 50, GDPR Arts 28 & 82), India (BSA 2023 s.61/63 electronic evidence, Commercial Courts Act s.12A), and Singapore (SIAC Rule 27).
 - **Real-Time Evidential Ingestion Engine**: Ingests ANY real legal document (.txt, .md, .eml, .json, or raw pasted text), computes WebCrypto SHA-256 digests, segments sentence spans with line coordinates, extracts factual assertions, and automatically detects cross-document contradictions in real time.
 - **Exact Span Grounding**: Text extraction maps assertions to immutable `[startOffset, endOffset]` byte coordinates and line numbers, verified against SHA-256 document digests.
@@ -99,8 +99,8 @@ Proofline's engineering specifically answers the real-world concerns of the dist
 
 - **For Sashank Agarwal (Senior Cloud Software & Infra Engineer at NVIDIA)**:
   - *Local Edge AI Optimization*: Precision-engineered for consumer-grade GPU constraints (NVIDIA RTX 3050 Laptop GPU, 6,144 MB VRAM, 16 GB RAM).
-  - *VRAM Budget Allocation*: 3.8 GB base model weights (`gemma4:e4b`), 0.9 GB KV cache (4k context window), leaving 1.4 GB dedicated headroom for OS and desktop display pipelines.
-  - *Airgapped Inference*: Loopback socket binding (`127.0.0.1:11434`) verified with `OLLAMA_NO_CLOUD=1` to prevent cloud offloading.
+  - *Empirically Measured Edge Hardware Performance*: Full 36/36 layer offload of `gemma4:e2b-it-qat` to CUDA0, Flash Attention enabled, 1,341.78 MiB CUDA0 model buffer + 2,152.50 MiB host memory, achieving 82.95 tokens/second warm throughput and 87.5% pass rate across 8 multi-jurisdiction legal benchmark tasks (`docs/BENCHMARK_RESULTS.json`).
+  - *Airgapped Inference*: Loopback socket binding (`127.0.0.1:11434`) verified with `OLLAMA_NO_CLOUD=1` to prevent cloud offloading, plus instant deterministic fallback.
 
 - **For Kunal Sharma (Product Lead at Stripe)**:
   - *Enterprise Product Velocity*: Declarative JSON contract playbooks (`STANDARD_UK_SAAS_PLAYBOOK`) standardizing risk positions across institutional teams.
@@ -113,9 +113,9 @@ Proofline's engineering specifically answers the real-world concerns of the dist
   - *Cascading Change Simulator*: Direct visual feedback demonstrating the downstream impact of document edits on dependent legal arguments.
 
 - **For Helly Patel & Chandra Bhushan Verma (Microsoft Engineers)**:
-  - *Native Systems Engineering*: Tauri 2 multi-process architecture with native Rust IPC commands and cross-platform WebCrypto fallback.
+  - *Native Systems Engineering*: Tauri 2 multi-process architecture with native Rust IPC commands, standalone 11.2 MB executable (`proofline.exe`), and enterprise MSI/NSIS Windows installers.
   - *Enterprise Open Standards*: RFC 5545 `.ics` court calendars, RFC 822 `.eml` email ingestion, Microsoft Word XML (`.doc`) with anchored footnotes, and bidirectional Obsidian markdown (`[[wikilinks]]`).
-  - *Robust Testing Rigor*: 51 passing unit and integration tests executing in ~2.0s with zero mocking of core cryptographic and propositional logic.
+  - *Robust Testing Rigor*: 82 passing unit and integration tests across 20 test suites executing in ~2.0s with zero mocking of core cryptographic and propositional logic.
 
 ---
 
@@ -220,19 +220,21 @@ Proofline's engineering specifically answers the real-world concerns of the dist
 - **Automated Invalidation**: The simulator visualizes exact numbers of impacted spans, dependent claims, and draft blocks requiring re-verification, setting affected claims to `invalidated` status to prevent stale evidence from appearing in court filings.
 
 ### 7. Local Gemma 4 on RTX 3050 VRAM Budget
-- **Edge Hardware Profile**: Targeted specifically for standard practitioner hardware: NVIDIA GeForce RTX 3050 Laptop GPU (6,144 MB VRAM, 16 GB System RAM).
-- **VRAM Breakdown**:
-  - Base Model Weights (`gemma4:e4b` 4B Q4_K_M): ~3,800 MB
-  - KV Cache (4,096 context window): ~900 MB
-  - Dedicated Headroom (OS + Desktop Display Pipeline): ~1,444 MB
-  - Total VRAM Utilization: ~76.5% (Safe margin preventing out-of-memory driver crashes).
-- **Loopback Enforcement**: Communicates exclusively over `http://127.0.0.1:11434` with `OLLAMA_NO_CLOUD=1` validated.
-- **Deterministic Offline Core**: If Ollama is unavailable, Proofline falls back instantaneously (<10ms) to its rule-based engine, generating fully verified CPR-compliant notices and contract analyses without dropping a single evidential citation.
+- **Edge Hardware Profile**: Targeted and benchmarked specifically on standard practitioner hardware: NVIDIA GeForce RTX 3050 Laptop GPU (6,144 MB VRAM, 16 GB System RAM).
+- **Empirical Hardware Offload**:
+  - Model: Google `gemma4:e2b-it-qat` (4,336,358,185 bytes / 4.34 GB, digest `07ea59a47401`).
+  - Offload: All **36/36 repeating layers offloaded to CUDA0** via Ollama on loopback `127.0.0.1:11434`.
+  - Flash Attention: Enabled on CUDA0.
+  - VRAM Utilization: 1,341.78 MiB CUDA0 model buffer + 2,152.50 MiB host memory, leaving generous dedicated headroom for OS and desktop display pipelines.
+  - Measured Throughput: **82.95 tokens/second** warm generation (1,042 tokens in 12.56s).
+  - Empirical Legal Accuracy: **87.5% pass rate (7/8 tasks)** across our rigorous multi-jurisdiction benchmark suite (`docs/BENCHMARK_RESULTS.json`), covering Consumer Rights Act 2015 s.19(14), UCTA 1977 reasonableness, Housing Act 2004 s.214 tenancy deposit penalties, *Donoghue v Stevenson* duty of care, and adverse telemetry contradictions.
+- **Deterministic Offline Core**: If Ollama is unavailable or stopped, Proofline instantaneously falls back (<10ms) to its rule-based engine, generating fully verified CPR-compliant notices and contract analyses with zero drop in evidential citations (achieving **100% / 8 of 8 passed** on deterministic legal queries).
 
 ### 8. Work Products & Enterprise Deliverables
 - **Microsoft Word XML (.doc)**: Emits well-formed Word XML incorporating native anchor-linked footnotes, preserving exact document citations and statutory references.
 - **RFC 5545 Court Calendar (.ics)**: Automatically calculates civil litigation deadlines (e.g., 14-day pre-action response windows, limitation dates) and exports `.ics` event files compatible with Outlook, Apple Calendar, and Google Calendar.
-- **SRA 6-Minute Dictation Parser**: Ingests raw audio dictation transcripts, parses timestamps and speakers, extracts action items and key issues, and formats SRA file-audit compliant attendance notes.
+- **Sovereign Dictation Studio & SRA 6-Minute Parser**: Ingests raw audio dictation transcripts from handheld dictaphones, parses timestamps and speakers, extracts action items and key issues, formats SRA file-audit compliant attendance notes in 6-minute billing units, and provides transparent notices regarding cloud speech recognition privacy.
+- **Technical Evidence Integrity & Provenance Schedule**: Replaces generic unverified claims with formal cryptographic schedules listing SHA-256 digests and span byte coordinates, while reminding fee earners of their personal obligation under CPR 32.14 / Civil Evidence Act 1995 s.9 to verify evidence prior to signing Statements of Truth.
 - **Obsidian Markdown Notebook**: Exports the entire matter into an interconnected folder hierarchy with YAML frontmatter and bidirectional `[[wikilinks]]` linking documents, claims, contradictions, authorities, and drafts.
 - **Encrypted .proofline Bundle Exchange**: Packages matters into portable, password-encrypted bundles using AES-GCM-256 with verifiable SHA-256 manifest hashes for secure firm-to-counsel transfer.
 
@@ -275,29 +277,35 @@ To experience Proofline's end-to-end workflow, consider the preloaded civil disp
 
 ## Empirical Verification & Testing Suite
 
-Proofline strictly rejects "hallucinated testing" or decorative status indicators. All core business logic, cryptographic guarantees, and parsing algorithms are verified via an automated Vitest test suite:
+Proofline strictly rejects "hallucinated testing" or decorative status indicators. All core business logic, cryptographic guarantees, and parsing algorithms are verified via an automated Vitest test suite executing across 20 test files:
 
 ```
  RUN  v3.2.7 C:/Users/lalwa/.gemini/antigravity/scratch/proofline
 
- ✓ src/tests/legalSearchEngine.test.ts (5 tests) 4ms
- ✓ src/tests/jobQueue.test.ts (4 tests) 7ms
- ✓ src/tests/contractReview.test.ts (7 tests) 10ms
- ✓ src/tests/injection.test.ts (3 tests) 4ms
- ✓ src/tests/verification.test.ts (4 tests) 4ms
- ✓ src/tests/networkBroker.test.ts (3 tests) 41ms
- ✓ src/tests/matterAnalyzer.test.ts (3 tests) 43ms
+ ✓ src/tests/contractReview.test.ts (7 tests) 7ms
+ ✓ src/tests/matterAnalyzer.test.ts (3 tests) 13ms
+ ✓ src/tests/connectorImporter.test.ts (3 tests) 13ms
+ ✓ src/tests/networkBroker.test.ts (3 tests) 10ms
+ ✓ src/tests/notebookStudio.test.ts (6 tests) 32ms
+ ✓ src/tests/vault.test.ts (4 tests) 140ms
+ ✓ src/tests/generateSampleExports.test.ts (1 test) 68ms
+ ✓ src/tests/realityVerification.test.ts (3 tests) 31ms
+ ✓ src/tests/persistence.test.ts (5 tests) 64ms
+ ✓ src/tests/bundleAndExport.test.ts (5 tests) 103ms
+ ✓ src/tests/productionSlices.test.ts (13 tests) 12ms
+ ✓ src/tests/legalSearchEngine.test.ts (5 tests) 6ms
+ ✓ src/tests/legalReasoningEngine.test.ts (4 tests) 6ms
+ ✓ src/tests/jobQueue.test.ts (4 tests) 5ms
  ✓ src/tests/memoryIsolation.test.ts (4 tests) 4ms
  ✓ src/tests/notebookExport.test.ts (1 test) 5ms
- ✓ src/tests/vault.test.ts (4 tests) 264ms
+ ✓ src/tests/contradiction.test.ts (1 test) 6ms
+ ✓ src/tests/verification.test.ts (4 tests) 6ms
  ✓ src/tests/rightsGate.test.ts (3 tests) 4ms
- ✓ src/tests/contradiction.test.ts (1 test) 4ms
- ✓ src/tests/legalReasoningEngine.test.ts (4 tests) 5ms
- ✓ src/tests/bundleAndExport.test.ts (5 tests) 801ms
+ ✓ src/tests/injection.test.ts (3 tests) 5ms
 
- Test Files  14 passed (14)
-      Tests  51 passed (51)
-   Duration  2.07s
+ Test Files  20 passed (20)
+      Tests  82 passed (82)
+   Duration  2.00s
 ```
 
 ### Verified Test Invariants:
@@ -308,6 +316,19 @@ Proofline strictly rejects "hallucinated testing" or decorative status indicator
 5. **Prompt Injection Containment**: Proves that malicious instructions embedded in case files are parsed as inert strings and never executed (`injection.test.ts`).
 6. **Playbook Anomaly Detection**: Proves that uncapped indemnities and Net 30 vs. Net 60 conflicts are accurately identified with appropriate redlines (`contractReview.test.ts`).
 7. **Bundle Integrity Verification**: Proves that exported `.proofline` packages verify against SHA-256 manifest digests and decrypt cleanly (`bundleAndExport.test.ts`).
+8. **Statutory Admissibility & Reality Verification**: Proves that evidence schedules reject automatic Statement of Truth certification without human review, and verifies that connector importers parse offline `.eml` and `.json` files without network calls (`realityVerification.test.ts`).
+
+---
+
+## Native Windows Desktop Release Packages
+
+Compiled via Tauri 2 and native Rust toolchain (`cargo build --release` with MSVC toolchain):
+
+| Package / Artifact | Path | Size | SHA-256 Checksum |
+| :--- | :--- | :--- | :--- |
+| **Standalone Binary** | `src-tauri/target/release/proofline.exe` | 11,222,016 bytes (11.2 MB) | `7EA5394D6510DB6FF0AC6662666EA2F88DEC59945AFC89F2B0EC3DE9ECED51CB` |
+| **Windows MSI Installer** | `src-tauri/target/release/bundle/msi/Proofline_1.0.0_x64_en-US.msi` | 3,919,872 bytes (3.92 MB) | `B77B8659DEA209826F032151E1630DD116491352FC31C51CEF3D71506DD93D76` |
+| **Windows NSIS Installer** | `src-tauri/target/release/bundle/nsis/Proofline_1.0.0_x64-setup.exe` | 2,636,394 bytes (2.64 MB) | `99B19A0E2FD7A3687818AF9924CB94D771D07AEAD012CF5EE5064FA81FC52A5A` |
 
 ---
 
@@ -317,26 +338,48 @@ Proofline is engineered for extreme efficiency. The complete web application bui
 
 ```
 vite v6.4.3 building for production...
-✓ 1931 modules transformed.
+✓ 1955 modules transformed.
 dist/index.html                   1.05 kB │ gzip:   0.63 kB
-dist/assets/index-D7ohY2bK.css   32.18 kB │ gzip:   6.30 kB
-dist/assets/index-D4Uy-75Q.js   466.80 kB │ gzip: 127.49 kB
-✓ built in 3.01s
+dist/assets/index-BHCeM_pa.css   45.26 kB │ gzip:   8.37 kB
+dist/assets/index-K37pS-0B.js   809.83 kB │ gzip: 230.49 kB
+✓ built in 3.81s
 ```
 
-- **Total Gzipped Bundle**: **~134 kB** (127.5 kB JS + 6.3 kB CSS)
 - **External Network Requests**: **Zero** (no CDNs, no web fonts, no external tracking scripts).
+- **Offline Self-Containment**: Entire UI assets, Lucide icons, fonts, and logic bundle to 238.8 kB gzipped.
 
 ---
 
-## Transparent Disclosures & Compliance
+## Transparent Disclosures & Truth Ledger
+
+In strict accordance with the LexHack 2026 Honor Code and our verified **Master Truth Ledger** (`docs/FINAL_PROOF_LEDGER.md`):
 
 1. **Solo Participant Disclosure**: Proofline was conceptualized, designed, and engineered entirely by **Vaibhav Lalwani** (MSc Student, University of Liverpool) for LexHack 2026.
 2. **AI Assistance Disclosure**: Development utilized AI coding assistants for code synthesis, test authoring, and refactoring under human architectural direction, systematic debugging, and rigorous test-driven validation.
-3. **Statutory Materials & Copyright**:
-   - UK Legislation materials (e.g., Consumer Rights Act 2015) are Crown Copyright, utilized under the **Open Government Licence (OGL) v3.0**.
-   - Case law citations reference **The National Archives Find Case Law** service. Proofline explicitly respects the **Open Justice Licence (OJL) v2.0**, enforcing single-record link-out gates and forbidding bulk computational training.
-4. **Professional Responsibility Disclaimer**: Proofline is an evidential organization and drafting assistance prototype designed for qualified legal practitioners and supervised law students. It does not provide legal advice, conduct autonomous litigation, or replace solicitor judgment.
+3. **Model Reality & Benchmark Evidence**:
+   - Model execution relies on Google’s open-weight `gemma4:e2b-it-qat` (4.34 GB, digest `07ea59a47401`) served via local Ollama daemon on loopback `127.0.0.1:11434`.
+   - Empirically measured hardware performance: all 36 repeating layers offloaded to CUDA0 (RTX 3050 6GB Laptop GPU), achieving 82.95 tokens/second warm throughput and 87.5% pass rate (7/8 tasks) on our legal evaluation benchmark (`docs/BENCHMARK_RESULTS.json`).
+   - *Honest Disclosure*: Earlier conversation exports referenced a "96.7% Sovereign Adapter". In accordance with zero-fabrication standards, we audited the environment and confirmed no fine-tuned adapter weights were created; the system is powered by Google’s open-weight Gemma 4 QAT model alongside Proofline’s 100% deterministic legal core.
+4. **Primary Law Packs & Rights Manifest**:
+   - 8 curated, rights-cleared Primary Law Packs (Consumer Rights Act 2015, Unfair Contract Terms Act 1977, Housing Act 2004, Civil Procedure Rules 1998, *Bates v Post Office*, *Donoghue v Stevenson*) are bundled under the **Open Government Licence (OGL) v3.0** and **Open Justice Licence (OJL) v2.0** (`docs/PRIMARY_LAW_PACK_MANIFEST.json`).
+   - *Honest Disclosure*: Earlier claims of "6,260 verified documents" represented an aspirational catalog indexing target. The production application includes 8 rights-cleared, full-text statutory packs for deterministic citation verification.
+5. **Voice Privacy & Dictation**:
+   - Proofline features a **Sovereign Dictation Studio** designed for confidential legal practice. It defaults to direct offline paste of transcripts from handheld dictaphones with SRA 6-minute billing units.
+   - *Honest Disclosure*: Browser `SpeechRecognition` APIs stream audio to third-party cloud servers (Google/Microsoft WAN endpoints). Proofline transparently warns the fee earner of this privacy risk before any live microphone session can begin.
+6. **Statutory Admissibility & Statements of Truth**:
+   - Proofline generates **Technical Evidence Integrity & Provenance Schedules** with SHA-256 file hashes and line coordinates.
+   - *Honest Disclosure*: The software explicitly does not purport to self-certify statutory Statements of Truth under CPR 32.14 or Section 9 Certificates of Authenticity under the Civil Evidence Act 1995. English law requires a qualified human legal practitioner to examine the evidence and assume personal professional responsibility.
+7. **Deterministic Grounding**: Every factual proposition requires matching character/line spans and matching SHA-256 document checksums. If Ollama is offline or uninstalled, the Deterministic Core handles drafting and citation checks without data loss.
+
+---
+
+## Complete Audit & Evidence Documents
+
+- Master Proof Ledger: [`docs/FINAL_PROOF_LEDGER.md`](file:///C:/Users/lalwa/.gemini/antigravity/scratch/proofline/docs/FINAL_PROOF_LEDGER.md)
+- Empirical Legal Benchmark: [`docs/BENCHMARK_RESULTS.json`](file:///C:/Users/lalwa/.gemini/antigravity/scratch/proofline/docs/BENCHMARK_RESULTS.json)
+- Primary Law Pack Manifest: [`docs/PRIMARY_LAW_PACK_MANIFEST.json`](file:///C:/Users/lalwa/.gemini/antigravity/scratch/proofline/docs/PRIMARY_LAW_PACK_MANIFEST.json)
+- Judge-Visible Flow Proof Log: [`docs/JUDGE_FLOW_PROOF_LOG.json`](file:///C:/Users/lalwa/.gemini/antigravity/scratch/proofline/docs/JUDGE_FLOW_PROOF_LOG.json)
+- Demo Video Recording Script: [`docs/DEMO_VIDEO_SCRIPT.md`](file:///C:/Users/lalwa/.gemini/antigravity/scratch/proofline/docs/DEMO_VIDEO_SCRIPT.md)
 
 ---
 

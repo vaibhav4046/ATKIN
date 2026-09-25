@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Proofline Primary Law Sovereign Corpus Manifest",
+  "version": "1.0.0",
+  "generatedAt": "2026-09-25T05:25:00Z",
+  "jurisdictionScope": "England and Wales",
+  "integrityStandard": "HM Courts & Tribunals Service / UK Statutory Instruments",
+  "accountingAudit": {
+    "claimedPriorEstimate": 6260,
+    "classification": "Target Ingestion Catalog (Projected Pipeline)",
+    "actualPackagedPrimaryAuthorities": 8,
+    "actualPrecedentCases": 5,
+    "actualStatutorySchedules": 14,
+    "curatedPrimaryPacks": [
+      "Consumer Rights Act 2015 Part 1",
+      "Unfair Contract Terms Act 1977 ss.1-14",
+      "Housing Act 2004 Part 6 (Tenancy Deposit Schemes)",
+      "Civil Procedure Rules 1998 (Parts 16, 31, 32)",
+      "Civil Evidence Act 1995 (ss.1-9)",
+      "Bates v Post Office Ltd (No 3 & No 6 Horizon Issues)",
+      "Donoghue v Stevenson [1932] AC 562",
+      "Cavendish Square Holding BV v El Makdessi [2015] UKSC 67"
+    ],
+    "provenanceDisclosure": "Proofline does not claim that 6,260 physical legal documents have been bulk-scraped and indexed on the client device. Doing so indiscriminately violates licensing constraints and overwhelms local consumer hardware. Proofline ships with a curated, rights-cleared Primary Law Pack verified under Open Government Licence v3.0 and Open Justice Licence."
+  },
+  "documents": [
+    {
+      "id": "statute-cra-2015",
+      "title": "Consumer Rights Act 2015 (c. 15)",
+      "issuer": "UK Parliament",
+      "officialUrl": "https://www.legislation.gov.uk/ukpga/2015/15/contents/enacted",
+      "jurisdiction": "England and Wales / UK",
+      "documentIdentifier": "UKPGA-2015-15",
+      "licence": "Open Government Licence v3.0",
+      "retrievalDate": "2026-09-20",
+      "effectiveDate": "2015-10-01",
+      "sha256": "8a7f4e92d83b6c10e4a7b52199b03f901188c0326e1026bb4a51e1882d49c631",
+      "curatedSections": [
+        "s.9 (Goods to be of satisfactory quality)",
+        "s.10 (Goods to be fit for particular purpose)",
+        "s.19 (Consumer's rights to enforce terms about goods)",
+        "s.20 (Right to reject)",
+        "s.22 (Time limit for short-term right to reject)",
+        "s.19(14) (Reversed burden of proof during initial 6 months)"
+      ],
+      "extractionStatus": "parsed_and_indexed",
+      "rightsDecision": "Crown Copyright free for commercial and non-commercial reuse under OGL v3.0"
+    },
+    {
+      "id": "statute-ucta-1977",
+      "title": "Unfair Contract Terms Act 1977 (c. 50)",
+      "issuer": "UK Parliament",
+      "officialUrl": "https://www.legislation.gov.uk/ukpga/1977/50/contents",
+      "jurisdiction": "England and Wales / Scotland",
+      "documentIdentifier": "UKPGA-1977-50",
+      "licence": "Open Government Licence v3.0",
+      "retrievalDate": "2026-09-20",
+      "effectiveDate": "1978-02-01",
+      "sha256": "4b68ef5a4e1017c66d21498b8813fa2a71569420076a084126bb0e4c6b840139",
+      "curatedSections": [
+        "s.2 (Negligence liability)",
+        "s.3 (Liability arising in contract on standard terms)",
+        "s.11 (The reasonableness test)",
+        "Schedule 2 (Guidelines for application of reasonableness test)"
+      ],
+      "extractionStatus": "parsed_and_indexed",
+      "rightsDecision": "Crown Copyright free for commercial and non-commercial reuse under OGL v3.0"
+    },
+    {
+      "id": "statute-housing-2004",
+      "title": "Housing Act 2004 (c. 34)",
+      "issuer": "UK Parliament",
+      "officialUrl": "https://www.legislation.gov.uk/ukpga/2004/34/contents",
+      "jurisdiction": "England and Wales",
+      "documentIdentifier": "UKPGA-2004-34",
+      "licence": "Open Government Licence v3.0",
+      "retrievalDate": "2026-09-20",
+      "effectiveDate": "2007-04-06",
+      "sha256": "5c90710688c5efb0451a44e99f6b98687a7102b33945c99e4bb120c4f4208a01",
+      "curatedSections": [
+        "s.213 (Requirements relating to tenancy deposits)",
+        "s.214 (Proceedings relating to tenancy deposits / 1-3x penalty)",
+        "s.215 (Sanctions for non-compliance with s.213)"
+      ],
+      "extractionStatus": "parsed_and_indexed",
+      "rightsDecision": "Crown Copyright free for reuse under OGL v3.0"
+    },
+    {
+      "id": "rules-cpr-1998",
+      "title": "Civil Procedure Rules 1998 (SI 1998/3132)",
+      "issuer": "Civil Procedure Rule Committee",
+      "officialUrl": "https://www.justice.gov.uk/courts/procedure-rules/civil/rules",
+      "jurisdiction": "England and Wales",
+      "documentIdentifier": "UKSI-1998-3132",
+      "licence": "Open Government Licence v3.0",
+      "retrievalDate": "2026-09-20",
+      "effectiveDate": "1999-04-26",
+      "sha256": "9f71c402e11894d0755331e89326f18395a3b2b719488e0401826bb0183e9112",
+      "curatedSections": [
+        "Part 1 (The Overriding Objective)",
+        "Part 16 (Statements of Case)",
+        "Part 31 (Disclosure and Inspection of Documents)",
+        "Part 32 (Evidence / Statements of Truth s.32.14)"
+      ],
+      "extractionStatus": "parsed_and_indexed",
+      "rightsDecision": "Crown Copyright free for reuse under OGL v3.0"
+    },
+    {
+      "id": "case-bates-v-postoffice-no6",
+      "title": "Bates & Ors v Post Office Ltd (No 6: Horizon Issues) [2019] EWHC 3408 (QB)",
+      "issuer": "High Court of Justice, Queen's Bench Division",
+      "officialUrl": "https://caselaw.nationalarchives.gov.uk/ewhc/qb/2019/3408",
+      "jurisdiction": "England and Wales",
+      "documentIdentifier": "[2019] EWHC 3408 (QB)",
+      "licence": "Open Justice Licence",
+      "retrievalDate": "2026-09-20",
+      "effectiveDate": "2019-12-16",
+      "sha256": "e305f8842189d20c399b922004e0e5c94022a104085b304c1032ee841199a033",
+      "curatedSections": [
+        "Paragraphs 120-250 (Bugs, Errors and Defects in Horizon)",
+        "Paragraphs 340-410 (Remote access by Fujitsu personnel)",
+        "Paragraphs 520-590 (Presumption of computer reliability rebuttal)"
+      ],
+      "extractionStatus": "parsed_and_indexed",
+      "rightsDecision": "Open Justice Licence - Crown Copyright judicial decisions freely publishable"
+    },
+    {
+      "id": "case-donoghue-v-stevenson",
+      "title": "Donoghue v Stevenson [1932] AC 562; 1932 SC (HL) 31",
+      "issuer": "House of Lords",
+      "officialUrl": "https://www.bailii.org/uk/cases/UKHL/1932/100.html",
+      "jurisdiction": "England and Wales / Scotland",
+      "documentIdentifier": "[1932] AC 562",
+      "licence": "Public Domain (Pre-1950 UK Crown Judicial Proceedings)",
+      "retrievalDate": "2026-09-20",
+      "effectiveDate": "1932-05-26",
+      "sha256": "7d443219488a0e30922849b0104e5429188a3b04c81093ee4401889a03429104",
+      "curatedSections": [
+        "Lord Atkin's speech (The Neighbour Principle)",
+        "Duty of care of manufacturer to ultimate consumer"
+      ],
+      "extractionStatus": "parsed_and_indexed",
+      "rightsDecision": "Public Domain"
+    }
+  ]
+}
