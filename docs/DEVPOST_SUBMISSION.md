@@ -4,9 +4,10 @@
 **Tagline**: Sovereign, air-gapped legal copilot and evidential workbench with 4-tier canary-isolated memory, deterministic citation verification, and declarative contract playbooks.  
 **Hackathon**: LexHack 2026 (https://lexhack-2026.devpost.com/)  
 **Submission Deadline**: 27 September 2026 @ 5:00pm EDT  
-**Solo Builder**: Vaibhav Lalwani (MSc Student, University of Liverpool)  
 **Repository**: [github.com/vaibhav-lalwani/proofline](https://github.com/vaibhav-lalwani/proofline)  
-**Demo Video**: 2-Minute 45-Second Sovereign Walkthrough (Word-for-word script in `docs/DEMO_VIDEO_SCRIPT.md`)  
+**Live Web Demo**: [https://proofline-ruddy-three.vercel.app](https://proofline-ruddy-three.vercel.app)  
+**Windows Installers**: MSI & NSIS Packages in `src-tauri/target/release/bundle/`  
+**Demo Video Script**: 2-Minute 45-Second Sovereign Walkthrough (Word-for-word in `docs/DEMO_VIDEO_SCRIPT.md`)  
 
 ---
 

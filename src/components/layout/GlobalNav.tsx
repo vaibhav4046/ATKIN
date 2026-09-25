@@ -47,7 +47,7 @@ export const GlobalNav: React.FC<GlobalNavProps> = ({
               Landmark Litigation
             </a>
             <a href="#court-admissibility" className="hover:text-ink transition-colors">
-              Civil Evidence Act s.9
+              Evidence Integrity
             </a>
             <button
               onClick={() => setActiveLegalModal('privacy')}

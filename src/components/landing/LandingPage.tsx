@@ -73,11 +73,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             100% Client-Side IndexedDB
           </span>
           <span>&bull;</span>
-          <span>51/51 Vitest Tests Passing</span>
+          <span>82/82 Vitest Tests Passing (20 Suites)</span>
           <span>&bull;</span>
           <span>Zero Cloud Egress Invariant</span>
           <span>&bull;</span>
-          <span>Civil Evidence Act 1995 s.9 Certified</span>
+          <span>Technical Evidence Integrity &amp; SHA-256 Provenance</span>
         </div>
       </section>
 
@@ -162,10 +162,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <FileCheck2 className="w-4 h-4 text-purple-700" />
             </div>
             <h3 className="text-base font-semibold text-ink">
-              Court Briefs &amp; Section 9 Proof
+              Court Briefs &amp; Evidence Integrity
             </h3>
             <p className="text-[12.5px] text-ink-slate leading-relaxed">
-              Generates CPR-compliant Pre-Action Letters and Briefs with anchored footnotes. Automatically appends a formal Civil Evidence Act 1995 Section 9 Certificate of Authenticity.
+              Generates CPR-compliant Pre-Action Letters and Briefs with anchored citations, accompanied by a Technical Evidence Integrity Schedule with SHA-256 manifests for practitioner CPR 32.14 sign-off.
             </p>
           </div>
         </div>
