@@ -190,4 +190,64 @@ describe('LexHack 2026 Regression & Evidential Integrity Audit Suite', () => {
       }
     });
   });
+
+  describe('5. Negation Handling & Format Instruction Compliance', () => {
+    it('accurately resolves invoice payment deadline in one sentence with exact clause while honoring negation of governing law', () => {
+      const output = engine.reason({
+        query: 'What is the invoice payment deadline? Answer in one sentence with the exact source clause. Do not discuss governing law.',
+        matterId: CONTRACT_MATTER.id,
+        matterTitle: CONTRACT_MATTER.title,
+        matterJurisdiction: CONTRACT_MATTER.jurisdiction,
+        documents: CONTRACT_DOCUMENTS,
+        spans: CONTRACT_SPANS,
+        claims: CONTRACT_CLAIMS,
+        authorities: COMMERCIAL_CONTRACT_AUTHORITIES,
+        reviewItems: CONTRACT_REVIEWS,
+        memories: []
+      });
+
+      expect(output).toBeDefined();
+
+      // Must NOT discuss governing law or Delaware
+      expect(output.formattedResponse).not.toContain('Governing Law & Jurisdictional Conflict Assessment');
+      expect(output.formattedResponse).not.toContain('laws of the State of Delaware');
+      expect(output.formattedResponse).not.toContain('Delaware');
+
+      // Must cite payment spans
+      expect(output.sourcesUsed.some(s => s.spanId === 'span-msa-pay30')).toBe(true);
+
+      // Must contain exact source clause
+      expect(output.formattedResponse).toContain(
+        'All undisputed invoices shall be due and payable within thirty (30) days from the invoice date.'
+      );
+
+      // Must be a single sentence
+      const cleanText = output.formattedResponse.trim();
+      const sentenceCount = (cleanText.match(/[.!?](\s+|$)/g) || []).length;
+      expect(sentenceCount).toBeLessThanOrEqual(2); // At most one sentence with terminal punctuation
+
+      // Confidence score must be high
+      expect(output.confidenceScore).toBeGreaterThanOrEqual(0.9);
+    });
+
+    it('correctly isolates indemnity inquiry when payment terms are explicitly negated', () => {
+      const output = engine.reason({
+        query: 'What are the indemnification obligations under this contract? Do not discuss payment terms or invoice dates.',
+        matterId: CONTRACT_MATTER.id,
+        matterTitle: CONTRACT_MATTER.title,
+        matterJurisdiction: CONTRACT_MATTER.jurisdiction,
+        documents: CONTRACT_DOCUMENTS,
+        spans: CONTRACT_SPANS,
+        claims: CONTRACT_CLAIMS,
+        authorities: COMMERCIAL_CONTRACT_AUTHORITIES,
+        reviewItems: CONTRACT_REVIEWS,
+        memories: []
+      });
+
+      expect(output).toBeDefined();
+      expect(output.sourcesUsed.some(s => s.spanId === 'span-msa-indemnity')).toBe(true);
+      expect(output.sourcesUsed.some(s => s.spanId === 'span-msa-pay30')).toBe(false);
+      expect(output.sourcesUsed.some(s => s.spanId === 'span-msa-pay60')).toBe(false);
+    });
+  });
 });

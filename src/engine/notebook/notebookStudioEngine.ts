@@ -158,7 +158,7 @@ export class NotebookStudioEngine {
     } else {
       replyText = `Based on examination of ${activeDocs.length} active notebook sources:\n\n` +
         matchedCitations.map((c, i) => `• [${i + 1}] **${c.documentTitle}**: "${c.quote}"`).join('\n\n') +
-        `\n\n**Evidential Assessment**: The propositions above are documented in the active source record. Verified admissible under Civil Evidence Act 1995 s.9.`;
+        `\n\n**Evidential Assessment**: The propositions above are documented in the active source record with character-offset citations. Practitioner review required under CPR 32.14.`;
     }
 
     return {
@@ -366,7 +366,7 @@ export class NotebookStudioEngine {
         `**Sovereign Evidentiary Corpus**: ${activeDocs.length} verified documents\n\n` +
         `## 1. Executive Summary\n` +
         `This matter concerns disputed assertions arising from documented transactions. Primary evidence has been indexed across ${activeDocs.length} contemporaneous exhibits. ` +
-        `All active exhibits carry verifiable cryptographic SHA-256 signatures satisfying Civil Evidence Act 1995 s.9.\n\n` +
+        `All active exhibits carry verifiable cryptographic SHA-256 digests. Note: Statutory Statements of Truth under CPR 32.14 / Civil Evidence Act 1995 s.9 require personal review and execution by a qualified legal practitioner.\n\n` +
         `## 2. Key Evidential Findings\n` +
         citations.map(c => `- **${c.documentTitle}**: "${c.quote.substring(0, 140)}..."`).join('\n') + '\n\n' +
         `## 3. Statutory & Procedural Authorities\n` +
@@ -391,7 +391,7 @@ export class NotebookStudioEngine {
       content += `\n\n### Temporal Integrity Audit\n` +
         `- 4-Timestamp Provenance: Active (eventDate, sourceDate, importedAt, verifiedAt).\n` +
         `- Chronological Inconsistencies: 0 fatal anomalies detected.\n` +
-        `- Admissibility Certification: Civil Evidence Act 1995 s.9 compliant.`;
+        `- Technical Evidentiary Schedule: SHA-256 integrity verified; requires CPR 32.14 practitioner verification.`;
     } else if (type === 'vulnerabilities') {
       title = `Adversarial Vulnerability & Risk Memo: ${notebook.title}`;
       tags.push('risk-assessment', 'red-team');
@@ -425,7 +425,7 @@ export class NotebookStudioEngine {
       content = `# Witness Examination & Deposition Inquiries\n\n` +
         `## Examination-in-Chief & Cross-Examination Outline\n\n` +
         `### Q1: Can you confirm the provenance of the contemporaneous logs?\n` +
-        `**Objective**: Establish admissibility under Civil Evidence Act 1995 s.9.\n` +
+        `**Objective**: Foundation for document admissibility and provenance under Civil Evidence Act 1995 s.9 & CPR 32.14.\n` +
         `**Documentary Anchor**: \`${activeDocs[0]?.filename || 'Exhibit 1'}\`\n\n` +
         `### Q2: Did management receive notification of discrepancies prior to escalating legal claims?\n` +
         `**Objective**: Pre-empt defense of acquiescence or delayed protest.\n` +

@@ -8,12 +8,14 @@ interface SourceInspectorProps {
   span: Span | null;
   document: Document | null;
   onClose: () => void;
+  isExcluded?: boolean;
 }
 
 export const SourceInspector: React.FC<SourceInspectorProps> = ({
   span,
   document,
-  onClose
+  onClose,
+  isExcluded = false
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -76,7 +78,14 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
           ) : (
             <div className="p-2.5 rounded-lg bg-proofline-green/10 border border-proofline-green/20 text-proofline-green text-[12px] flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span className="font-medium">100% Grounded in Document Text</span>
+              <span className="font-medium">Character-Grounded in Source Text</span>
+            </div>
+          )}
+
+          {isExcluded && (
+            <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-900 text-[11px] flex items-center gap-1.5">
+              <span className="font-semibold font-mono uppercase text-[10px] bg-amber-200/60 px-1 rounded">Excluded</span>
+              <span>This document is excluded from active query context.</span>
             </div>
           )}
 

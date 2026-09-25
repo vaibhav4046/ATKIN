@@ -19,7 +19,8 @@ import {
   Eye,
   GitBranch,
   Terminal,
-  Database
+  Database,
+  Download
 } from 'lucide-react';
 import { FeatureStage } from './FeatureStage.tsx';
 import { Badge } from '../common/Badge.tsx';
@@ -28,11 +29,13 @@ import { LegalModal } from '../common/LegalModal.tsx';
 interface LandingPageProps {
   onOpenWorkbench: () => void;
   onLoadSample: () => void;
+  onNewMatter?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenWorkbench,
-  onLoadSample
+  onLoadSample,
+  onNewMatter
 }) => {
   const [activeLegalModal, setActiveLegalModal] = useState<'terms' | 'privacy' | null>(null);
   const [demoQuery, setDemoQuery] = useState<'remote-access' | 'governing-law' | 'abstention'>('remote-access');
@@ -106,7 +109,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </button>
 
           <button
-            onClick={onOpenWorkbench}
+            onClick={onNewMatter || onOpenWorkbench}
             className="px-6 py-3 rounded-[4px] bg-white border border-border-hairline hover:bg-canvas-subtle text-ink text-[13.5px] font-medium transition-colors shadow-subtle cursor-pointer"
           >
             Create a Private Matter
@@ -532,6 +535,86 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <FeatureStage onOpenWorkbench={onOpenWorkbench} />
       </section>
 
+      {/* Native Windows Sovereign Desktop App Downloads */}
+      <section className="bg-white border border-border-hairline rounded-[8px] p-6 sm:p-8 shadow-card space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="space-y-2 max-w-[650px]">
+            <div className="flex items-center gap-2">
+              <Badge variant="green" size="sm">v1.0.0 Production Release</Badge>
+              <span className="text-[12px] font-mono text-ink-steel">Windows Native &bull; x64</span>
+            </div>
+            <h2 className="text-2xl font-serif text-ink tracking-tight">
+              Download Sovereign Windows Desktop App
+            </h2>
+            <p className="text-[13.5px] text-ink-slate leading-relaxed">
+              Install Proofline as a standalone Windows workstation application. Connects directly to local Ollama on loopback socket (<code>127.0.0.1:11434</code>) with zero cloud dependencies and cryptographic SHA-256 file hashing.
+            </p>
+          </div>
+
+          <div className="shrink-0 flex flex-col sm:items-end gap-2">
+            <a
+              href="https://github.com/vaibhav4046/proofline/releases/tag/v1.0.0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[12px] font-medium text-proofline-blue hover:underline flex items-center gap-1"
+            >
+              <span>View Release on GitHub</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-4 bg-canvas-subtle rounded-[6px] border border-border-hairline flex flex-col justify-between space-y-3">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-ink text-[14px]">Windows NSIS Setup (.exe)</span>
+                <span className="text-[11px] font-mono text-ink-steel">2.64 MB</span>
+              </div>
+              <p className="text-[12px] text-ink-slate mt-1">
+                Standard single-user installer for Windows 10/11. Automatic shortcut creation and local environment auto-detection.
+              </p>
+              <div className="mt-2 text-[10px] font-mono text-ink-steel break-all bg-white p-2 rounded border border-border-hairline">
+                <span className="font-semibold text-ink">SHA-256: </span>
+                99B19A0E2FD7A3687818AF9924CB94D771D07AEAD012CF5EE5064FA81FC52A5A
+              </div>
+            </div>
+
+            <a
+              href="https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64-setup.exe"
+              className="px-4 py-2 bg-proofline-blue hover:bg-proofline-navy text-white text-[12.5px] font-medium rounded-[4px] transition-colors flex items-center justify-center gap-2 shadow-subtle cursor-pointer"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download Proofline Setup (.exe)</span>
+            </a>
+          </div>
+
+          <div className="p-4 bg-canvas-subtle rounded-[6px] border border-border-hairline flex flex-col justify-between space-y-3">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-ink text-[14px]">Enterprise Windows Installer (.msi)</span>
+                <span className="text-[11px] font-mono text-ink-steel">3.92 MB</span>
+              </div>
+              <p className="text-[12px] text-ink-slate mt-1">
+                Standard MSI package for enterprise law firm deployment, Group Policy Objects (GPO), and silent fleet installation.
+              </p>
+              <div className="mt-2 text-[10px] font-mono text-ink-steel break-all bg-white p-2 rounded border border-border-hairline">
+                <span className="font-semibold text-ink">SHA-256: </span>
+                B77B8659DEA209826F032151E1630DD116491352FC31C51CEF3D71506DD93D76
+              </div>
+            </div>
+
+            <a
+              href="https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64_en-US.msi"
+              className="px-4 py-2 bg-white hover:bg-slate-50 border border-border-hairline text-ink text-[12.5px] font-medium rounded-[4px] transition-colors flex items-center justify-center gap-2 shadow-subtle cursor-pointer"
+            >
+              <Download className="w-4 h-4 text-proofline-blue" />
+              <span>Download Enterprise MSI (.msi)</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Open Source & Getting Started */}
       <section className="bg-white border border-border-hairline rounded-[8px] p-6 sm:p-8 shadow-card space-y-6">
         <div className="space-y-2 max-w-[700px]">
@@ -554,7 +637,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
           <pre className="text-proofline-navy overflow-x-auto py-1 leading-relaxed">
 {`# 1. Clone repository
-git clone https://github.com/vaibhav-lalwani/proofline.git
+git clone https://github.com/vaibhav4046/proofline.git
 cd proofline
 
 # 2. Install dependencies & run vitest audit
@@ -572,7 +655,7 @@ ollama run gemma4:e2b-it-qat`}
         <div className="flex flex-wrap items-center justify-between gap-4 pt-2 text-[12.5px] text-ink-steel">
           <div className="flex items-center gap-3">
             <a
-              href="https://github.com/vaibhav-lalwani/proofline"
+              href="https://github.com/vaibhav4046/proofline"
               target="_blank"
               rel="noopener noreferrer"
               className="text-proofline-blue hover:text-proofline-navy font-medium flex items-center gap-1.5 underline"
@@ -627,7 +710,7 @@ ollama run gemma4:e2b-it-qat`}
           </button>
           <span>&bull;</span>
           <a 
-            href="https://github.com/vaibhav-lalwani/proofline" 
+            href="https://github.com/vaibhav4046/proofline" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="hover:text-ink transition-colors flex items-center gap-1 cursor-pointer"

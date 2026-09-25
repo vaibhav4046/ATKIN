@@ -10,9 +10,12 @@ import {
   saveDraftToDB, 
   saveClaimToDB, 
   deleteClaimFromDB, 
-  saveReviewItemToDB 
+  saveReviewItemToDB,
+  saveChatMessageToDB,
+  loadChatMessagesFromDB,
+  clearChatMessagesFromDB
 } from '../db/index.ts';
-import type { Matter, Document, Span, Claim, Draft, ReviewItem } from '../types/index.ts';
+import type { Matter, Document, Span, Claim, Draft, ReviewItem, ChatMessage } from '../types/index.ts';
 
 describe('Proofline IndexedDB Persistence Service', () => {
   beforeEach(async () => {
@@ -23,6 +26,7 @@ describe('Proofline IndexedDB Persistence Service', () => {
     await db.authorities.clear();
     await db.drafts.clear();
     await db.reviewItems.clear();
+    await db.messages.clear();
   });
 
   it('seeds initial fixtures with isDemo: true when database is empty', async () => {
@@ -206,5 +210,47 @@ describe('Proofline IndexedDB Persistence Service', () => {
     await deleteClaimFromDB(claim.id);
     entities = await loadMatterEntitiesFromDB('matter-test-888');
     expect(entities.claims.length).toBe(0);
+  });
+
+  it('persists and restores durable chat message history across sessions', async () => {
+    const userMsg: ChatMessage = {
+      id: 'msg-persist-1',
+      matterId: 'matter-novacorp-meridian-2026',
+      role: 'user',
+      content: 'What is the invoice payment deadline?',
+      timestamp: '2026-09-25T10:00:00.000Z'
+    };
+
+    const assistantMsg: ChatMessage = {
+      id: 'msg-persist-2',
+      matterId: 'matter-novacorp-meridian-2026',
+      role: 'assistant',
+      content: 'Under Section 4.2 of the agreement, "All undisputed invoices shall be due and payable within thirty (30) days from the invoice date."',
+      timestamp: '2026-09-25T10:00:01.000Z',
+      sourcesUsed: [
+        {
+          docId: 'doc-msa-meridian-001',
+          filename: 'Meridian_Master_Cloud_Agreement_2026.pdf',
+          spanId: 'span-msa-pay30',
+          lineRange: 'L40–L40'
+        }
+      ]
+    };
+
+    // Save messages
+    await saveChatMessageToDB(userMsg);
+    await saveChatMessageToDB(assistantMsg);
+
+    // Retrieve messages
+    const restored = await loadChatMessagesFromDB('matter-novacorp-meridian-2026');
+    expect(restored.length).toBe(2);
+    expect(restored[0].content).toBe('What is the invoice payment deadline?');
+    expect(restored[1].role).toBe('assistant');
+    expect(restored[1].sourcesUsed?.length).toBe(1);
+
+    // Clear messages
+    await clearChatMessagesFromDB('matter-novacorp-meridian-2026');
+    const emptyHistory = await loadChatMessagesFromDB('matter-novacorp-meridian-2026');
+    expect(emptyHistory.length).toBe(0);
   });
 });

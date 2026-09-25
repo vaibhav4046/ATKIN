@@ -4,25 +4,36 @@
 
 [![LexHack 2026 Submission](https://img.shields.io/badge/LexHack-2026_Submission-0071e3.svg)](https://lexhack-2026.devpost.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests: Vitest](https://img.shields.io/badge/Tests-8%2F8_Passing-2e7d32.svg)](src/tests/)
+[![Tests: Vitest](https://img.shields.io/badge/Tests-92%2F92_Passing-2e7d32.svg)](src/tests/)
+[![Windows Native](https://img.shields.io/badge/Windows-v1.0.0_Released-0066cc.svg)](https://github.com/vaibhav4046/proofline/releases/tag/v1.0.0)
 [![Local AI: Gemma 4](https://img.shields.io/badge/Model-Gemma_4_(Ollama)-orange.svg)](https://ai.google.dev/gemma/docs/core/model_card_4)
 
 Built for **LexHack 2026** by **Vaibhav Lalwani** (MSc Student, University of Liverpool).
 
 ---
 
-## 30-Second Quick Start
+## Windows Desktop Native Installers (v1.0.0)
+
+Direct sovereign releases with verified cryptographic checksums:
+- **Windows NSIS Setup (.exe)**: [Proofline_1.0.0_x64-setup.exe](https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64-setup.exe) (2.64 MB)  
+  `SHA-256: 99B19A0E2FD7A3687818AF9924CB94D771D07AEAD012CF5EE5064FA81FC52A5A`
+- **Windows MSI Installer (.msi)**: [Proofline_1.0.0_x64_en-US.msi](https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64_en-US.msi) (3.92 MB)  
+  `SHA-256: B77B8659DEA209826F032151E1630DD116491352FC31C51CEF3D71506DD93D76`
+
+---
+
+## Quick Start (Local Web Server)
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/vaibhav-lalwani/proofline.git
+git clone https://github.com/vaibhav4046/proofline.git
 cd proofline
 
-# 2. Install dependencies (Node 18+)
+# 2. Install dependencies (Node 20+)
 npm install
 
-# 3. Run automated tests (8/8 passing in <1s)
-npm test
+# 3. Run automated tests (92 passing across 21 suites)
+npm test -- --run
 
 # 4. Start local development server (binds strictly to 127.0.0.1)
 npm run dev

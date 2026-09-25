@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Send, 
   ShieldCheck, 
@@ -45,6 +45,7 @@ import { NetworkBroker } from '../../engine/network/networkBroker.ts';
 import { IcsHandler } from '../../engine/calendar/icsHandler.ts';
 import { localSpeechEngine } from '../../engine/media/localSpeechEngine.ts';
 import { Badge } from '../common/Badge.tsx';
+import { MarkdownView } from '../common/MarkdownView.tsx';
 
 interface ChatTabProps {
   matterId: string;
@@ -85,7 +86,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
         id: 'msg-welcome-001',
         matterId,
         role: 'assistant',
-        content: `**Proofline Sovereign Evidential Consultation Active**\n\nOperating in **${networkBroker.getCurrentMode().toUpperCase()}** mode with local cryptographic memory. All queries are grounded against your indexed matter documents and primary statutory authorities with zero cloud egress.\n\nHow may I assist with the evidential or statutory review of this matter?`,
+        content: `**Proofline Evidential Consultation Active**\n\nOperating in **${networkBroker.getCurrentMode().toUpperCase()}** mode with local matter memory. Queries are evaluated against indexed matter documents and statutory authorities with verifiable citation anchors.\n\nHow may I assist with the evidential or statutory review of this matter?`,
         timestamp: new Date().toISOString(),
         generationDetails: {
           modelTag: 'proofline-sovereign-core',
@@ -95,6 +96,19 @@ export const ChatTab: React.FC<ChatTabProps> = ({
       }
     ];
   });
+
+  // Restore persisted message history from IndexedDB on matter switch or page reload
+  useEffect(() => {
+    let isCancelled = false;
+    async function restoreHistory() {
+      const persisted = await chatEngine.loadHistoryForMatter(matterId);
+      if (!isCancelled && persisted.length > 0) {
+        setMessages(persisted);
+      }
+    }
+    restoreHistory();
+    return () => { isCancelled = true; };
+  }, [matterId]);
 
   const [inputQuery, setInputQuery] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -389,8 +403,8 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                 )}
 
                 {/* Message Body */}
-                <div className="whitespace-pre-wrap font-sans space-y-2">
-                  {msg.content}
+                <div className="font-sans">
+                  <MarkdownView content={msg.content} isUser={msg.role === 'user'} />
                 </div>
 
                 {/* Agentic Trace Subagent Execution Visualizer */}
@@ -547,39 +561,51 @@ export const ChatTab: React.FC<ChatTabProps> = ({
               e.preventDefault();
               handleSend();
             }}
-            className="flex items-center gap-2"
+            className="flex items-end gap-2.5"
           >
-            <input
-              type="text"
-              value={inputQuery}
-              onChange={(e) => setInputQuery(e.target.value)}
-              placeholder="Ask evidential copilot (e.g. 'Audit Fujitsu PIN-188 under UCTA 1977', 'Check 30-day rejection right under CRA 2015')..."
-              className="flex-1 px-3 py-2 rounded-[4px] border border-border-hairline focus-visible:outline-none focus:border-proofline-blue text-[12.5px] bg-canvas-subtle placeholder:text-ink-steel"
-            />
+            <div className="flex-1 relative">
+              <textarea
+                value={inputQuery}
+                onChange={(e) => setInputQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (inputQuery.trim() && !isProcessing) {
+                      handleSend();
+                    }
+                  }
+                }}
+                rows={2}
+                placeholder="Ask evidential copilot (e.g. 'What is the invoice payment deadline? Answer in one sentence with the exact source clause. Do not discuss governing law.'). Press Enter to send, Shift+Enter for new line..."
+                className="w-full px-3.5 py-2.5 rounded-[6px] border border-border-hairline focus-visible:outline-none focus:border-proofline-blue text-[13px] bg-canvas-subtle placeholder:text-ink-steel resize-none leading-relaxed transition-colors focus:bg-white"
+              />
+            </div>
 
-            <button
-              type="button"
-              onClick={handleVoiceDictation}
-              disabled={isDictating}
-              className={`p-2 rounded-[4px] border transition-colors ${
-                isDictating 
-                  ? 'bg-rose-600 text-white border-rose-600 animate-pulse' 
-                  : 'bg-canvas-subtle hover:bg-white text-ink-slate border-border-hairline'
-              }`}
-              title="Voice Dictation (Real Microphone / Offline Speech Input)"
-              aria-label="Voice Dictation"
-            >
-              <Mic className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-2 pb-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={handleVoiceDictation}
+                disabled={isDictating}
+                className={`p-2.5 rounded-[6px] border transition-colors ${
+                  isDictating 
+                    ? 'bg-rose-600 text-white border-rose-600 animate-pulse' 
+                    : 'bg-canvas-subtle hover:bg-white text-ink-slate border-border-hairline'
+                }`}
+                title="Voice Dictation (Real Microphone / Offline Speech Input)"
+                aria-label="Voice Dictation"
+              >
+                <Mic className="w-4 h-4" />
+              </button>
 
-            <button
-              type="submit"
-              disabled={!inputQuery.trim() || isProcessing}
-              className="px-3.5 py-2 bg-ink hover:bg-ink-light disabled:opacity-40 text-white rounded-[4px] text-[12px] font-medium flex items-center gap-1.5 transition-colors shadow-subtle"
-            >
-              <Send className="w-3.5 h-3.5" />
-              <span>Send</span>
-            </button>
+              <button
+                type="submit"
+                disabled={!inputQuery.trim() || isProcessing}
+                className="px-4 py-2.5 bg-ink hover:bg-ink-light disabled:opacity-40 text-white rounded-[6px] text-[12.5px] font-medium flex items-center gap-1.5 transition-colors shadow-subtle cursor-pointer"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Send</span>
+              </button>
+            </div>
           </form>
         </div>
       </div>

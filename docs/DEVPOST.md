@@ -4,7 +4,7 @@
 **Tagline**: Sovereign legal copilot & evidential workbench running 100% locally with encrypted vault, scoped memory, and zero cloud leakage.  
 **Track / Category**: Open Source / Sovereign Legal Tech / Access to Justice  
 **Builder**: Vaibhav Lalwani (Solo Builder, MSc Student at University of Liverpool)  
-**Submission URL**: https://github.com/vaibhav-lalwani/proofline *(or active repo)*  
+**Submission URL**: https://github.com/vaibhav4046/proofline  
 **Demo Video**: 3-minute sovereign walkthrough (see `docs/DEMO_SCRIPT.md`)  
 
 ---

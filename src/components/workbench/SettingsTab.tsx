@@ -400,12 +400,26 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             {/* OLLAMA_NO_CLOUD verification */}
-            <div className="flex items-center justify-between p-3.5 bg-proofline-green/10 border border-proofline-green/20 rounded-[4px] text-[12px]">
-              <div className="flex items-center gap-2 text-proofline-green font-semibold">
+            <div className={`flex items-center justify-between p-3.5 ${
+              modelStatus.state === 'connected'
+                ? 'bg-proofline-green/10 border border-proofline-green/20'
+                : 'bg-canvas-subtle border border-border-hairline'
+            } rounded-[4px] text-[12px]`}>
+              <div className={`flex items-center gap-2 font-semibold ${
+                modelStatus.state === 'connected' ? 'text-proofline-green' : 'text-ink-steel'
+              }`}>
                 <ShieldCheck className="w-4 h-4" />
-                <span>Sovereign Isolation: OLLAMA_NO_CLOUD=1 Verified</span>
+                <span>
+                  {modelStatus.state === 'connected'
+                    ? 'Sovereign Isolation: OLLAMA_NO_CLOUD=1 Verified'
+                    : 'Local Runtime Standby — Deterministic IRAC Core Active'}
+                </span>
               </div>
-              <span className="text-[11px] text-ink-slate">All external model telemetry routes disabled</span>
+              <span className="text-[11px] text-ink-slate">
+                {modelStatus.state === 'connected'
+                  ? 'All external model telemetry routes disabled'
+                  : 'Start Ollama with OLLAMA_NO_CLOUD=1 for local neural inference'}
+              </span>
             </div>
           </div>
 

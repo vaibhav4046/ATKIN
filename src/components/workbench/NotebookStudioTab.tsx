@@ -28,7 +28,7 @@ import {
   AlertTriangle,
   Info
 } from 'lucide-react';
-import type { Matter, Document, Span, Claim, Authority } from '../../types/index.ts';
+import type { Matter, Document, Span, Claim, Authority, ModelStatus } from '../../types/index.ts';
 import type { 
   Notebook, 
   NotebookNote, 
@@ -52,6 +52,7 @@ interface NotebookStudioTabProps {
   claims: Claim[];
   authorities: Authority[];
   onSelectSpan?: (span: Span) => void;
+  modelStatus?: ModelStatus;
 }
 
 export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
@@ -60,7 +61,8 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
   spans,
   claims,
   authorities,
-  onSelectSpan
+  onSelectSpan,
+  modelStatus
 }) => {
   // Initialize default notebook for this matter
   const [notebook, setNotebook] = useState<Notebook>(() => 
@@ -480,10 +482,10 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
 
           <div className="p-3 bg-slate-50 border-t border-slate-200 text-2xs text-slate-500 flex items-center justify-between">
             <span className="flex items-center space-x-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Civil Evidence Act s.9 Admissibility</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-proofline-blue" />
+              <span>IndexedDB Technical Schedule</span>
             </span>
-            <span className="font-mono">AES-256</span>
+            <span className="font-mono text-slate-400">CPR 32.14 Review Required</span>
           </div>
         </div>
 
@@ -617,7 +619,11 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
                 </form>
                 <div className="mt-1.5 flex items-center justify-between text-2xs text-slate-400">
                   <span>Chat is grounded exclusively on checked sources ({tokenStats.totalTokens.toLocaleString()} tokens in context).</span>
-                  <span className="text-emerald-600 font-medium">✓ Local Gemma 4 Sovereign Bridge</span>
+                  {modelStatus?.state === 'connected' ? (
+                    <span className="text-emerald-600 font-medium">✓ Local Gemma 4 Sovereign Bridge ({modelStatus.modelTag})</span>
+                  ) : (
+                    <span className="text-slate-500 font-medium font-mono">Deterministic IRAC Core (Local Model Offline)</span>
+                  )}
                 </div>
               </div>
             </div>

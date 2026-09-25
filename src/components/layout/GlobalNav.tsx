@@ -58,7 +58,7 @@ export const GlobalNav: React.FC<GlobalNavProps> = ({
               Terms &amp; SRA Notice
             </button>
             <a 
-              href="https://github.com/vaibhav-lalwani/proofline" 
+              href="https://github.com/vaibhav4046/proofline" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hover:text-ink transition-colors flex items-center gap-1"
@@ -129,7 +129,7 @@ export const GlobalNav: React.FC<GlobalNavProps> = ({
             Terms &amp; SRA Notice
           </button>
           <a
-            href="https://github.com/vaibhav-lalwani/proofline"
+            href="https://github.com/vaibhav4046/proofline"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-ink font-medium py-1"

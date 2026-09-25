@@ -378,7 +378,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <span className="px-2 py-0.5 bg-white border border-border-hairline rounded-[3px]">IndexedDB: Active</span>
           <span className="px-2 py-0.5 bg-white border border-border-hairline rounded-[3px]">SHA-256 Provenance: Enforced</span>
           <span className="px-2 py-0.5 bg-white border border-border-hairline rounded-[3px]">Loopback: 127.0.0.1</span>
-          <span className="px-2 py-0.5 bg-white border border-border-hairline rounded-[3px]">SRA AI Guidance: Compliant</span>
+          <span className="px-2 py-0.5 bg-white border border-border-hairline rounded-[3px]">Aligned with SRA AI Principles</span>
         </div>
       </div>
     </div>

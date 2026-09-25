@@ -12,6 +12,7 @@ import { MemoryEngine } from '../memory/memoryEngine.ts';
 import { LocalModelManager } from '../model/localModelManager.ts';
 import { NetworkBroker } from '../network/networkBroker.ts';
 import { legalReasoningEngine } from '../reasoning/legalReasoningEngine.ts';
+import { saveChatMessageToDB, loadChatMessagesFromDB, clearChatMessagesFromDB } from '../../db/index.ts';
 
 export interface ChatEngineContext {
   matterId: string;
@@ -36,14 +37,26 @@ export class ChatEngine {
     return this.messages.get(matterId) || [];
   }
 
+  public async loadHistoryForMatter(matterId: string): Promise<ChatMessage[]> {
+    const fromDB = await loadChatMessagesFromDB(matterId);
+    if (fromDB.length > 0) {
+      this.messages.set(matterId, fromDB);
+      return fromDB;
+    }
+    return this.messages.get(matterId) || [];
+  }
+
   public addMessage(message: ChatMessage): void {
     const list = this.messages.get(message.matterId) || [];
     list.push(message);
     this.messages.set(message.matterId, list);
+    // Persist to local IndexedDB asynchronously
+    saveChatMessageToDB(message).catch(err => console.error('Error persisting message:', err));
   }
 
   public clearHistory(matterId: string): void {
     this.messages.set(matterId, []);
+    clearChatMessagesFromDB(matterId).catch(err => console.error('Error clearing messages:', err));
   }
 
   public async processUserQuery(

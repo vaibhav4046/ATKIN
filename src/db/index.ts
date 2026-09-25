@@ -7,7 +7,8 @@ import type {
   EvidenceEdge, 
   Authority, 
   Draft, 
-  ReviewItem 
+  ReviewItem,
+  ChatMessage 
 } from '../types/index.ts';
 
 import { 
@@ -58,6 +59,7 @@ export class ProoflineDatabase extends Dexie {
   authorities!: Table<Authority, string>;
   drafts!: Table<Draft, string>;
   reviewItems!: Table<ReviewItem, string>;
+  messages!: Table<ChatMessage, string>;
 
   constructor() {
     super('ProoflineLocalDB');
@@ -70,6 +72,17 @@ export class ProoflineDatabase extends Dexie {
       authorities: 'id, identifier, jurisdiction, verificationLevel',
       drafts: 'id, matterId, type, reviewStatus, updatedAt',
       reviewItems: 'id, matterId, type, severity, status, createdAt'
+    });
+    this.version(2).stores({
+      matters: 'id, title, jurisdiction, clientAlias, status, createdAt, updatedAt',
+      documents: 'id, matterId, filename, sha256, sourceDate, importedAt',
+      spans: 'id, documentId, checksum',
+      claims: 'id, matterId, kind, status, polarity, updatedAt',
+      edges: 'id, claimId, spanId, type, reviewState',
+      authorities: 'id, identifier, jurisdiction, verificationLevel',
+      drafts: 'id, matterId, type, reviewStatus, updatedAt',
+      reviewItems: 'id, matterId, type, severity, status, createdAt',
+      messages: 'id, matterId, role, timestamp'
     });
   }
 }
@@ -285,5 +298,39 @@ export async function saveReviewItemToDB(item: ReviewItem): Promise<void> {
     await db.reviewItems.put(item);
   } catch (err) {
     console.error('Failed to save review item to IndexedDB:', err);
+  }
+}
+
+/**
+ * Persist chat message to IndexedDB for continuous conversational history across page refreshes.
+ */
+export async function saveChatMessageToDB(message: ChatMessage): Promise<void> {
+  try {
+    await db.messages.put(message);
+  } catch (err) {
+    console.error('Failed to save chat message to IndexedDB:', err);
+  }
+}
+
+/**
+ * Load continuous conversational history for a matter from IndexedDB.
+ */
+export async function loadChatMessagesFromDB(matterId: string): Promise<ChatMessage[]> {
+  try {
+    return await db.messages.where('matterId').equals(matterId).sortBy('timestamp');
+  } catch (err) {
+    console.error('Failed to load chat messages from IndexedDB:', err);
+    return [];
+  }
+}
+
+/**
+ * Clear chat history for a matter from IndexedDB.
+ */
+export async function clearChatMessagesFromDB(matterId: string): Promise<void> {
+  try {
+    await db.messages.where('matterId').equals(matterId).delete();
+  } catch (err) {
+    console.error('Failed to clear chat messages from IndexedDB:', err);
   }
 }

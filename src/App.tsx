@@ -543,7 +543,14 @@ export function App() {
       />
 
       {activeView === 'landing' ? (
-        <LandingPage onOpenWorkbench={handleLoadSampleMatter} onLoadSample={handleLoadSampleMatter} />
+        <LandingPage 
+          onOpenWorkbench={() => setActiveView('workbench')} 
+          onLoadSample={handleLoadSampleMatter}
+          onNewMatter={() => {
+            setActiveView('workbench');
+            setIsNewMatterOpen(true);
+          }}
+        />
       ) : (
         <div className="flex-1 flex flex-col">
           {/* Top Context Rail */}
@@ -568,7 +575,7 @@ export function App() {
               <div className="flex items-center gap-2.5">
                 <span className="w-2 h-2 rounded-full bg-proofline-ochre inline-block shrink-0 animate-pulse" />
                 <span>
-                  <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong> — Local Ollama endpoint offline. Proofline is operating in 100% deterministic, zero-hallucination evidential mode with SHA-256 verifiable citations.
+                  <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong> — Local Ollama endpoint offline. Proofline is operating in deterministic evidential mode with SHA-256 verifiable citations.
                 </span>
               </div>
               <div className="flex items-center gap-3 shrink-0">
@@ -641,6 +648,7 @@ export function App() {
                   claims={claims}
                   authorities={authorities}
                   onSelectSpan={setSelectedSpan}
+                  modelStatus={modelStatus}
                 />
               )}
 

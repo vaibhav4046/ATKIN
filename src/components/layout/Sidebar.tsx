@@ -313,7 +313,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className="pt-2 border-t border-border-hairline/80 flex items-center gap-1.5 text-[10.5px] text-ink-steel font-mono">
           <ShieldCheck className="w-3 h-3 text-proofline-green shrink-0" />
-          <span>Browser IndexedDB · Airgapped</span>
+          <span>Browser-Local Storage (IndexedDB)</span>
         </div>
       </div>
     </aside>
