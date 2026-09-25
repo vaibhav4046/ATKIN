@@ -21,6 +21,7 @@ import { Badge } from '../common/Badge.tsx';
 import { DocumentSkeletonLoader } from '../common/Skeleton.tsx';
 import { checkPromptInjectionRisk } from '../../engine/verifier.ts';
 import { matterAnalyzer, type IngestionAnalysisResult } from '../../engine/ingestion/matterAnalyzer.ts';
+import { offlineConnectorImporter } from '../../engine/connectors/offlineConnectorImporter.ts';
 
 interface SourcesTabProps {
   documents: Document[];
@@ -77,14 +78,49 @@ export const SourcesTab: React.FC<SourcesTabProps> = ({
     await new Promise(r => setTimeout(r, 200));
     setAnalysisStatus('Mining factual assertions and legal propositions...');
 
-    const result = await matterAnalyzer.analyzeDocument({
-      matterId,
-      filename,
-      text: rawText,
-      sourceDate: sourceDate || ingestDate,
-      privacyLabel: ingestPrivacy,
-      existingClaims
-    });
+    let result: IngestionAnalysisResult;
+    const lowerName = filename.toLowerCase();
+
+    if (lowerName.endsWith('.eml') || lowerName.endsWith('.mbox')) {
+      result = await offlineConnectorImporter.ingestConnectorPayload({
+        matterId,
+        payload: {
+          sourceType: 'gmail_eml',
+          filename,
+          rawContent: rawText
+        },
+        existingClaims
+      });
+    } else if (lowerName.endsWith('.json') && (lowerName.includes('slack') || rawText.includes('"ts"'))) {
+      result = await offlineConnectorImporter.ingestConnectorPayload({
+        matterId,
+        payload: {
+          sourceType: 'slack_json',
+          filename,
+          rawContent: rawText
+        },
+        existingClaims
+      });
+    } else if (lowerName.includes('linear') || rawText.includes('LINEAR')) {
+      result = await offlineConnectorImporter.ingestConnectorPayload({
+        matterId,
+        payload: {
+          sourceType: 'linear_export',
+          filename,
+          rawContent: rawText
+        },
+        existingClaims
+      });
+    } else {
+      result = await matterAnalyzer.analyzeDocument({
+        matterId,
+        filename,
+        text: rawText,
+        sourceDate: sourceDate || ingestDate,
+        privacyLabel: ingestPrivacy,
+        existingClaims
+      });
+    }
 
     setAnalysisStatus(`Extracted ${result.spans.length} spans, ${result.claims.length} claims, ${result.reviewItems.length} contradictions!`);
     await new Promise(r => setTimeout(r, 300));
@@ -102,7 +138,7 @@ export const SourcesTab: React.FC<SourcesTabProps> = ({
     setIngestFilename('');
   };
 
-  const handleLoadSampleRealFiling = (type: 'horizon' | 'contract') => {
+  const handleLoadSampleRealFiling = (type: 'horizon' | 'contract' | 'email' | 'slack' | 'linear') => {
     if (type === 'horizon') {
       setIngestFilename('FUJITSU_HORIZON_PIN188_BUG_REPORT.txt');
       setIngestDate('2000-11-14');
@@ -118,6 +154,51 @@ Fujitsu software engineering review confirms Bug 188. When network packets are i
 Technical Action:
 Bracknell engineering team performed remote database balancing patch directly on branch node.
 Note: Post Office management advised of discrepancy.`);
+    } else if (type === 'email') {
+      setIngestFilename('Gmail_Thread_PostOffice_Escalation.eml');
+      setIngestDate('2026-04-14');
+      setIngestText(`From: alistair.powell@postoffice.co.uk
+To: alan.bates@subpostmasters.org.uk
+Date: Tue, 14 Apr 2026 14:15:00 +0100
+Subject: Horizon Balancing Discrepancies - Audit Response
+
+Dear Mr Bates,
+In response to your query regarding the £4,200 branch account adjustment on terminal 2:
+Post Office Limited maintains that Horizon records are legally presumed reliable under the Police and Criminal Evidence Act 1984 s.69.
+However, we acknowledge receipt of your notice regarding Fujitsu third-party support ticket PIN-188.
+We require all documentation to be submitted through formal CPR 31 disclosure channels.
+Regards,
+Alistair Powell
+Legal & Governance Department, Post Office Limited`);
+    } else if (type === 'slack') {
+      setIngestFilename('slack_dev_channel_horizon_audit.json');
+      setIngestDate('2026-04-15');
+      setIngestText(JSON.stringify([
+        {
+          user: 'Gareth_Jenkins_Architect',
+          text: 'The rollback routine in v1.2.4 does not reverse database ledger lines if connection fails mid-stream.',
+          ts: '1776250800.000100'
+        },
+        {
+          user: 'Bracknell_Support_Lead',
+          text: 'Understood. We manually injected debit correction lines into 47 branch accounts from headquarters yesterday.',
+          ts: '1776251400.000200'
+        }
+      ], null, 2));
+    } else if (type === 'linear') {
+      setIngestFilename('linear_defects_export.json');
+      setIngestDate('2026-04-16');
+      setIngestText(JSON.stringify({
+        issues: [
+          {
+            identifier: 'PIN-188',
+            title: 'Automatic ledger debit on interrupted batch rollover',
+            state: 'Confirmed Defect',
+            priority: 'Critical',
+            description: 'Database transaction commits without subpostmaster authorization during comms dropout.'
+          }
+        ]
+      }, null, 2));
     } else {
       setIngestFilename('SaaS_Customer_Data_Protection_Rider.txt');
       setIngestDate('2026-03-01');
@@ -313,21 +394,42 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
             </div>
 
             {/* Quick Real Test Presets */}
-            <div className="flex items-center gap-2 text-[11px]">
+            <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
               <span className="text-ink-steel font-medium">Quick Exhibit:</span>
               <button
                 type="button"
                 onClick={() => handleLoadSampleRealFiling('horizon')}
-                className="px-2.5 py-1 rounded-[3px] bg-canvas-subtle hover:bg-slate-200 border border-border-hairline text-ink font-mono"
+                className="px-2 py-0.5 rounded-[3px] bg-canvas-subtle hover:bg-slate-200 border border-border-hairline text-ink font-mono"
               >
-                Horizon IT Bug Report (PIN-188)
+                Horizon Bug (PIN-188)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleLoadSampleRealFiling('email')}
+                className="px-2 py-0.5 rounded-[3px] bg-canvas-subtle hover:bg-slate-200 border border-border-hairline text-ink font-mono"
+              >
+                Gmail / EML Thread
+              </button>
+              <button
+                type="button"
+                onClick={() => handleLoadSampleRealFiling('slack')}
+                className="px-2 py-0.5 rounded-[3px] bg-canvas-subtle hover:bg-slate-200 border border-border-hairline text-ink font-mono"
+              >
+                Slack Chat (JSON)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleLoadSampleRealFiling('linear')}
+                className="px-2 py-0.5 rounded-[3px] bg-canvas-subtle hover:bg-slate-200 border border-border-hairline text-ink font-mono"
+              >
+                Linear Issues (JSON)
               </button>
               <button
                 type="button"
                 onClick={() => handleLoadSampleRealFiling('contract')}
-                className="px-2.5 py-1 rounded-[3px] bg-canvas-subtle hover:bg-slate-200 border border-border-hairline text-ink font-mono"
+                className="px-2 py-0.5 rounded-[3px] bg-canvas-subtle hover:bg-slate-200 border border-border-hairline text-ink font-mono"
               >
-                SaaS Data Protection Rider
+                SaaS Rider
               </button>
             </div>
 

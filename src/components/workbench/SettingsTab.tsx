@@ -34,6 +34,7 @@ import { DeterministicOfflineAdapter } from '../../engine/model/modelAdapter.ts'
 import { corpusTracker } from '../../engine/adaptation/corpusTracker.ts';
 import { benchmarkHarness } from '../../engine/benchmark/benchmarkHarness.ts';
 import { conflictCheckEngine } from '../../engine/conflicts/conflictCheckEngine.ts';
+import { ConnectorRegistry } from '../../engine/connectors/connectorRegistry.ts';
 import { Badge } from '../common/Badge.tsx';
 
 interface SettingsTabProps {
@@ -54,7 +55,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
   const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeSubTab, setActiveSubTab] = useState<
-    'model' | 'qualification' | 'corpus' | 'benchmarks' | 'conflicts' | 'vault' | 'jobs' | 'hardware'
+    'model' | 'qualification' | 'corpus' | 'benchmarks' | 'conflicts' | 'connectors' | 'vault' | 'jobs' | 'hardware'
   >('model');
 
   // Qualification Gate state
@@ -256,6 +257,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             className={`px-2.5 py-1 rounded-[4px] font-medium transition-colors ${activeSubTab === 'conflicts' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
           >
             Conflict Check
+          </button>
+          <button
+            onClick={() => setActiveSubTab('connectors')}
+            className={`px-2.5 py-1 rounded-[4px] font-medium transition-colors ${activeSubTab === 'connectors' ? 'bg-gallery-white shadow-xs text-ink' : 'text-ink-slate hover:text-ink'}`}
+          >
+            Connectors
           </button>
           <button
             onClick={() => setActiveSubTab('hardware')}
@@ -1034,6 +1041,84 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             <div className="p-3 bg-canvas border border-border-hairline rounded-[4px] text-[11.5px] text-ink-slate">
               <span className="font-semibold text-ink">Zero-Leakage Assurance: </span>
               Conflict check queries operate strictly on entity identifiers and corporate affiliations. Internal matter documents, legal analyses, and strategy notes are cryptographically excluded from the index.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SUBTAB 9: CONNECTORS & SOVEREIGN IMPORTERS */}
+      {activeSubTab === 'connectors' && (
+        <div className="space-y-5">
+          <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-hairline pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-[15px] font-semibold text-ink">
+                    Sovereign Connectors &amp; Offline Importers
+                  </h3>
+                  <Badge variant="blue" size="sm">CPR Part 31 Compliant</Badge>
+                </div>
+                <p className="text-[12px] text-ink-slate mt-0.5">
+                  Ingest evidence from email threads, team chats, and bug trackers directly without vendor cloud telemetry.
+                </p>
+              </div>
+
+              <span className="text-[11px] font-mono text-ink-steel">
+                Zero Cloud Reliance · 100% Local Parsing
+              </span>
+            </div>
+
+            {/* Truth Table */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-ink-steel font-mono">
+                Connector Status &amp; Privacy Boundary Truth Table
+              </h4>
+
+              <div className="border border-border-hairline rounded-[4px] overflow-hidden">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-canvas border-b border-border-hairline text-ink-steel font-mono text-[11px]">
+                      <th className="p-3">Platform / Protocol</th>
+                      <th className="p-3">Sovereign Status</th>
+                      <th className="p-3">Permissions / Scopes</th>
+                      <th className="p-3">Zero-Cloud Offline Fallback</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border-hairline bg-white">
+                    {ConnectorRegistry.getTruthTable().map(conn => (
+                      <tr key={conn.providerId}>
+                        <td className="p-3 font-semibold text-ink">
+                          {conn.name}
+                        </td>
+                        <td className="p-3">
+                          <Badge 
+                            variant={conn.status === 'implemented_and_tested' ? 'green' : 'blue'} 
+                            size="sm"
+                          >
+                            {conn.status === 'implemented_and_tested' ? 'Active / Tested' : 'Direct EML/JSON Import'}
+                          </Badge>
+                        </td>
+                        <td className="p-3 font-mono text-[11px] text-ink-slate">
+                          {conn.requiredScopes.join(', ')}
+                        </td>
+                        <td className="p-3 text-[11.5px] text-ink-slate">
+                          {conn.offlineFallback}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Offline File Importer Guidance */}
+            <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2 text-xs">
+              <span className="font-semibold text-ink block">
+                How Proofline Resolves External OAuth Blockers for Lawyers:
+              </span>
+              <p className="text-ink-slate leading-relaxed text-[11.5px]">
+                Law firms frequently forbid connecting cloud OAuth apps to live firm Exchange/Google suites due to client confidentiality covenants. Proofline solves this through <strong>Direct Offline Ingestion</strong>: export your email threads as standard <code>.eml</code>/<code>.mbox</code>, Slack channels as exported <code>.json</code>, or Linear tickets as <code>.csv</code>/<code>.json</code>. Proofline ingests them into the matter with byte-level SHA-256 integrity, span extraction, and contradiction detection without sending a single byte to Google, Slack, or Linear.
+              </p>
             </div>
           </div>
         </div>
