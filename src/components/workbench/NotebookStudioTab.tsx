@@ -68,7 +68,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
   const [notebook, setNotebook] = useState<Notebook>(() => 
     notebookStudioEngine.createNotebook(
       matter.id,
-      `${matter.title} — Sovereign Research Notebook`,
+      `${matter.title}: Sovereign Research Notebook`,
       `Dedicated evidentiary workspace and knowledge distillation container for ${matter.title}.`,
       documents
     )

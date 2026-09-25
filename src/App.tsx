@@ -302,7 +302,7 @@ export function App() {
       id: `draft-${Date.now()}`,
       matterId: newMatter.id,
       type: 'matter_brief',
-      title: `Matter Assessment Brief — ${newMatter.title}`,
+      title: `Matter Assessment Brief: ${newMatter.title}`,
       blocks: [
         {
           id: `blk-${Date.now()}-1`,
@@ -575,7 +575,7 @@ export function App() {
               <div className="flex items-center gap-2.5">
                 <span className="w-2 h-2 rounded-full bg-proofline-ochre inline-block shrink-0 animate-pulse" />
                 <span>
-                  <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong> — Local Ollama endpoint offline. Proofline is operating in deterministic evidential mode with SHA-256 verifiable citations.
+                  <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong>: Local Ollama endpoint offline. Proofline is operating in deterministic evidential mode with SHA-256 verifiable citations.
                 </span>
               </div>
               <div className="flex items-center gap-3 shrink-0">

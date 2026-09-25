@@ -14,7 +14,7 @@ export class ConnectorRegistry {
     },
     {
       providerId: 'conn-google-gmail',
-      name: 'Google Workspace — Gmail Import',
+      name: 'Google Workspace: Gmail Import',
       status: 'implemented_needs_credentials',
       readSupported: true,
       writeSupported: false,

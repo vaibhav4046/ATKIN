@@ -649,7 +649,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
               </div>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(`"${selectedSpan.exactText || selectedSpan.text}" — ${selectedDoc.filename}`);
+                  navigator.clipboard.writeText(`"${selectedSpan.exactText || selectedSpan.text}" (${selectedDoc.filename})`);
                   alert('Citation copied to clipboard in OSCOLA format.');
                 }}
                 className="px-2 py-1 bg-white hover:bg-canvas-subtle border border-border-hairline rounded-[3px] text-[10.5px] text-ink flex items-center gap-1 shadow-subtle"

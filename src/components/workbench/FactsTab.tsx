@@ -483,7 +483,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                         )}
                       </td>
                       <td className="p-3 align-top text-ink-slate text-[11px]">
-                        {claim.editorNotes || '—'}
+                        {claim.editorNotes || 'None'}
                       </td>
                     </tr>
                   );

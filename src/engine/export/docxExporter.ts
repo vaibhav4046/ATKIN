@@ -31,7 +31,7 @@ export class DocxExporter {
         if (linkedClaims.length > 0) {
           lines.push('*Evidential Grounding:*');
           for (const c of linkedClaims) {
-            lines.push(`- **[${c.kind.toUpperCase()}]** ${c.statement} *(${c.status.toUpperCase()} — ${c.provenanceEdges.length} source span links)*`);
+            lines.push(`- **[${c.kind.toUpperCase()}]** ${c.statement} *(${c.status.toUpperCase()}, ${c.provenanceEdges.length} source span links)*`);
           }
           lines.push('');
         }
@@ -39,7 +39,7 @@ export class DocxExporter {
     }
 
     lines.push('---');
-    lines.push('*Proofline Sovereign Legal Copilot — Verification Hash Verified. No external cloud endpoints accessed.*');
+    lines.push('*Proofline Sovereign Legal Copilot: Verification Hash Verified. No external cloud endpoints accessed.*');
 
     return lines.join('\n');
   }

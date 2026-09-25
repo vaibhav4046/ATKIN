@@ -44,7 +44,7 @@ export class SourceCatalog {
       },
       {
         id: 'src-uk-find-case-law',
-        name: 'The National Archives — Find Case Law',
+        name: 'The National Archives: Find Case Law',
         jurisdiction: 'UK',
         publisher: 'The National Archives on behalf of Ministry of Justice',
         officialUrl: 'https://caselaw.nationalarchives.gov.uk',
@@ -96,7 +96,7 @@ export class SourceCatalog {
         lastCheckedDate: '2026-09-23',
         installedLocally: true,
         recordCount: 840,
-        coverageCaveat: 'Includes CPR 1998, Practice Direction — Pre-Action Conduct, Part 7, Part 8, Part 31, and Part 36.'
+        coverageCaveat: 'Includes CPR 1998, Practice Direction (Pre-Action Conduct), Part 7, Part 8, Part 31, and Part 36.'
       },
       {
         id: 'src-us-courtlistener',

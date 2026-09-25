@@ -412,7 +412,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 <span>
                   {modelStatus.state === 'connected'
                     ? 'Sovereign Isolation: OLLAMA_NO_CLOUD=1 Verified'
-                    : 'Local Runtime Standby — Deterministic IRAC Core Active'}
+                    : 'Local Runtime Standby: Deterministic IRAC Core Active'}
                 </span>
               </div>
               <span className="text-[11px] text-ink-slate">

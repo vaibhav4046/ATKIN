@@ -21,7 +21,7 @@ export function generateDeterministicDraft(
       const blocks: DraftBlock[] = [
         {
           id: 'blk-bates-ltr-1',
-          heading: 'RE: Group Litigation Order — Horizon Systemic Defects & Unfair Contract Defense',
+          heading: 'RE: Group Litigation Order: Horizon Systemic Defects & Unfair Contract Defense',
           text: `Dear Mr Bates and Claimants,\n\nWe write to provide our formal evidential advice following forensic inspection of disclosed Post Office and Fujitsu technical records in the High Court proceedings (Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB)).`,
           claimIds: claimRemote ? [claimRemote.id] : [],
           spanIds: ['span-bates-01'],
@@ -209,7 +209,7 @@ export function generateDeterministicDraft(
     const blocks: DraftBlock[] = [
       {
         id: 'blk-ltr-1',
-        heading: 'RE: Defective ZenithBook Pro 15 — Statutory Rights under Consumer Rights Act 2015',
+        heading: 'RE: Defective ZenithBook Pro 15: Statutory Rights under Consumer Rights Act 2015',
         text: `Dear Ms Vance,\n\nThank you for instructing Proofline Legal Clinic regarding the ZenithBook Pro 15 laptop purchased from ZenithTech Retail Ltd on 15 January 2026 for £1,499.00. We have completed our preliminary evidential audit of your file.`,
         claimIds: purchaseClaim ? [purchaseClaim.id] : [],
         spanIds: purchaseClaim ? purchaseClaim.provenanceEdges.map(e => e.spanId) : [],

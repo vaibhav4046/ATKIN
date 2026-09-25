@@ -30,3 +30,6 @@ target/
 
 
 .vercel
+.env*
+
+lab/

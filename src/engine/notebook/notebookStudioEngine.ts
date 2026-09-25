@@ -396,7 +396,7 @@ export class NotebookStudioEngine {
       title = `Adversarial Vulnerability & Risk Memo: ${notebook.title}`;
       tags.push('risk-assessment', 'red-team');
       content = `# Adversarial Vulnerability & Red Team Memo\n\n` +
-        `**Confidential & Privileged — Attorney Work Product**\n\n` +
+        `**Confidential & Privileged: Attorney Work Product**\n\n` +
         `## 1. Anticipated Opponent Attack Vectors\n` +
         `1. **Contemporaneous Integrity Challenge**: Opposing counsel will seek to challenge the computerized records under hearsay rules.\n` +
         `2. **Laches / Delay in Notification**: Opponent will argue notification was not provided within a reasonable commercial timeframe.\n` +
@@ -440,7 +440,7 @@ export class NotebookStudioEngine {
         `**Directive**: ${customPrompt || 'General matter synthesis'}\n\n` +
         `## Synthesized Analysis\n` +
         `Analysis conducted across ${activeDocs.length} active documents in sovereign notebook context.\n\n` +
-        citations.map(c => `> "${c.quote.substring(0, 160)}..." — *${c.documentTitle}*`).join('\n\n') + '\n\n' +
+        citations.map(c => `> "${c.quote.substring(0, 160)}..." (*${c.documentTitle}*)`).join('\n\n') + '\n\n' +
         `**Conclusion**: The requested legal analysis has been compiled with zero external data egress.`;
     }
 
