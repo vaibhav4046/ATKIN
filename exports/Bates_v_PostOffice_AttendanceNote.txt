@@ -1,0 +1,18 @@
+ATTENDANCE NOTE
+Date: 25/09/2026
+Matter Reference: matter-bates-postoffice-2019
+Title: Conference on Horizon Audit Disclosure
+Attendees: Alan Bates, Counsel, Solicitor
+
+1. SUMMARY OF DISCUSSION & KEY ISSUES
+1.1 Client instruction and evidence review regarding matter disputes
+
+2. ACTION ITEMS & DEADLINES
+- [ ] : Action: Draft Application for Third-Party Disclosure against Fujitsu Services Limited under CPR 31.17 by 18 October. (Assigned to: Solicitor | Due: 18 October.)
+
+3. CHRONOLOGICAL TRANSCRIPT EXTRACTS
+[00:00:10] Alan Bates: ": Reviewing Post Office internal correspondence regarding Fujitsu Horizon PIN-188."
+[00:01:25] Counsel: ": Gareth Jenkins memo confirms remote balance alterations were possible without subpostmaster knowledge."
+[00:02:40] Solicitor: ": Action: Draft Application for Third-Party Disclosure against Fujitsu Services Limited under CPR 31.17 by 18 October."
+
+Recorded in local sovereign workspace. Verified against SRA File Audit standards.

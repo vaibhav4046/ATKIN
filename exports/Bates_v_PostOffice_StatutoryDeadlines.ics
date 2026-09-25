@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Proofline Sovereign Legal Copilot//Court Calendar v1.0//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:hearing-bates-001@proofline.local
+DTSTAMP:20260925T000509Z
+DTSTART:20261112T103000Z
+DTEND:20261112T163000Z
+SUMMARY:High Court Horizon Technical Hearing (Fraser J)
+DESCRIPTION:Case management conference and expert evidence directions regarding PIN-188 discrepancy logs.
+LOCATION:Rolls Building\, Royal Courts of Justice\, London
+STATUS:CONFIRMED
+PRIORITY:1
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Court / Statutory Deadline Reminder: High Court Horizon Technical Hearing (Fraser J)
+END:VALARM
+END:VEVENT
+END:VCALENDAR
