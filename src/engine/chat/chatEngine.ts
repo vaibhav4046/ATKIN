@@ -13,6 +13,9 @@ import { LocalModelManager } from '../model/localModelManager.ts';
 import { NetworkBroker } from '../network/networkBroker.ts';
 import { legalReasoningEngine } from '../reasoning/legalReasoningEngine.ts';
 import { saveChatMessageToDB, loadChatMessagesFromDB, clearChatMessagesFromDB } from '../../db/index.ts';
+import { AstraRuntime } from '../protocol/astraRuntime.ts';
+import { OllamaLegalModel, DeterministicOfflineLegalModel } from '../protocol/models.ts';
+import type { DocumentRecord as CitationDocRecord } from '../protocol/citationGate.ts';
 
 export interface ChatEngineContext {
   matterId: string;
@@ -105,13 +108,44 @@ export class ChatEngine {
       memories: activeMemories
     });
 
+    // 3. Prepare Documents Map for ASTRA & CitationGate
+    const docMap = new Map<string, CitationDocRecord>();
+    for (const d of documents) {
+      docMap.set(d.id, {
+        id: d.id,
+        filename: d.filename,
+        matterId: d.matterId,
+        currentVersionId: 'v1',
+        content: d.text || d.content || '',
+        sha256: d.sha256
+      });
+    }
+
+    const modelStatus = await modelManager.checkHealth();
+    const legalModel = (modelStatus.state === 'connected')
+      ? new OllamaLegalModel({ modelTag: modelStatus.modelTag })
+      : new DeterministicOfflineLegalModel();
+
+    const astra = new AstraRuntime({ legalModel });
+
+    const astraRes = await astra.execute({
+      id: `req-${Date.now()}`,
+      userId: 'solicitor-01',
+      workspaceId: 'ws-personal',
+      matterId,
+      mode: 'ask',
+      message: userQuery,
+      jurisdiction: (matterJurisdiction as any) || 'England and Wales',
+      privacyMode: 'local_only'
+    }, {
+      spans,
+      documents: docMap
+    });
+
     let assistantReply = '';
     let isLocalRuntime = false;
-    let modelTagUsed = 'proofline-sovereign-irac';
+    let modelTagUsed = legalModel.name;
 
-    // 3. Attempt local LLM call if Ollama is running and model connected,
-    // provided evidential abstention was not triggered
-    const modelStatus = await modelManager.checkHealth();
     if (modelStatus.state === 'connected' && reasoningOutput.sourcesUsed.length > 0) {
       try {
         const relevantSpansForLlm = reasoningOutput.sourcesUsed
@@ -137,11 +171,14 @@ export class ChatEngine {
         isLocalRuntime = true;
         modelTagUsed = modelStatus.modelTag;
       } catch {
-        // Fall back cleanly to deterministic sovereign IRAC engine
-        assistantReply = reasoningOutput.formattedResponse;
+        assistantReply = (astraRes.claimSupportStatus === 'FULLY_SUPPORTED' || astraRes.irac.isAbstention)
+          ? astraRes.answer
+          : (reasoningOutput.formattedResponse || astraRes.answer);
       }
     } else {
-      assistantReply = reasoningOutput.formattedResponse;
+      assistantReply = (astraRes.claimSupportStatus === 'FULLY_SUPPORTED' || astraRes.irac.isAbstention)
+        ? astraRes.answer
+        : (reasoningOutput.formattedResponse || astraRes.answer);
     }
 
     const latencyMs = Date.now() - startTime;
@@ -161,17 +198,37 @@ export class ChatEngine {
       suggestedMemories.push(suggested.id);
     }
 
+    const sources = reasoningOutput.sourcesUsed.length > 0
+      ? reasoningOutput.sourcesUsed
+      : astraRes.irac.citations.map(c => {
+          const s = spans.find(sp => sp.id === c.spanId);
+          return {
+            docId: s?.documentId || 'doc-001',
+            filename: docMap.get(s?.documentId || '')?.filename || 'Document',
+            spanId: c.spanId,
+            lineRange: s?.lineStart ? `L${s.lineStart}` : undefined
+          };
+        });
+
     const assistantMsg: ChatMessage = {
       id: `msg-${Date.now()}-assistant`,
       matterId,
       role: 'assistant',
       content: assistantReply,
       timestamp: new Date().toISOString(),
-      sourcesUsed: reasoningOutput.sourcesUsed.length > 0 ? reasoningOutput.sourcesUsed : undefined,
+      sourcesUsed: sources.length > 0 ? sources : undefined,
       memoriesUsed: activeMemories.length > 0 ? activeMemories.slice(0, 3).map(m => ({ memoryId: m.id, text: m.text, scope: m.scope })) : undefined,
       needsReviewItems: suggestedMemories.length > 0 ? ['New matter fact suggested for review in Memory tab.'] : undefined,
       reasoningSteps: reasoningOutput.reasoningSteps,
       suggestedAction: reasoningOutput.suggestedAction,
+      claimSupportStatus: astraRes.claimSupportStatus,
+      auditReceiptHash: astraRes.auditReceiptHash,
+      astraStages: astraRes.executionTrace.stages,
+      verifications: astraRes.verifications.map(v => ({
+        spanId: v.spanId,
+        status: v.status,
+        reason: v.failureReason || 'Verification passed'
+      })),
       generationDetails: {
         modelTag: modelTagUsed,
         localRuntime: isLocalRuntime,

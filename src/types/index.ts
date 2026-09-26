@@ -34,6 +34,8 @@ export type LegalRole =
   | 'paralegal' 
   | 'trainee' 
   | 'academic' 
+  | 'legal_researcher'
+  | 'law_student'
   | 'pro_se' 
   | 'other';
 
@@ -57,10 +59,16 @@ export type MemoryPolicy =
 export interface UserProfile {
   id: string;
   name: string;
+  displayName?: string;
   role: LegalRole;
   firmOrOrg: string;
+  organisation?: string;
   primaryJurisdiction: Jurisdiction;
   secondaryJurisdictions: Jurisdiction[];
+  preferredLanguage?: string;
+  answerDetail?: 'concise' | 'standard' | 'exhaustive';
+  draftStyle?: string;
+  citationStyle?: string;
   privacyMode: 'local_only' | 'local_research' | 'hybrid';
   hardwareTier: 'detected' | 'manual';
   detectedHardware: {
@@ -77,6 +85,10 @@ export interface UserProfile {
   draftingStyle: DraftingStyle;
   citationFormat: CitationFormat;
   memoryPolicy: MemoryPolicy;
+  skillLearningEnabled?: boolean;
+  internetResearchEnabled?: boolean;
+  externalActionPolicy?: 'always_confirm' | 'autonomous_safe';
+  preferredModelPolicy?: string;
   activeWorkspace: WorkspaceType;
   onboardingCompleted: boolean;
   createdAt: string;
@@ -481,6 +493,14 @@ export interface ChatMessage {
     latencyMs: number;
     tokensGenerated?: number;
   };
+  claimSupportStatus?: 'FULLY_SUPPORTED' | 'PARTIALLY_SUPPORTED' | 'EVIDENTIALLY_ABSTAINED' | 'UNSUPPORTED';
+  auditReceiptHash?: string;
+  astraStages?: string[];
+  verifications?: Array<{
+    spanId: string;
+    status: 'VERIFIED' | 'MISSING_SOURCE' | 'WRONG_MATTER' | 'VERSION_MISMATCH' | 'INVALID_SPAN' | 'TEXT_MISMATCH' | 'STALE_VERSION';
+    reason: string;
+  }>;
 }
 
 // -------------------------------------------------------------

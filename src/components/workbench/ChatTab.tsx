@@ -402,10 +402,71 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                   </div>
                 )}
 
+                {/* CitationGate Provenance & RFC 8785 Audit Hash Badges */}
+                {msg.role === 'assistant' && msg.claimSupportStatus && (
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium ${
+                      msg.claimSupportStatus === 'FULLY_SUPPORTED'
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        : msg.claimSupportStatus === 'EVIDENTIALLY_ABSTAINED'
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        : msg.claimSupportStatus === 'PARTIALLY_SUPPORTED'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : 'bg-rose-50 text-rose-700 border border-rose-200'
+                    }`}>
+                      <ShieldCheck className="w-3 h-3" />
+                      CitationGate: {msg.claimSupportStatus.replace('_', ' ')}
+                    </span>
+                    {msg.auditReceiptHash && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-stone-50 text-stone-600 border border-stone-200" title={`RFC 8785 Digest: ${msg.auditReceiptHash}`}>
+                        <span>Audit:</span>
+                        <span className="font-semibold text-stone-800">{msg.auditReceiptHash.slice(0, 14)}...</span>
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 {/* Message Body */}
                 <div className="font-sans">
                   <MarkdownView content={msg.content} isUser={msg.role === 'user'} />
                 </div>
+
+                {/* ASTRA 12-Stage Legal Execution Pipeline Trace */}
+                {msg.astraStages && msg.astraStages.length > 0 && (
+                  <div className="mt-3 pt-2.5 border-t border-border-hairline">
+                    <button
+                      onClick={() => setExpandedTraceMsgId(expandedTraceMsgId === `astra-${msg.id}` ? null : `astra-${msg.id}`)}
+                      className="text-[11px] font-medium text-ink-steel hover:text-proofline-blue flex items-center gap-1.5 transition-colors font-mono"
+                    >
+                      <Layers className="w-3 h-3 text-proofline-blue" />
+                      <span>ASTRA 12-Stage Pipeline Trace ({msg.astraStages.length} stages &bull; CitationGate Verified)</span>
+                      {expandedTraceMsgId === `astra-${msg.id}` ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                    </button>
+                    {expandedTraceMsgId === `astra-${msg.id}` && (
+                      <div className="mt-2 p-3 rounded-[4px] bg-canvas-subtle border border-border-hairline text-[11px] font-mono space-y-1.5">
+                        <div className="grid grid-cols-2 gap-1 pb-2 border-b border-border-hairline text-[10px] text-ink-steel">
+                          {msg.astraStages.map((stg, sIdx) => (
+                            <div key={sIdx} className="flex items-center gap-1.5 text-ink-slate">
+                              <CheckCircle className="w-3 h-3 text-emerald-600 shrink-0" />
+                              <span className="truncate">{stg}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {msg.verifications && msg.verifications.length > 0 && (
+                          <div className="pt-1 text-[10.5px]">
+                            <span className="text-ink font-semibold">CitationGate Provenance:</span>
+                            {msg.verifications.map((v, vIdx) => (
+                              <div key={vIdx} className="flex items-center justify-between text-stone-600 py-0.5">
+                                <span className="truncate max-w-[200px]">{v.spanId}</span>
+                                <span className={`font-semibold ${v.status === 'VERIFIED' ? 'text-emerald-600' : 'text-amber-600'}`}>{v.status}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Agentic Trace Subagent Execution Visualizer */}
                 {msg.reasoningSteps && msg.reasoningSteps.length > 0 && (

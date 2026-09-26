@@ -57,6 +57,7 @@ export interface CitationVerification {
 
 export interface DocumentRecord {
   id: string;
+  filename?: string;
   matterId: string;
   currentVersionId: string;
   sha256: string;
