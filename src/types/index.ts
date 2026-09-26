@@ -25,6 +25,64 @@ export type ReviewItemType =
 export type ReviewSeverity = 'high' | 'medium' | 'low';
 export type ReviewStatus = 'pending' | 'resolved' | 'dismissed';
 
+export type WorkspaceType = 'personal' | 'demo';
+
+export type LegalRole = 
+  | 'solicitor' 
+  | 'barrister' 
+  | 'in_house' 
+  | 'paralegal' 
+  | 'trainee' 
+  | 'academic' 
+  | 'pro_se' 
+  | 'other';
+
+export type DraftingStyle = 
+  | 'plain_english' 
+  | 'traditional' 
+  | 'formal_advocacy' 
+  | 'executive_summary';
+
+export type CitationFormat = 
+  | 'oscola' 
+  | 'bluebook' 
+  | 'neutral' 
+  | 'inline_statute';
+
+export type MemoryPolicy = 
+  | 'strict_matter_isolation' 
+  | 'cross_matter_semantic_allowed' 
+  | 'ephemeral';
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  role: LegalRole;
+  firmOrOrg: string;
+  primaryJurisdiction: Jurisdiction;
+  secondaryJurisdictions: Jurisdiction[];
+  privacyMode: 'local_only' | 'local_research' | 'hybrid';
+  hardwareTier: 'detected' | 'manual';
+  detectedHardware: {
+    cpuCores: number;
+    memoryGb: number;
+    gpuName?: string;
+    platform: string;
+  };
+  modelPreference: {
+    preferredModel: string;
+    localModelPath?: string;
+    contextLimit: number;
+  };
+  draftingStyle: DraftingStyle;
+  citationFormat: CitationFormat;
+  memoryPolicy: MemoryPolicy;
+  activeWorkspace: WorkspaceType;
+  onboardingCompleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Matter {
   id: string;
   title: string;
@@ -34,6 +92,7 @@ export interface Matter {
   status: 'active' | 'archived' | 'review';
   createdAt: string;
   updatedAt: string;
+  workspaceType?: WorkspaceType;
   isDemo?: boolean;
   notes?: string;
 }

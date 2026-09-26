@@ -18,6 +18,7 @@ import { ChatTab } from './components/workbench/ChatTab.tsx';
 import { MemoryTab } from './components/workbench/MemoryTab.tsx';
 import { ContractTab } from './components/workbench/ContractTab.tsx';
 import { NotebookStudioTab } from './components/workbench/NotebookStudioTab.tsx';
+import { OnboardingModal } from './components/onboarding/OnboardingModal.tsx';
 
 import type { 
   Matter, 
@@ -29,7 +30,9 @@ import type {
   DraftBlock,
   ReviewItem, 
   ModelStatus,
-  NetworkMode
+  NetworkMode,
+  UserProfile,
+  WorkspaceType
 } from './types/index.ts';
 
 import { 
@@ -91,7 +94,10 @@ import {
   saveDraftToDB, 
   saveClaimToDB, 
   deleteClaimFromDB, 
-  saveReviewItemToDB 
+  saveReviewItemToDB,
+  getUserProfileFromDB,
+  saveUserProfileToDB,
+  DEFAULT_USER_PROFILE
 } from './db/index.ts';
 
 // Singletons for sovereign runtime
@@ -103,22 +109,22 @@ export function App() {
   const [activeView, setActiveView] = useState<'landing' | 'workbench'>('landing');
   const [currentTab, setCurrentTab] = useState<WorkbenchTab>('overview');
 
-  // Multi-matter portfolio with real landmark litigation as primary
-  const [matters, setMatters] = useState<Matter[]>([
-    BATES_MATTER,
-    CONTRACT_MATTER,
-    TENANCY_MATTER,
-    SAMPLE_MATTER
-  ]);
-  const [activeMatterId, setActiveMatterId] = useState<string>(BATES_MATTER.id);
+  // User Profile & Onboarding State
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [activeWorkspace, setActiveWorkspace] = useState<WorkspaceType>('personal');
+
+  // Multi-matter portfolio partitioned by workspace
+  const [matters, setMatters] = useState<Matter[]>([]);
+  const [activeMatterId, setActiveMatterId] = useState<string>('');
 
   // Evidential state
-  const [documents, setDocuments] = useState<Document[]>(BATES_DOCUMENTS);
-  const [spans, setSpans] = useState<Span[]>(BATES_SPANS);
-  const [claims, setClaims] = useState<Claim[]>(BATES_CLAIMS);
-  const [authorities, setAuthorities] = useState<Authority[]>(BATES_AUTHORITIES);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [spans, setSpans] = useState<Span[]>([]);
+  const [claims, setClaims] = useState<Claim[]>([]);
+  const [authorities, setAuthorities] = useState<Authority[]>([]);
   const [draft, setDraft] = useState<Draft>(BATES_DRAFT);
-  const [reviewItems, setReviewItems] = useState<ReviewItem[]>(BATES_REVIEWS);
+  const [reviewItems, setReviewItems] = useState<ReviewItem[]>([]);
 
   // Sovereign Broker & Vault state
   const [networkMode, setNetworkMode] = useState<NetworkMode>('offline');
@@ -142,7 +148,19 @@ export function App() {
     detectedTags: []
   });
 
-  const activeMatter = matters.find(m => m.id === activeMatterId) || matters[0];
+  const fallbackEmptyMatter: Matter = {
+    id: 'empty-matter',
+    title: 'My Practice (Clean)',
+    jurisdiction: userProfile?.primaryJurisdiction || 'England and Wales',
+    clientAlias: 'Private Client',
+    status: 'active',
+    workspaceType: 'personal',
+    isDemo: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  const activeMatter = matters.find(m => m.id === activeMatterId) || (matters.length > 0 ? matters[0] : fallbackEmptyMatter);
 
   useEffect(() => {
     checkOllamaConnection().then(setModelStatus);
@@ -150,13 +168,25 @@ export function App() {
     // Hydrate persistent state from IndexedDB
     async function initPersistentDB() {
       await seedInitialFixturesIfEmpty();
-      const storedMatters = await getMattersFromDB();
+      
+      const profile = await getUserProfileFromDB();
+      setUserProfile(profile);
+
+      if (!profile || !profile.onboardingCompleted) {
+        setIsOnboardingOpen(true);
+      }
+
+      const initialWs: WorkspaceType = profile?.activeWorkspace || 'personal';
+      setActiveWorkspace(initialWs);
+
+      const storedMatters = await getMattersFromDB(initialWs);
+      setMatters(storedMatters);
+
       if (storedMatters && storedMatters.length > 0) {
-        setMatters(storedMatters);
         const defaultMatterId = storedMatters[0].id;
         setActiveMatterId(defaultMatterId);
         const entities = await loadMatterEntitiesFromDB(defaultMatterId);
-        if (entities && entities.documents.length > 0) {
+        if (entities && (entities.documents.length > 0 || entities.claims.length > 0)) {
           setDocuments(entities.documents);
           setSpans(entities.spans);
           setClaims(entities.claims);
@@ -165,6 +195,15 @@ export function App() {
           setReviewItems(entities.reviewItems);
           if (entities.spans.length > 0) setSelectedSpan(entities.spans[0]);
         }
+      } else {
+        // Clean empty state for Personal Workspace
+        setActiveMatterId('');
+        setDocuments([]);
+        setSpans([]);
+        setClaims([]);
+        setAuthorities([]);
+        setReviewItems([]);
+        setSelectedSpan(null);
       }
     }
     initPersistentDB();
@@ -249,8 +288,49 @@ export function App() {
     }
   };
 
-  const handleLoadSampleMatter = () => {
-    handleSelectMatter(BATES_MATTER.id);
+  const handleSelectWorkspace = async (ws: WorkspaceType) => {
+    setActiveWorkspace(ws);
+    if (userProfile) {
+      const updated: UserProfile = { ...userProfile, activeWorkspace: ws, updatedAt: new Date().toISOString() };
+      setUserProfile(updated);
+      await saveUserProfileToDB(updated);
+    }
+    const wsMatters = await getMattersFromDB(ws);
+    setMatters(wsMatters);
+    if (wsMatters.length > 0) {
+      await handleSelectMatter(wsMatters[0].id);
+    } else {
+      setActiveMatterId('');
+      setDocuments([]);
+      setSpans([]);
+      setClaims([]);
+      setAuthorities([]);
+      setReviewItems([]);
+      setSelectedSpan(null);
+    }
+  };
+
+  const handleOnboardingComplete = async (profile: UserProfile, launchAction: 'new_matter' | 'import_files' | 'demo') => {
+    setUserProfile(profile);
+    setIsOnboardingOpen(false);
+    setActiveView('workbench');
+
+    if (launchAction === 'demo') {
+      await handleSelectWorkspace('demo');
+      setCurrentTab('overview');
+    } else {
+      await handleSelectWorkspace('personal');
+      if (launchAction === 'new_matter') {
+        setIsNewMatterOpen(true);
+      } else if (launchAction === 'import_files') {
+        setCurrentTab('sources');
+      }
+    }
+  };
+
+  const handleLoadSampleMatter = async () => {
+    await handleSelectWorkspace('demo');
+    await handleSelectMatter(BATES_MATTER.id);
     setActiveView('workbench');
     setCurrentTab('overview');
   };
@@ -290,12 +370,13 @@ export function App() {
     const newMatter: Matter = {
       id: `matter-${Date.now()}`,
       title: newTitle.trim(),
-      jurisdiction: 'England and Wales',
+      jurisdiction: userProfile?.primaryJurisdiction || 'England and Wales',
       clientAlias: newClient.trim() || 'Confidential Client',
       status: 'active',
+      workspaceType: 'personal',
+      isDemo: false,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      isDemo: false
+      updatedAt: new Date().toISOString()
     };
 
     const newDraft: Draft = {
@@ -322,6 +403,7 @@ export function App() {
     await saveMatterToDB(newMatter);
     await saveDraftToDB(newDraft);
 
+    setActiveWorkspace('personal');
     setMatters(prev => [newMatter, ...prev]);
     setActiveMatterId(newMatter.id);
     setDocuments([]);
@@ -608,20 +690,56 @@ export function App() {
               matters={matters}
               activeMatterId={activeMatterId}
               onSelectMatter={handleSelectMatter}
+              activeWorkspace={activeWorkspace}
+              onSelectWorkspace={handleSelectWorkspace}
             />
 
             {/* Central Work Area */}
             <main className="flex-1 overflow-y-auto bg-gallery-paper">
-              {currentTab === 'overview' && (
-                <OverviewTab
-                  matter={activeMatter}
-                  documents={documents}
-                  claims={claims}
-                  reviewItems={reviewItems}
-                  authorities={authorities}
-                  onNavigateTab={setCurrentTab}
-                />
-              )}
+              {matters.length === 0 ? (
+                <div className="flex-1 h-full min-h-[500px] flex items-center justify-center p-8 bg-gallery-paper">
+                  <div className="max-w-md w-full bg-white border border-border-hairline rounded-xl p-8 text-center shadow-subtle space-y-4">
+                    <div className="w-12 h-12 rounded-full bg-stone-100 border border-stone-200 text-stone-800 flex items-center justify-center mx-auto text-xl font-serif">
+                      A
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-xl font-serif text-ink tracking-tight">Your Practice is Clean</h3>
+                      <p className="text-xs text-ink-slate leading-relaxed">
+                        You are in your private, sovereign workspace. No matters have been created yet.
+                        All documents you import remain 100% on this computer.
+                      </p>
+                    </div>
+                    <div className="space-y-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsNewMatterOpen(true)}
+                        className="w-full py-2.5 px-4 bg-proofline-blue hover:bg-proofline-navy text-white text-xs font-semibold rounded-md shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <span>Create First Client Matter</span>
+                        <span className="font-mono text-xs">→</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectWorkspace('demo')}
+                        className="w-full py-2 px-3 bg-stone-50 hover:bg-stone-100 text-stone-700 text-xs font-medium rounded-md border border-stone-200 transition-colors cursor-pointer"
+                      >
+                        Explore Demo Sandbox (Bates & NovaCorp)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {currentTab === 'overview' && (
+                    <OverviewTab
+                      matter={activeMatter}
+                      documents={documents}
+                      claims={claims}
+                      reviewItems={reviewItems}
+                      authorities={authorities}
+                      onNavigateTab={setCurrentTab}
+                    />
+                  )}
 
               {currentTab === 'chat' && (
                 <ChatTab
@@ -752,6 +870,8 @@ export function App() {
                   onExportVaultBackup={handleExportBundle}
                 />
               )}
+                </>
+              )}
             </main>
 
             {/* Right 300px Source Inspector Panel */}
@@ -867,6 +987,14 @@ export function App() {
           </div>
         </div>
       )}
+
+      {/* Practitioner Onboarding Modal */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        initialProfile={userProfile}
+        onComplete={handleOnboardingComplete}
+        onClose={() => setIsOnboardingOpen(false)}
+      />
     </div>
   );
 }

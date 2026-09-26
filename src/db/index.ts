@@ -8,7 +8,9 @@ import type {
   Authority, 
   Draft, 
   ReviewItem,
-  ChatMessage 
+  ChatMessage,
+  UserProfile,
+  WorkspaceType 
 } from '../types/index.ts';
 
 import { 
@@ -60,6 +62,7 @@ export class ProoflineDatabase extends Dexie {
   drafts!: Table<Draft, string>;
   reviewItems!: Table<ReviewItem, string>;
   messages!: Table<ChatMessage, string>;
+  userProfile!: Table<UserProfile, string>;
 
   constructor() {
     super('ProoflineLocalDB');
@@ -83,6 +86,18 @@ export class ProoflineDatabase extends Dexie {
       drafts: 'id, matterId, type, reviewStatus, updatedAt',
       reviewItems: 'id, matterId, type, severity, status, createdAt',
       messages: 'id, matterId, role, timestamp'
+    });
+    this.version(3).stores({
+      matters: 'id, title, jurisdiction, clientAlias, status, workspaceType, isDemo, createdAt, updatedAt',
+      documents: 'id, matterId, filename, sha256, sourceDate, importedAt',
+      spans: 'id, documentId, checksum',
+      claims: 'id, matterId, kind, status, polarity, updatedAt',
+      edges: 'id, claimId, spanId, type, reviewState',
+      authorities: 'id, identifier, jurisdiction, verificationLevel',
+      drafts: 'id, matterId, type, reviewStatus, updatedAt',
+      reviewItems: 'id, matterId, type, severity, status, createdAt',
+      messages: 'id, matterId, role, timestamp',
+      userProfile: 'id, role, primaryJurisdiction, onboardingCompleted'
     });
   }
 }
@@ -111,7 +126,7 @@ export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
       db.reviewItems
     ], async () => {
       // 1. Bates Post Office Matter
-      await db.matters.put({ ...BATES_MATTER, isDemo: true });
+      await db.matters.put({ ...BATES_MATTER, isDemo: true, workspaceType: 'demo' });
       await db.documents.bulkPut(BATES_DOCUMENTS);
       await db.spans.bulkPut(BATES_SPANS);
       await db.claims.bulkPut(BATES_CLAIMS);
@@ -120,7 +135,7 @@ export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
       await db.reviewItems.bulkPut(BATES_REVIEWS);
 
       // 2. Contract Review Matter
-      await db.matters.put({ ...CONTRACT_MATTER, isDemo: true });
+      await db.matters.put({ ...CONTRACT_MATTER, isDemo: true, workspaceType: 'demo' });
       await db.documents.bulkPut(CONTRACT_DOCUMENTS);
       await db.spans.bulkPut(CONTRACT_SPANS);
       await db.claims.bulkPut(CONTRACT_CLAIMS);
@@ -129,7 +144,7 @@ export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
       await db.reviewItems.bulkPut(CONTRACT_REVIEWS);
 
       // 3. Tenancy Matter
-      await db.matters.put({ ...TENANCY_MATTER, isDemo: true });
+      await db.matters.put({ ...TENANCY_MATTER, isDemo: true, workspaceType: 'demo' });
       await db.documents.bulkPut(TENANCY_DOCUMENTS);
       await db.spans.bulkPut(TENANCY_SPANS);
       await db.claims.bulkPut(TENANCY_CLAIMS);
@@ -138,7 +153,7 @@ export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
       await db.reviewItems.bulkPut(TENANCY_REVIEWS);
 
       // 4. Consumer Laptop Matter
-      await db.matters.put({ ...SAMPLE_MATTER, isDemo: true });
+      await db.matters.put({ ...SAMPLE_MATTER, isDemo: true, workspaceType: 'demo' });
       await db.documents.bulkPut(SAMPLE_DOCUMENTS);
       await db.spans.bulkPut(SAMPLE_SPANS);
       await db.claims.bulkPut(SAMPLE_CLAIMS);
@@ -155,24 +170,108 @@ export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
 }
 
 /**
- * Fetch all matters from IndexedDB.
+ * Fetch matters from IndexedDB, optionally filtered by workspace ('personal' vs 'demo').
  */
-export async function getMattersFromDB(): Promise<Matter[]> {
+export async function getMattersFromDB(workspaceType?: WorkspaceType): Promise<Matter[]> {
   try {
-    return await db.matters.toArray();
+    const all = await db.matters.toArray();
+    if (workspaceType) {
+      return all.filter(m => {
+        const mWorkspace = m.workspaceType || (m.isDemo ? 'demo' : 'personal');
+        return mWorkspace === workspaceType;
+      });
+    }
+    return all;
   } catch {
-    return [BATES_MATTER, CONTRACT_MATTER, TENANCY_MATTER, SAMPLE_MATTER];
+    if (workspaceType === 'personal') return [];
+    return [
+      { ...BATES_MATTER, isDemo: true, workspaceType: 'demo' },
+      { ...CONTRACT_MATTER, isDemo: true, workspaceType: 'demo' },
+      { ...TENANCY_MATTER, isDemo: true, workspaceType: 'demo' },
+      { ...SAMPLE_MATTER, isDemo: true, workspaceType: 'demo' }
+    ];
   }
 }
 
 /**
- * Save a matter to IndexedDB.
+ * Save a matter to IndexedDB, ensuring workspaceType is set.
  */
 export async function saveMatterToDB(matter: Matter): Promise<void> {
   try {
-    await db.matters.put(matter);
+    const prepared: Matter = {
+      ...matter,
+      workspaceType: matter.workspaceType || (matter.isDemo ? 'demo' : 'personal')
+    };
+    await db.matters.put(prepared);
   } catch (err) {
     console.error('Failed to save matter to IndexedDB:', err);
+  }
+}
+
+export const DEFAULT_USER_PROFILE: UserProfile = {
+  id: 'user-default',
+  name: '',
+  role: 'solicitor',
+  firmOrOrg: '',
+  primaryJurisdiction: 'England and Wales',
+  secondaryJurisdictions: [],
+  privacyMode: 'local_only',
+  hardwareTier: 'detected',
+  detectedHardware: {
+    cpuCores: typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 8 : 8,
+    memoryGb: typeof navigator !== 'undefined' && 'deviceMemory' in navigator ? (navigator as any).deviceMemory || 16 : 16,
+    platform: typeof navigator !== 'undefined' ? navigator.platform || 'Windows' : 'Windows'
+  },
+  modelPreference: {
+    preferredModel: 'gemma4:legal',
+    contextLimit: 8192
+  },
+  draftingStyle: 'plain_english',
+  citationFormat: 'oscola',
+  memoryPolicy: 'strict_matter_isolation',
+  activeWorkspace: 'personal',
+  onboardingCompleted: false,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+};
+
+/**
+ * Fetch UserProfile from IndexedDB or local storage.
+ */
+export async function getUserProfileFromDB(): Promise<UserProfile | null> {
+  try {
+    const profiles = await db.userProfile.toArray();
+    if (profiles && profiles.length > 0) {
+      return profiles[0];
+    }
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('atkin_user_profile');
+      if (stored) return JSON.parse(stored);
+    }
+    return null;
+  } catch {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('atkin_user_profile');
+      if (stored) return JSON.parse(stored);
+    }
+    return null;
+  }
+}
+
+/**
+ * Save UserProfile to IndexedDB and local storage.
+ */
+export async function saveUserProfileToDB(profile: UserProfile): Promise<void> {
+  try {
+    await db.userProfile.put(profile);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('atkin_user_profile', JSON.stringify(profile));
+    }
+  } catch (err) {
+    console.error('Failed to save user profile to IndexedDB:', err);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('atkin_user_profile', JSON.stringify(profile));
+    }
   }
 }
 

@@ -16,13 +16,13 @@ import {
   Lock,
   ChevronRight
 } from 'lucide-react';
-import type { Matter } from '../../types/index.ts';
+import type { Matter, WorkspaceType } from '../../types/index.ts';
 
 export type WorkbenchTab = 
   | 'overview' 
-  | 'explore'
-  | 'chat'
-  | 'notebook'
+  | 'explore' 
+  | 'chat' 
+  | 'notebook' 
   | 'sources' 
   | 'facts' 
   | 'timeline' 
@@ -49,6 +49,8 @@ interface SidebarProps {
   matters: Matter[];
   activeMatterId: string;
   onSelectMatter: (id: string) => void;
+  activeWorkspace?: WorkspaceType;
+  onSelectWorkspace?: (ws: WorkspaceType) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -59,7 +61,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onNewMatter,
   matters,
   activeMatterId,
-  onSelectMatter
+  onSelectMatter,
+  activeWorkspace = 'personal',
+  onSelectWorkspace
 }) => {
   const activeMatter = matters.find(m => m.id === activeMatterId);
   const isSampleMatter = activeMatter?.isDemo || activeMatterId.includes('bates') || activeMatterId.includes('contract') || activeMatterId.includes('tenancy') || activeMatterId.includes('consumer');
@@ -85,11 +89,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside className="w-[248px] bg-canvas-subtle border-r border-border-hairline flex flex-col justify-between shrink-0 select-none min-h-[calc(100vh-106px)] font-sans">
       <div>
+        {/* Workspace Partition Selector */}
+        <div className="p-2 border-b border-border-hairline bg-slate-50">
+          <div className="flex bg-slate-200/80 p-0.5 rounded-[5px] text-[11px] font-medium">
+            <button
+              type="button"
+              onClick={() => onSelectWorkspace && onSelectWorkspace('personal')}
+              className={`flex-1 py-1 text-center rounded-[4px] transition-all cursor-pointer ${
+                activeWorkspace === 'personal'
+                  ? 'bg-white text-ink shadow-xs font-semibold'
+                  : 'text-ink-slate hover:text-ink'
+              }`}
+            >
+              My Practice
+            </button>
+            <button
+              type="button"
+              onClick={() => onSelectWorkspace && onSelectWorkspace('demo')}
+              className={`flex-1 py-1 text-center rounded-[4px] transition-all cursor-pointer ${
+                activeWorkspace === 'demo'
+                  ? 'bg-white text-ink shadow-xs font-semibold'
+                  : 'text-ink-slate hover:text-ink'
+              }`}
+            >
+              Demo Sandbox
+            </button>
+          </div>
+        </div>
+
         {/* Matter Portfolio Switcher */}
         <div className="p-3 border-b border-border-hairline bg-white space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-semibold tracking-wider text-ink-steel uppercase font-mono">
-              Active Matter
+              {activeWorkspace === 'demo' ? 'Sandbox Cases' : 'Active Matter'}
             </span>
             <button
               onClick={onNewMatter}
@@ -102,29 +134,45 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
 
-          <select
-            value={activeMatterId}
-            onChange={(e) => onSelectMatter(e.target.value)}
-            className="w-full text-[12.5px] bg-white border border-border-hairline rounded-[4px] px-2 py-1.5 text-ink font-medium focus-visible:outline-none focus:border-proofline-blue cursor-pointer"
-          >
-            {matters.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.title}
-              </option>
-            ))}
-          </select>
+          {matters.length === 0 ? (
+            <div className="p-2.5 bg-stone-50 border border-dashed border-stone-300 rounded-[5px] text-center space-y-2">
+              <div className="text-[11.5px] text-stone-700 font-medium">No Private Matters</div>
+              <p className="text-[10.5px] text-stone-500 leading-tight">
+                Your private workspace is completely clean.
+              </p>
+              <button
+                type="button"
+                onClick={onNewMatter}
+                className="w-full py-1 px-2 bg-proofline-blue hover:bg-proofline-navy text-white text-[11px] font-medium rounded transition-colors"
+              >
+                + Create Matter
+              </button>
+            </div>
+          ) : (
+            <select
+              value={activeMatterId}
+              onChange={(e) => onSelectMatter(e.target.value)}
+              className="w-full text-[12.5px] bg-white border border-border-hairline rounded-[4px] px-2 py-1.5 text-ink font-medium focus-visible:outline-none focus:border-proofline-blue cursor-pointer"
+            >
+              {matters.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.title}
+                </option>
+              ))}
+            </select>
+          )}
 
-          {/* Persistent Truthful Sample Label */}
-          {isSampleMatter ? (
+          {/* Persistent Truthful Sample Label or Air-Gap Badge */}
+          {activeWorkspace === 'demo' ? (
             <div className="flex items-center justify-between text-[11px] pt-1">
               <span className="bg-amber-50 text-amber-900 border border-amber-200/80 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium">
-                Sample Matter
+                Demo Sandbox
               </span>
               <button
-                onClick={onNewMatter}
+                onClick={() => onSelectWorkspace && onSelectWorkspace('personal')}
                 className="text-proofline-blue hover:text-proofline-navy underline text-[10.5px] cursor-pointer"
               >
-                Start private matter
+                My Practice
               </button>
             </div>
           ) : (
