@@ -1,170 +1,155 @@
-# Proofline — Grounded Legal Evidence & Drafting Workbench
+# ATKIN — Sovereign Legal AI & Verifiable Evidence Workbench
 
-> **Turn a disorderly civil legal matter into a source-linked map of facts, contradictions, questions, authorities, and a draft that a lawyer can actually audit.**
+> **A sovereign, air-gapped legal workbench for solicitors: verifiable fact mapping, adverse contradiction discovery, 5-layer sovereign memory, statutory citations, and audit-ready drafting with 0% cloud egress.**
 
 [![LexHack 2026 Submission](https://img.shields.io/badge/LexHack-2026_Submission-0071e3.svg)](https://lexhack-2026.devpost.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests: Vitest](https://img.shields.io/badge/Tests-92%2F92_Passing-2e7d32.svg)](src/tests/)
-[![Windows Native](https://img.shields.io/badge/Windows-v1.0.0_Released-0066cc.svg)](https://github.com/vaibhav4046/proofline/releases/tag/v1.0.0)
-[![Local AI: Gemma 4](https://img.shields.io/badge/Model-Gemma_4_(Ollama)-orange.svg)](https://ai.google.dev/gemma/docs/core/model_card_4)
+[![Tests: Vitest](https://img.shields.io/badge/Tests-143%2F143_Passing-2e7d32.svg)](src/tests/)
+[![Windows Desktop](https://img.shields.io/badge/Windows-MSI_Verified-0066cc.svg)](release/windows/)
+[![Android Mobile](https://img.shields.io/badge/Android-APK_Verified-3ddc84.svg)](release/android/)
+[![Local AI: Ollama](https://img.shields.io/badge/Local_AI-Gemma_2_%2F_4_(RTX_3050)-orange.svg)](https://ollama.ai)
 
-Built for **LexHack 2026** by **Vaibhav Lalwani** (MSc Student, University of Liverpool).
-
----
-
-## Windows Desktop Native Installers (v1.0.0)
-
-Direct sovereign releases with verified cryptographic checksums:
-- **Windows NSIS Setup (.exe)**: [Proofline_1.0.0_x64-setup.exe](https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64-setup.exe) (2.64 MB)  
-  `SHA-256: 99B19A0E2FD7A3687818AF9924CB94D771D07AEAD012CF5EE5064FA81FC52A5A`
-- **Windows MSI Installer (.msi)**: [Proofline_1.0.0_x64_en-US.msi](https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64_en-US.msi) (3.92 MB)  
-  `SHA-256: B77B8659DEA209826F032151E1630DD116491352FC31C51CEF3D71506DD93D76`
+Built for **LexHack 2026** by **Vaibhav Lalwani** (MSc Student, University of Liverpool).  
+*Evolution note: ATKIN began as Proofline and has evolved into a full-fidelity sovereign legal workstation with native desktop and mobile companion applications.*
 
 ---
 
-## Quick Start (Local Web Server)
+## 1. Verified Release Installers (v1.0.0)
 
+Pre-built binaries with verified cryptographic checksums in `release/`:
+
+| Platform | Format | Installer File | Size | SHA-256 Checksum | Verification Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Windows Desktop** | WiX MSI | [`Atkin_1.0.0_x64_en-US.msi`](release/windows/Atkin_1.0.0_x64_en-US.msi) | 5.36 MB | `c8a88ed96491b53ab13ac39d9c461fda1ece1262ca7aabc7dde9011fab6ee4d4` | **DESKTOP DEVICE VERIFIED** (Silent install, registry, SQLite store) |
+| **Windows Desktop** | NSIS Setup | [`Atkin_1.0.0_x64-setup.exe`](release/windows/Atkin_1.0.0_x64-setup.exe) | 3.80 MB | `b659768689b4c742da92b49f5beef007ee05cbad499cdb1fc2d4e64d009f0586` | **BINARY BUILT** |
+| **Android Mobile** | Signed APK | [`Atkin-1.0.0-universal.apk`](release/android/Atkin-1.0.0-universal.apk) | 17.19 MB | `50eb140618639a05162eedc4c5d23b8b1d3d9b4e72e9ad455bc496793a63619d` | **ANDROID EMULATOR VERIFIED** (Pixel 9 Pro API 36, 7-step onboarding) |
+
+---
+
+## 2. Key Sovereign Capabilities
+
+1. **Evidential Abstention & Zero Hallucination**:
+   - Queries regarding unrecorded facts (e.g., supplier incorporation dates not present in contracts) trigger truthful evidential abstention rather than plausible hallucinated guesses.
+2. **Dual-Tier Offline Persistence**:
+   - Webview: High-speed reactive Dexie IndexedDB.
+   - Native Desktop: Local SQLite database at `%LOCALAPPDATA%\Atkin\atkin_store.db` across process restarts and cache clears.
+3. **5-Layer Sovereign Memory Architecture**:
+   - **Layer 1 (Working)**: Current matter context, active span selection, and volatile reasoning buffers.
+   - **Layer 2 (Episodic)**: Chronological matter timeline, court deadlines, and interview notes.
+   - **Layer 3 (Semantic)**: Extracted facts, entity relationships, and cross-document evidentiary links.
+   - **Layer 4 (Procedural)**: Reusable legal skills, review checklists, and firm-specific SOPs.
+   - **Layer 5 (Meta)**: Practitioner drafting style preferences (OSCOLA vs Harvard, plain English tone) and model guardrails.
+4. **Adverse Contradiction Engine**:
+   - Automatically cross-examines client statements, invoices, and supplier terms to surface evidentiary conflicts side-by-side with exact character offsets.
+5. **Air-Gapped Cross-Device Companion**:
+   - Ephemeral 6-digit SAS pairing over local encrypted LAN.
+   - Android mobile companion connects to desktop Ollama runtime (`gemma2:2b`, `qwen2.5-coder:3b`, `gemma4:e2b-it-qat`) with GPU acceleration (NVIDIA RTX 3050).
+   - *Transparent Disclosure*: Mobile APK operates as a companion client and offline deterministic engine. On-device local GGUF compilation is planned for v1.1.
+
+---
+
+## 3. Quick Start
+
+### A. Run Desktop Native App (Windows)
+```powershell
+# Silent install via MSI
+msiexec.exe /i release\windows\Atkin_1.0.0_x64_en-US.msi /qn
+
+# Launch installed executable
+& "C:\Program Files\Atkin\atkin.exe"
+```
+
+### B. Run Android Mobile Companion (ADB / Emulator)
 ```bash
-# 1. Clone repository
-git clone https://github.com/vaibhav4046/proofline.git
-cd proofline
+# Install signed APK onto connected Android device or emulator
+adb install -r release/android/Atkin-1.0.0-universal.apk
 
-# 2. Install dependencies (Node 20+)
+# Forward local model port for desktop companion inference
+adb reverse tcp:11434 tcp:11434
+
+# Launch Atkin MainActivity
+adb shell am start -n com.atkin.legal/.MainActivity
+```
+
+### C. Run Local Web Workbench
+```bash
+# 1. Install dependencies (Node 20+)
 npm install
 
-# 3. Run automated tests (92 passing across 21 suites)
+# 2. Run automated test suite (143 passing across 28 suites)
 npm test -- --run
 
-# 4. Start local development server (binds strictly to 127.0.0.1)
+# 3. Start local development server (binds strictly to 127.0.0.1)
 npm run dev
 ```
-
-Open **http://127.0.0.1:5173** in your browser. Click **"Load Sample Consumer Matter"** to immediately explore the synthetic *Vance v ZenithTech Retail Ltd* case file.
-
----
-
-## What Makes Proofline Different?
-
-| Feature | Generic Chatbots (ChatGPT / Claude) | Proofline Legal Workbench |
-|---|---|---|
-| **Evidential Grounding** | Text summaries with unverified hallucinated quotes | **Exact character and line offsets** verified against underlying document text |
-| **Contradiction Handling** | Silently averages or ignores contradictory evidence | **First-class adverse conflict cards** displaying conflicting records side-by-side |
-| **Client Confidentiality** | Uploads sensitive client documents to third-party cloud | **100% browser-local IndexedDB storage**; zero external file transmission |
-| **Hostile Prompt Injections** | Vulnerable to directives embedded in emails | **Treats document content as inert data**; hostile instructions are quarantined |
-| **Legal Authorities** | Hallucinates nonexistent judgments (SRA warning risk) | **Curated statutory provisions** (CRA 2015) with The National Archives appeal caveats |
-| **Drafting Output** | Authoritative-sounding unverified prose | **Audit-ready drafts** with sentence-by-sentence clickable citation anchors |
+Open **http://127.0.0.1:5173** in your browser.
 
 ---
 
-## The Demonstration Matter: *Vance v ZenithTech Retail Ltd*
+## 4. Local Model Configuration (Ollama)
 
-The built-in synthetic matter models a realistic England & Wales consumer dispute under the **Consumer Rights Act 2015**:
-1. `Receipt_Invoice_INV-8492.txt`: Laptop purchased 15 Jan 2026, delivered 18 Jan 2026 for £1,499.00 (triggers the 6-month statutory presumption under CRA 2015 s.19(14)).
-2. `Client_Statement_Chronology.md`: Witness chronology recalling hardware power collapse on **12 April 2026**.
-3. `Merchant_Correspondence_ZenithTech.eml`: Unlawful refusal asserting a 30-day return policy, demanding a £120 fee, and containing an adversarial prompt injection payload.
-4. `Service_Report_ApexRepair.txt`: Independent engineering forensics confirming latent solder fatigue micro-fractures present at delivery.
-5. `Contradictory_Intake_Email_ZenithSupport.eml` *(Planted Contradiction)*: Defendant telephony log recording an initial customer call reporting power anomalies on **8 April 2026**.
+Atkin interfaces with local Ollama runtimes on `http://127.0.0.1:11434`:
 
----
-
-## System Architecture
-
-```
-[Imported Files (TXT, MD, EML)]
-              │
-              ▼
-   [Client-Side Parser] ─── Computes SHA-256 Fingerprint
-              │
-              ▼
-   [IndexedDB (Dexie.js)] ─── 100% Local Storage
-              │
-              ▼
-    [Positional Extractor] ─── Byte Slices & Checksums
-              │
-              ▼
-    [Claim & Fact Ledger] ─── Supported / Contested / Unverified
-              │
-    ┌─────────┴─────────┐
-    ▼                   ▼
-[Citation Verifier]   [Local Gemma 4 (Ollama 127.0.0.1)]
-    │                   │
-    └─────────┬─────────┘
-              ▼
-[Drafting Studio & Export Manifest]
-```
-
----
-
-## Local Gemma 4 Setup Guide (Ollama)
-
-To use Google's **Gemma 4** open-weights model locally:
-
-1. Install [Ollama](https://ollama.ai) on your computer.
-2. In terminal, pull the recommended model variant:
+1. Install [Ollama](https://ollama.ai) on your workstation.
+2. Pull recommended legal models:
    ```bash
-   ollama pull gemma4:e4b
+   ollama pull gemma2:2b
+   ollama pull qwen2.5-coder:3b
+   ollama pull gemma4:e2b-it-qat
    ```
-   *(Or `gemma4:e2b` for laptops with lower VRAM).*
-3. Start the Ollama background daemon:
+3. Start the daemon:
    ```bash
    ollama serve
    ```
-4. In Proofline, click **Settings & Diagnostics** → **Test Connection**. The workbench will automatically detect the model on `127.0.0.1:11434`.
+4. Atkin automatically detects active local models and executes inference with zero network roundtrips.
 
 > [!NOTE]
-> When visited on a public web URL, browser security prevents remote scripts from directly probing a visitor's loopback ports. Proofline operates cleanly and honestly in **Deterministic Offline Mode** with zero fake status indicators.
+> On public hosted web deployments (e.g., Vercel), browser sandbox policies prevent web pages from probing visitor loopback ports. Atkin operates cleanly and honestly in **Deterministic Offline Mode** with verifiable SHA-256 citations and zero fake connection indicators.
 
 ---
 
-## Project Structure
+## 5. System Architecture
 
 ```
-proofline/
-├── index.html                   # HTML entry point with WCAG 2.2 AA meta
-├── package.json                 # Dependencies & scripts
-├── vite.config.ts               # Vite configuration with loopback proxy
-├── src/
-│   ├── types/index.ts           # Core evidential data contract
-│   ├── db/                      # Dexie IndexedDB & synthetic matter fixtures
-│   ├── engine/
-│   │   ├── parser.ts            # SHA-256 hashing & RFC 822 EML parser
-│   │   ├── spanExtractor.ts     # Positional byte slice & line mapper
-│   │   ├── verifier.ts          # Deterministic citation gate
-│   │   ├── contradictionEngine.ts # Adverse contradiction discovery
-│   │   ├── draftingEngine.ts    # Audit-ready draft builder & markdown exporter
-│   │   └── modelBridge.ts       # Loopback Ollama adapter
-│   ├── components/              # Scandinavian editorial UI components
-│   └── tests/                   # Vitest unit test suite
-├── docs/
-│   ├── architecture.md          # Trust boundaries & data flow
-│   ├── evaluation.md            # Benchmark evaluation report
-│   ├── security.md              # Threat model & prompt injection isolation
-│   └── roadmap.md               # P0, P1, and P2 capabilities
-├── DEVPOST.md                   # Complete Devpost hackathon writeup
-├── DEMO_SCRIPT.md               # 2:45 timed video recording script
-└── PROGRESS.md                  # Milestone log & build clock
+┌─────────────────────────────────────────────────────────────┐
+│                 ATKIN Sovereign Legal AI                    │
+├──────────────────────────────┬──────────────────────────────┤
+│      Windows Workstation     │   Android Companion Client   │
+│   (WiX MSI / Tauri Native)   │     (Universal APK / AVD)    │
+│                              │                              │
+│   ┌───────────────────────┐  │   ┌───────────────────────┐  │
+│   │    Edge WebView2      │  │   │    Android WebView    │  │
+│   │  (Dexie IndexedDB)    │  │   │  (Clean Workspace)    │  │
+│   └───────────┬───────────┘  │   └───────────┬───────────┘  │
+│               │              │               │              │
+│   ┌───────────▼───────────┐  │   ┌───────────▼───────────┐  │
+│   │     Rust Core IPC     │◄─┼───┤   Encrypted LAN Sync  │  │
+│   │  (Tauri Commands)     │  │   │   (6-Digit SAS OTP)   │  │
+│   └───────────┬───────────┘  │   └───────────────────────┘  │
+│               │              │                              │
+│   ┌───────────▼───────────┐  │   ┌───────────────────────┐  │
+│   │     Native SQLite     │  │   │ Remote GPU Inference  │  │
+│   │   (%LOCALAPPDATA%)    │  │   │  (Ollama 127.0.0.1)   │  │
+│   └───────────────────────┘  │   └───────────────────────┘  │
+└──────────────────────────────┴──────────────────────────────┘
 ```
 
 ---
 
-## Evaluation & Verification Commands
+## 6. Verification & Reality Evidence
 
-```bash
-# Run unit tests
-npm test
-
-# Build production bundle
-npm run build
-
-# Preview production build locally
-npm run preview
-```
+The complete audit trail is documented in [`release/RELEASE_EVIDENCE.md`](release/RELEASE_EVIDENCE.md), including:
+- 20 Acceptance Journeys audited across concrete evidence tiers.
+- Physical installation logs, process IDs, and registry entries.
+- Android emulator screenshots across all 7 onboarding steps.
+- Real PDF ingestion fixture (`fixtures/AlderPeak-Independent-Contract.pdf`).
+- Evidential abstention verification output.
 
 ---
 
-## Disclosures & Legal Disclaimer
+## 7. Disclosures & Legal Compliance
 
 * **Author**: Vaibhav Lalwani (Solo Builder, MSc Student at University of Liverpool).
-* **Statutory Sources**: Crown Copyright materials from [legislation.gov.uk](https://www.legislation.gov.uk/) and notices from [The National Archives Find Case Law](https://caselaw.nationalarchives.gov.uk/).
-* **Regulatory Compliance**: Built in accordance with the **Solicitors Regulation Authority (SRA)** guidance on the misuse of AI in legal practice.
-* **Disclaimer**: Proofline is an evidential organization and drafting prototype for qualified solicitors; it does not provide legal advice or replace solicitor oversight.
+* **Jurisdiction**: England and Wales (CPR Pre-Action Protocol, CRA 2015, UCTA 1977).
+* **Statutory Sources**: Crown Copyright materials from [legislation.gov.uk](https://www.legislation.gov.uk/) and judgments from [The National Archives Find Case Law](https://caselaw.nationalarchives.gov.uk/).
+* **SRA Compliance**: Designed to adhere strictly to the **Solicitors Regulation Authority (SRA)** Standards & Regulations regarding AI usage, client confidentiality (Rule 6.3), and supervisory accountability.
