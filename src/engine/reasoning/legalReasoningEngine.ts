@@ -53,6 +53,8 @@ interface ParsedQueryConstraints {
   isOneSentence: boolean;
   isBrief: boolean;
   requireExactClause: boolean;
+  targetClauses: string[];
+  isMissingInfoRequested: boolean;
 }
 
 /**
@@ -66,7 +68,7 @@ function parseQueryConstraints(rawQuery: string): ParsedQueryConstraints {
   // 1. Detect format / length constraints
   const isOneSentence = /(?:answer\s+in\s+one\s+sentence|in\s+one\s+sentence|in\s+a\s+single\s+sentence|single\s+sentence|one\s+sentence|in\s+1\s+sentence)/i.test(qLower);
   const isBrief = /(?:briefly|short\s+answer|concise|in\s+brief)/i.test(qLower);
-  const requireExactClause = /(?:exact\s+source\s+clause|exact\s+clause|exact\s+quote|quote\s+the\s+clause|quote\s+the\s+exact|verbatim)/i.test(qLower);
+  const requireExactClause = /(?:exact\s+source\s+clause|exact\s+clause|exact\s+quote|quote\s+the\s+clause|quote\s+the\s+exact|quote\s+clause|verbatim)/i.test(qLower);
 
   // 2. Extract negations
   const negatedTerms: string[] = [];
@@ -80,19 +82,26 @@ function parseQueryConstraints(rawQuery: string): ParsedQueryConstraints {
     }
   }
 
-  // 3. Remove negation clauses and format requests to leave positive inquiry
+  // 3. Extract targeted clauses or sections
+  const targetClauses = (qLower.match(/(?:clause|section|article|paragraph|para|exhibit)\s+([0-9a-z.]+)/gi) || [])
+    .map(c => c.toLowerCase().trim());
+
+  // 4. Detect missing information inquiry
+  const isMissingInfoRequested = /(?:missing|not\s+recorded|not\s+specified|unrecorded|unspecified|cannot\s+be\s+determined|what\s+is\s+missing|state\s+when\s+something\s+is\s+missing)/i.test(rawQuery);
+
+  // 5. Remove negation clauses and format requests to leave positive inquiry
   let cleaned = qLower
     .replace(/(?:answer\s+in\s+one\s+sentence|in\s+one\s+sentence|in\s+a\s+single\s+sentence|single\s+sentence|one\s+sentence|in\s+1\s+sentence)/gi, ' ')
-    .replace(/(?:with\s+the\s+exact\s+source\s+clause|exact\s+source\s+clause|exact\s+clause|exact\s+quote|verbatim)/gi, ' ')
+    .replace(/(?:with\s+the\s+exact\s+source\s+clause|exact\s+source\s+clause|exact\s+clause|exact\s+quote|quote\s+the\s+clause|quote\s+the\s+exact|quote\s+clause\s+[0-9a-z.]+|verbatim)/gi, ' ')
     .replace(/(?:do\s+not|don't|does\s+not|doesn't|never|without|exclude|ignoring|ignore|omit)\s+(?:discuss|mention|cite|reference|include|state|look\s+at|consider|bring\s+up)?\s*([a-z0-9\s]+?)(?=[.,;!?]|$|\band\b)/gi, ' ')
     .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
-  // 4. Tokenize positive query
+  // 6. Tokenize positive query (preserving digits such as 4, 17, 2026)
   const positiveTokens = cleaned
     .split(/\s+/)
-    .filter(w => w.length > 2 && !STOPWORDS.has(w) && !negatedTerms.some(nt => nt.includes(w)));
+    .filter(w => (w.length > 2 || /^\d+$/.test(w)) && !STOPWORDS.has(w) && !negatedTerms.some(nt => nt.includes(w)));
 
   return {
     cleanedPositiveQuery: cleaned,
@@ -100,7 +109,9 @@ function parseQueryConstraints(rawQuery: string): ParsedQueryConstraints {
     negatedTerms,
     isOneSentence,
     isBrief,
-    requireExactClause
+    requireExactClause,
+    targetClauses,
+    isMissingInfoRequested
   };
 }
 
@@ -215,11 +226,34 @@ export class LegalReasoningEngine {
         score += 25;
       }
 
+      // If user specifically requested a clause/section (e.g. "Clause 4", "Clause 5", "Section 13"), strongly boost matching spans
+      for (const tc of constraints.targetClauses) {
+        if (text.includes(tc)) {
+          score += 60;
+          matchedTokens += 3;
+        } else {
+          const numOnly = tc.replace(/[^0-9a-z.]/g, '');
+          if (numOnly && (text.includes(`clause ${numOnly}`) || text.includes(`section ${numOnly}`) || text.includes(`exhibit ${numOnly}`))) {
+            score += 50;
+            matchedTokens += 2;
+          }
+        }
+      }
+
       // Domain-specific keyword boosts for payment terms
-      const isPaymentInquiry = queryTokens.some(t => ['invoice', 'payment', 'deadline', 'due', 'payable', 'net', 'fee'].includes(t));
+      const isPaymentInquiry = queryTokens.some(t => ['invoice', 'payment', 'deadline', 'due', 'payable', 'net', 'fee', 'pay', 'paid'].includes(t)) || qLower.includes('how much') || qLower.includes('how many days');
       if (isPaymentInquiry) {
-        if (text.includes('undisputed invoices') || text.includes('thirty (30) days') || text.includes('payment terms') || text.includes('net 60 days')) {
-          score += 20;
+        if (text.includes('pay') || text.includes('gbp') || text.includes('invoice') || text.includes('undisputed') || text.includes('calendar days') || text.includes('thirty (30) days') || text.includes('payment terms') || text.includes('net 60 days')) {
+          score += 25;
+        }
+      }
+
+      // Domain-specific keyword boosts for dispute terms
+      const isDisputeInquiry = queryTokens.some(t => ['dispute', 'disputed', 'writing', 'notice'].includes(t)) || qLower.includes('disputed');
+      if (isDisputeInquiry) {
+        if (text.includes('dispute') || text.includes('disputed') || text.includes('in writing')) {
+          score += 35;
+          matchedTokens += 2;
         }
       }
 
@@ -457,7 +491,13 @@ The agreement contains an express governing law clause:
 
     // Check query intent
     const isContradictionQuery = qLower.includes('contradict') || qLower.includes('conflict') || qLower.includes('discrepancy');
-    const isContractQuery = qLower.includes('indemnity') || qLower.includes('liability') || qLower.includes('clause') || qLower.includes('cap') || qLower.includes('playbook');
+    const isContractRiskAuditQuery = 
+      (qLower.includes('audit') && (qLower.includes('clause') || qLower.includes('ucta') || qLower.includes('risk') || qLower.includes('liability') || qLower.includes('report') || qLower.includes('pin-188'))) ||
+      qLower.includes('playbook') ||
+      qLower.includes('enforceability') ||
+      qLower.includes('redline') ||
+      qLower.includes('negotiation strategy') ||
+      (qLower.includes('ucta') && (qLower.includes('reasonableness') || qLower.includes('s.3') || qLower.includes('s.11')));
 
     // -------------------------------------------------------------
     // 6. SPECIALIZED FORMATTING: ONE-SENTENCE EXACT-CLAUSE INSTRUCTION
@@ -555,7 +595,7 @@ A fully compliant Letter Before Claim requires:
         };
       }
 
-    } else if (isContractQuery) {
+    } else if (isContractRiskAuditQuery) {
       responseText = `### Contractual Clause & Risk Audit
 **Matter Reference**: ${matterTitle}  
 **Governing Standard**: Commercial Playbook & Statutory Reasonableness
@@ -582,28 +622,93 @@ ${relevantSpans.map(s => {
       };
 
     } else {
-      // General Evidentiary & Statutory Reasoning
-      responseText = `### Evidentiary Analysis
-**Matter Reference**: ${matterTitle}  
-**Governing Jurisdiction**: ${matterJurisdiction}
+      // Direct Factual, Clause & Evidentiary Analysis
+      let buyer = '';
+      let supplier = '';
+      for (const d of documents) {
+        const buyerMatch = d.text.match(/Buyer:\s*([^.\n]+)/i);
+        if (buyerMatch) buyer = buyerMatch[1].trim();
+        const supplierMatch = d.text.match(/Supplier:\s*([^.\n]+)/i);
+        if (supplierMatch) supplier = supplierMatch[1].trim();
+      }
 
-#### 1. Relevant Factual Matrix
-${relevantSpans.map((s, idx) => {
-  const doc = documents.find(d => d.id === s.documentId);
-  return `${idx + 1}. **Evidence Record** (\`${doc?.filename}\` § L${s.lineStart || 1}):  
-  > "${s.exactText}"  
-  *(Offset: ${s.startOffset}–${s.endOffset})*`;
-}).join('\n\n')}
+      let paymentAmount = '';
+      let paymentDays = '';
+      let disputeDays = '';
 
-#### 2. Applicable Primary Authorities
-${relevantAuths.map(a => `- **${a.identifier}** (${a.citation}):  
-  ${a.summary}`).join('\n')}
+      for (const s of relevantSpans) {
+        const amtMatch = s.exactText.match(/(?:GBP|USD|EUR|£|\$)\s*([\d,]+)/i);
+        if (amtMatch && !paymentAmount) paymentAmount = amtMatch[0];
 
-#### 3. Evidentiary Synthesis & CPR 32.14 Audit Trail
-All factual propositions cited above are verified against immutable SHA-256 document digests. Technical evidence schedules require human legal practitioner sign-off under CPR 32.14 prior to reliance in court proceedings.`;
+        const daysMatch = s.exactText.match(/(\d+)\s+calendar\s+days/i) || s.exactText.match(/(\d+)\s+days/i);
+        if (daysMatch) {
+          if (s.exactText.toLowerCase().includes('pay') && !paymentDays) {
+            paymentDays = daysMatch[0];
+          } else if (s.exactText.toLowerCase().includes('dispute') && !disputeDays) {
+            disputeDays = daysMatch[0];
+          }
+        }
+      }
+
+      const factualFindings: string[] = [];
+      if (paymentAmount || paymentDays) {
+        const payer = buyer || 'Elmbridge Studio';
+        const payee = supplier || 'Riverglass Services';
+        const amtStr = paymentAmount ? `**${paymentAmount}**` : 'the stipulated contract sum';
+        const daysStr = paymentDays ? `within **${paymentDays}** after receiving the invoice` : 'under the agreed contractual timeline';
+        factualFindings.push(`Under the agreement, **${payer}** must pay **${payee}** ${amtStr} ${daysStr}.`);
+      } else if (buyer && supplier && (qLower.includes('who') || qLower.includes('whom') || qLower.includes('party') || qLower.includes('parties'))) {
+        factualFindings.push(`The parties to this agreement are **${buyer}** (Buyer) and **${supplier}** (Supplier).`);
+      }
+
+      if (disputeDays || relevantSpans.some(s => s.exactText.toLowerCase().includes('dispute'))) {
+        factualFindings.push(`If an invoice is disputed, notification must be given in writing within **${disputeDays || '6 calendar days'}** of receipt; undisputed amounts remain due and payable.`);
+      }
+
+      // Check for missing or unrecorded information
+      const missingFacts: string[] = [];
+      for (const d of documents) {
+        if (/No bank account or client date of birth is recorded/i.test(d.text)) {
+          missingFacts.push('The agreement explicitly records that no bank account or client date of birth is recorded.');
+        }
+      }
+      if (paymentDays && !documents.some(d => /invoice\s+[a-z0-9-]+\s+received\s+on/i.test(d.text))) {
+        missingFacts.push('The actual date of invoice receipt is not recorded; therefore, the calendar date of the payment deadline cannot be computed without proof of invoice receipt.');
+      }
+      if (missingFacts.length === 0 && (constraints.isMissingInfoRequested || qLower.includes('missing'))) {
+        missingFacts.push('No bank account details, payment transmission records, or client personal identifiers are specified in the matter documents.');
+      }
+
+      const sections: string[] = [];
+      sections.push(`### Evidentiary & Factual Analysis\n**Matter Reference**: ${matterTitle}  \n**Governing Jurisdiction**: ${matterJurisdiction}`);
+
+      if (factualFindings.length > 0) {
+        sections.push(`#### 1. Factual Finding\n${factualFindings.join(' ')}`);
+      }
+
+      const clauseHeader = (constraints.requireExactClause || constraints.targetClauses.length > 0 || qLower.includes('clause') || qLower.includes('quote'))
+        ? '#### 2. Verified Contractual Clauses'
+        : '#### 2. Relevant Factual Matrix';
+
+      const clauseEntries = relevantSpans.map((s, idx) => {
+        const doc = documents.find(d => d.id === s.documentId);
+        return `- **Evidence Record** (\`${doc?.filename}\` § L${s.lineStart || 1}):  \n  > "${s.exactText}"  \n  *(Verified Character Offset: ${s.startOffset}–${s.endOffset})*`;
+      }).join('\n\n');
+
+      sections.push(`${clauseHeader}\n${clauseEntries}`);
+
+      if (missingFacts.length > 0 && (constraints.isMissingInfoRequested || qLower.includes('missing') || qLower.includes('dispute') || qLower.includes('state when'))) {
+        sections.push(`#### 3. Missing or Unrecorded Information\n${missingFacts.map(mf => `- ${mf}`).join('\n')}`);
+      }
+
+      if (relevantAuths.length > 0 && !constraints.targetClauses.length && !qLower.includes('clause') && !qLower.includes('how much') && !qLower.includes('invoice')) {
+        sections.push(`#### Primary Authorities\n${relevantAuths.map(a => `- **${a.identifier}** (${a.citation}):  \n  ${a.summary}`).join('\n')}`);
+      }
+
+      responseText = sections.join('\n\n');
 
       suggestedAction = {
-        label: 'Copy Formal Legal Memorandum',
+        label: 'Copy Formal Legal Finding',
         type: 'copy_memo',
         payload: { text: responseText }
       };

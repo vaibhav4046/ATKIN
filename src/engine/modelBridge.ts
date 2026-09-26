@@ -145,10 +145,13 @@ Provide a concise, formal draft block for a solicitor's review:`;
     };
   } catch (err) {
     // Graceful fallback to verified deterministic offline content
+    const contextSnippet = contextSpans.length > 0 
+      ? contextSpans.map(s => `"${s.exactText}"`).join(' ') 
+      : 'No verified source spans provided for this draft request.';
     return {
       source: 'deterministic_offline',
       modelTag: 'deterministic_offline (fallback)',
-      proposedText: `[Deterministic Offline Summary]: Based on the verified source records, the subject goods exhibited catastrophic hardware failure within the statutory 6-month presumption window under Consumer Rights Act 2015 s.19(14). (Note: Local model generation timed out or was offline; verified template applied).`
+      proposedText: `[Deterministic Offline Summary]: Local model generation was offline or timed out. Verified source excerpt: ${contextSnippet}`
     };
   }
 }
