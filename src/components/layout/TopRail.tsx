@@ -13,7 +13,8 @@ import {
   Package, 
   Calendar, 
   BookOpen,
-  Award
+  Award,
+  Smartphone
 } from 'lucide-react';
 import type { Matter, ModelStatus, NetworkMode } from '../../types/index.ts';
 import { Badge } from '../common/Badge.tsx';
@@ -31,6 +32,7 @@ interface TopRailProps {
   onExportNotebook: () => void;
   onExportCalendar: () => void;
   onOpenSettings: () => void;
+  onOpenPairing?: () => void;
 }
 
 export const TopRail: React.FC<TopRailProps> = ({
@@ -45,7 +47,8 @@ export const TopRail: React.FC<TopRailProps> = ({
   onExportBundle,
   onExportNotebook,
   onExportCalendar,
-  onOpenSettings
+  onOpenSettings,
+  onOpenPairing
 }) => {
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
   const [isNetMenuOpen, setIsNetMenuOpen] = useState(false);
@@ -263,10 +266,22 @@ export const TopRail: React.FC<TopRailProps> = ({
           )}
         </div>
 
+        {/* Device Pairing Button */}
+        {onOpenPairing && (
+          <button
+            onClick={onOpenPairing}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border border-border-hairline hover:bg-canvas-subtle text-[12px] text-ink transition-colors cursor-pointer"
+            title="Pair Android Mobile Companion (Air-Gapped LAN)"
+          >
+            <Smartphone className="w-3.5 h-3.5 text-proofline-blue" />
+            <span className="hidden sm:inline">Pair Phone</span>
+          </button>
+        )}
+
         {/* Settings button */}
         <button
           onClick={onOpenSettings}
-          className="p-1 rounded-[4px] hover:bg-canvas-subtle text-ink-steel hover:text-ink transition-colors"
+          className="p-1 rounded-[4px] hover:bg-canvas-subtle text-ink-steel hover:text-ink transition-colors cursor-pointer"
           aria-label="Matter & Model Settings"
           title="Matter & Model Settings"
         >

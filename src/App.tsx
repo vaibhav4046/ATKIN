@@ -19,6 +19,7 @@ import { MemoryTab } from './components/workbench/MemoryTab.tsx';
 import { ContractTab } from './components/workbench/ContractTab.tsx';
 import { NotebookStudioTab } from './components/workbench/NotebookStudioTab.tsx';
 import { OnboardingModal } from './components/onboarding/OnboardingModal.tsx';
+import { DevicePairingModal } from './components/sync/DevicePairingModal.tsx';
 
 import type { 
   Matter, 
@@ -139,6 +140,7 @@ export function App() {
   const [newTitle, setNewTitle] = useState('');
   const [newClient, setNewClient] = useState('');
   const [isOfflineBannerDismissed, setIsOfflineBannerDismissed] = useState(false);
+  const [isPairingOpen, setIsPairingOpen] = useState(false);
 
   // Local model state
   const [modelStatus, setModelStatus] = useState<ModelStatus>({
@@ -649,6 +651,7 @@ export function App() {
             onExportNotebook={handleExportNotebook}
             onExportCalendar={handleExportCalendar}
             onOpenSettings={() => setCurrentTab('settings')}
+            onOpenPairing={() => setIsPairingOpen(true)}
           />
 
           {/* Honest Sovereign Mode / Local LLM Status Banner */}
@@ -994,6 +997,12 @@ export function App() {
         initialProfile={userProfile}
         onComplete={handleOnboardingComplete}
         onClose={() => setIsOnboardingOpen(false)}
+      />
+
+      {/* Cross-Device Companion Pairing Modal */}
+      <DevicePairingModal
+        isOpen={isPairingOpen}
+        onClose={() => setIsPairingOpen(false)}
       />
     </div>
   );

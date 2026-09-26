@@ -22,9 +22,85 @@ export interface PullProgress {
   percent?: number;
 }
 
+export interface HardwareProfile {
+  cpuCores: number;
+  systemMemoryGb: number;
+  gpuVendor?: string;
+  hardwareTier: 'edge_minimal' | 'practitioner_standard' | 'counsel_workstation';
+  recommendedModelTag: string;
+  recommendedModelDescription: string;
+  recommendedContextBudget: number;
+  pullCommand: string;
+}
+
 export class LocalModelManager {
   private endpoint = '/api/local-model';
   private customOpenAIEndpoint = 'http://127.0.0.1:1234/v1';
+
+  /**
+   * Probes client hardware capabilities to recommend optimal local model parameters
+   */
+  public async detectHardwareProfile(): Promise<HardwareProfile> {
+    let cpuCores = 4;
+    let memoryGb = 8;
+    let gpuVendor = 'Integrated / CPU Fallback';
+
+    if (typeof navigator !== 'undefined') {
+      if (navigator.hardwareConcurrency) {
+        cpuCores = navigator.hardwareConcurrency;
+      }
+      if ('deviceMemory' in navigator && typeof (navigator as any).deviceMemory === 'number') {
+        memoryGb = (navigator as any).deviceMemory;
+      }
+      try {
+        if ('gpu' in navigator && (navigator as any).gpu) {
+          const adapter = await (navigator as any).gpu.requestAdapter();
+          if (adapter && adapter.info) {
+            gpuVendor = adapter.info.vendor || adapter.info.architecture || 'Discrete GPU (DirectX/Vulkan)';
+          }
+        }
+      } catch {
+        // WebGPU probing may be disallowed in certain sandboxes
+      }
+    }
+
+    if (memoryGb < 8) {
+      return {
+        cpuCores,
+        systemMemoryGb: memoryGb,
+        gpuVendor,
+        hardwareTier: 'edge_minimal',
+        recommendedModelTag: 'gemma-2b-it-qat',
+        recommendedModelDescription: 'Gemma 2B QAT (Quantized Aware Training) - Fast, lightweight, runs under 2GB RAM without discrete GPU.',
+        recommendedContextBudget: 4096,
+        pullCommand: 'ollama pull gemma:2b'
+      };
+    }
+
+    if (memoryGb <= 16) {
+      return {
+        cpuCores,
+        systemMemoryGb: memoryGb,
+        gpuVendor,
+        hardwareTier: 'practitioner_standard',
+        recommendedModelTag: 'gemma2:9b-instruct-q4_K_M',
+        recommendedModelDescription: 'Gemma 2 9B Instruct (Q4_K_M) - Exceptional legal statutory reasoning and clause extraction for standard practitioner laptops.',
+        recommendedContextBudget: 8192,
+        pullCommand: 'ollama pull gemma2:9b'
+      };
+    }
+
+    return {
+      cpuCores,
+      systemMemoryGb: memoryGb,
+      gpuVendor,
+      hardwareTier: 'counsel_workstation',
+      recommendedModelTag: 'qwen2.5:14b-instruct-q4_K_M',
+      recommendedModelDescription: 'Qwen 2.5 14B / DeepSeek R1 14B - High-capacity common law multi-step procedural reasoning and complex contract auditing.',
+      recommendedContextBudget: 16384,
+      pullCommand: 'ollama pull qwen2.5:14b'
+    };
+  }
 
   public setEndpoint(url: string) {
     this.endpoint = url;
