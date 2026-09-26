@@ -111,14 +111,19 @@ export class MatterAnalyzer {
 
       // Only process substantive lines (more than 15 chars, not pure punctuation/headers)
       if (trimmed.length > 20 && !trimmed.startsWith('===')) {
-        // Split substantive lines into sentences or meaningful clauses
-        const sentenceRegex = /[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g;
-        let match;
-        while ((match = sentenceRegex.exec(lineText)) !== null) {
-          const sentence = match[0].trim();
-          if (sentence.length >= 25) {
-            const startOffset = lineStartOffset + match.index;
-            const endOffset = startOffset + match[0].length;
+        // Split on sentence boundaries: punctuation after letter/quote/paren followed by space and capital/quote
+        const rawSegments = trimmed.split(/(?<=[a-zA-Z0-9\)"'][.!?]['")\]]*)\s+(?=[A-Z"'(])/);
+        let searchCursor = 0;
+        for (const seg of rawSegments) {
+          const sentence = seg.trim();
+          if (sentence.length >= 20) {
+            const relIndex = lineText.indexOf(sentence, searchCursor);
+            const actualRel = relIndex >= 0 ? relIndex : lineText.indexOf(sentence);
+            const startOffset = lineStartOffset + actualRel;
+            const endOffset = startOffset + sentence.length;
+            if (relIndex >= 0) {
+              searchCursor = relIndex + sentence.length;
+            }
             const spanId = `span-${doc.id.slice(4, 9)}-${spans.length + 1}`;
 
             spans.push({

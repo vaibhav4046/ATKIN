@@ -1,0 +1,29 @@
+MASTER SERVICES AGREEMENT (LOGISTICS PLATFORM)
+====================================================================
+Date of Agreement: 12 March 2026
+
+PARTIES:
+(1) HIGHFIELD LOGISTICS GROUP LTD, a private limited company incorporated in England and Wales under Company No. 04821901, having its registered office at 14 Cabot Square, Canary Wharf, London, E14 4QJ ("Customer"); and
+(2) ALDER PEAK SYSTEMS LTD, a company incorporated in England and Wales, having its principal place of business at Unit 4B, St Ann's Enterprise Park, Newcastle upon Tyne, NE1 2PZ ("Supplier").
+
+1. APPOINTMENT AND SCOPE OF SERVICES
+1.1 The Supplier shall provide the Cloud Logistics Management System and continuous telemetry data integration services in accordance with Schedule 1 (Service Specification).
+1.2 The Supplier warrants that the software services shall conform in all material respects with the technical specifications agreed between the parties.
+
+2. FEES, INVOICING AND PAYMENT TERMS
+2.1 In consideration of the provision of the Services, the Customer shall pay to the Supplier a total fixed implementation price of £18,420 (excluding Value Added Tax).
+2.2 The Supplier shall submit a single VAT invoice upon completion of Milestone 2 acceptance testing.
+2.3 The Customer shall pay all undisputed invoice amounts within 45 days from the date of receipt of the valid tax invoice.
+
+3. DURATION AND TERMINATION
+3.1 This Agreement shall commence on the Effective Date and shall continue for an initial period of twelve (12) months unless terminated earlier in accordance with this Clause 3.
+3.2 Either party may terminate this Agreement without cause by giving not less than 37 days prior written notice to the other party.
+3.3 Either party may terminate this Agreement immediately by written notice if the other party commits a material breach which is irremediable or fails to remedy such breach within fourteen (14) days of receipt of written notice requiring remedy.
+
+4. GOVERNING LAW AND JURISDICTION
+4.1 This Agreement and any dispute or claim arising out of or in connection with it or its subject matter or formation (including non-contractual disputes or claims) shall be governed by and construed in accordance with the law of England and Wales.
+4.2 Each party irrevocably agrees that the courts of England and Wales shall have exclusive jurisdiction to settle any dispute or claim arising out of or in connection with this Agreement.
+
+IN WITNESS WHEREOF the parties have executed this Agreement on the date first written above.
+Signed for and on behalf of Highfield Logistics Group Ltd: [Signature]
+Signed for and on behalf of Alder Peak Systems Ltd: [Signature]

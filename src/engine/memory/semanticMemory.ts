@@ -142,6 +142,42 @@ export class SemanticMemoryEngine {
       .find(e => e.matterId === matterId && e.canonicalKey === canonicalKey);
   }
 
+  public upsertEntity(matterId: string, entity: {
+    id: string;
+    name: string;
+    kind?: string;
+    type?: LegalEntityType;
+    canonicalKey?: string;
+    properties?: Record<string, any>;
+    attributes?: Record<string, any>;
+    provenance?: EntityProvenance;
+    sourceSpanIds?: string[];
+    confidence?: number;
+  }): LegalEntity {
+    const existing = this.entities.get(entity.id);
+    const resolved: LegalEntity = {
+      id: entity.id,
+      matterId,
+      name: entity.name,
+      type: (entity.type || (entity.kind as LegalEntityType) || 'clause'),
+      canonicalKey: entity.canonicalKey || `entity:${entity.id}`,
+      properties: entity.properties || entity.attributes || {},
+      provenance: entity.provenance || {
+        documentId: entity.sourceSpanIds?.[0] ? `doc-${entity.sourceSpanIds[0]}` : 'doc-default',
+        sourceTextSnippet: entity.name,
+        spanId: entity.sourceSpanIds?.[0]
+      },
+      confidence: entity.confidence ?? 1.0,
+      createdAt: existing?.createdAt || new Date().toISOString()
+    };
+    this.entities.set(entity.id, resolved);
+    return resolved;
+  }
+
+  public getEntities(matterId: string): LegalEntity[] {
+    return this.getEntitiesForMatter(matterId);
+  }
+
   /**
    * Returns graph neighborhood for a given entity
    */

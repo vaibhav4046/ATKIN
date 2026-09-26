@@ -284,6 +284,39 @@ export class ProceduralMemoryEngine {
     return true;
   }
 
+  public promoteWorkflowToSkill(
+    name: string,
+    description: string,
+    triggerPatterns: string[],
+    stepInstructions: string[]
+  ): ProceduralSkill {
+    const candidate = this.registerCandidateSkill({
+      name,
+      version: 1,
+      description,
+      jurisdiction: 'England and Wales',
+      practiceArea: 'Commercial Practice',
+      triggerPatterns,
+      requiredInputs: ['matter_context'],
+      steps: stepInstructions.map((inst, idx) => ({
+        stepNumber: idx + 1,
+        actionName: `Step ${idx + 1}`,
+        instruction: inst,
+        expectedOutput: `Verified ${inst}`
+      })),
+      verificationChecks: [
+        { checkId: 'chk-step-complete', description: 'Step executed and checked', mandatory: true }
+      ],
+      reviewGateRequired: false
+    });
+    this.promoteCandidate(candidate.id, 'Senior Solicitor');
+    return this.skills.get(candidate.id)!;
+  }
+
+  public getSkills(): ProceduralSkill[] {
+    return Array.from(this.skills.values());
+  }
+
   public getApprovedSkills(): ProceduralSkill[] {
     return Array.from(this.skills.values()).filter(s => s.status === 'approved');
   }

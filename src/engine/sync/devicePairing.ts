@@ -115,15 +115,17 @@ export class DevicePairingEngine {
    */
   public completePairing(params: {
     deviceName: string;
-    platform: DeviceIdentity['platform'];
-    remoteFingerprint: string;
-    submittedCode: string;
-  }): { success: boolean; device?: DeviceIdentity; error?: string } {
+    platform?: DeviceIdentity['platform'];
+    remoteFingerprint?: string;
+    submittedCode?: string;
+    pairingCode?: string;
+  }): { success: boolean; device?: DeviceIdentity; pairedDevice?: DeviceIdentity; error?: string } {
     if (!this.activeSession || this.activeSession.status === 'expired') {
       return { success: false, error: 'Pairing session has expired or does not exist.' };
     }
 
-    const cleanInputCode = params.submittedCode.replace(/\s+/g, '');
+    const inputCode = params.submittedCode || params.pairingCode || '';
+    const cleanInputCode = inputCode.replace(/\s+/g, '');
     const cleanSessionCode = this.activeSession.pairingCode.replace(/\s+/g, '');
 
     if (cleanInputCode !== cleanSessionCode) {
@@ -134,8 +136,8 @@ export class DevicePairingEngine {
     const device: DeviceIdentity = {
       deviceId: newDeviceId,
       deviceName: params.deviceName,
-      platform: params.platform,
-      fingerprint: params.remoteFingerprint,
+      platform: params.platform || 'android_mobile',
+      fingerprint: params.remoteFingerprint || `SHA256:${Date.now()}`,
       pairedAt: new Date().toISOString(),
       lastSyncAt: new Date().toISOString(),
       trustState: 'trusted'
@@ -145,7 +147,7 @@ export class DevicePairingEngine {
     this.activeSession.status = 'completed';
     this.activeSession = null;
 
-    return { success: true, device };
+    return { success: true, device, pairedDevice: device };
   }
 
   public getPairedDevices(): DeviceIdentity[] {

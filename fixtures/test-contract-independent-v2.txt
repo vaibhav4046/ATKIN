@@ -1,0 +1,23 @@
+DEED OF VARIATION AND AMENDMENT (LOGISTICS PLATFORM)
+====================================================================
+Date of Deed: 28 April 2026
+
+PARTIES:
+(1) HIGHFIELD LOGISTICS GROUP LTD ("Customer"); and
+(2) ALDER PEAK SYSTEMS LTD ("Supplier").
+
+BACKGROUND:
+(A) The parties entered into a Master Services Agreement dated 12 March 2026 ("Original Agreement").
+(B) The parties have agreed to vary the agreed price for Milestone 2 software deliverables as set out herein.
+
+AGREED TERMS:
+1. VARIATION OF CLAUSE 2.1 (FEES)
+1.1 Clause 2.1 of the Original Agreement is hereby deleted in its entirety and replaced with the following:
+"2.1 In consideration of the provision of the Services, the Customer shall pay to the Supplier a revised total fixed implementation price of £17,900 (excluding Value Added Tax)."
+
+2. CONTINUANCE OF REMAINING TERMS
+2.1 Save as varied by Clause 1 of this Deed, the Original Agreement (including all termination provisions and Clause 3.2 notice requirements) shall continue in full force and effect.
+
+IN WITNESS WHEREOF the parties have executed this Deed.
+Signed for and on behalf of Highfield Logistics Group Ltd: [Signature]
+Signed for and on behalf of Alder Peak Systems Ltd: [Signature]

@@ -12,6 +12,7 @@ import type {
   UserProfile,
   WorkspaceType 
 } from '../types/index.ts';
+import { mirrorToNativeStorage, hydrateFromNativeStorageIfEmpty } from './nativeStorageBridge.ts';
 
 import { 
   BATES_MATTER, 
@@ -111,9 +112,10 @@ export const db = new ProoflineDatabase();
  */
 export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
   try {
+    await hydrateFromNativeStorageIfEmpty(db.matters, db.userProfile);
     const matterCount = await db.matters.count();
     if (matterCount > 0) {
-      return false; // Database already has persisted records
+      return false; // Database already has persisted records (or hydrated from SQLite)
     }
 
     await db.transaction('rw', [
@@ -203,6 +205,7 @@ export async function saveMatterToDB(matter: Matter): Promise<void> {
       workspaceType: matter.workspaceType || (matter.isDemo ? 'demo' : 'personal')
     };
     await db.matters.put(prepared);
+    mirrorToNativeStorage('matters', prepared.id, prepared).catch(() => {});
   } catch (err) {
     console.error('Failed to save matter to IndexedDB:', err);
   }
@@ -267,6 +270,7 @@ export async function saveUserProfileToDB(profile: UserProfile): Promise<void> {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('atkin_user_profile', JSON.stringify(profile));
     }
+    mirrorToNativeStorage('user_profiles', profile.id, profile).catch(() => {});
   } catch (err) {
     console.error('Failed to save user profile to IndexedDB:', err);
     if (typeof localStorage !== 'undefined') {
@@ -351,6 +355,11 @@ export async function persistIngestionResultToDB(params: {
         await db.drafts.put(params.draft);
       }
     });
+
+    mirrorToNativeStorage('documents', params.document.id, params.document, params.document.matterId).catch(() => {});
+    if (params.draft) {
+      mirrorToNativeStorage('drafts', params.draft.id, params.draft, params.draft.matterId).catch(() => {});
+    }
   } catch (err) {
     console.error('Failed to persist ingestion result to IndexedDB:', err);
   }
@@ -362,6 +371,7 @@ export async function persistIngestionResultToDB(params: {
 export async function saveDraftToDB(draft: Draft): Promise<void> {
   try {
     await db.drafts.put(draft);
+    mirrorToNativeStorage('drafts', draft.id, draft, draft.matterId).catch(() => {});
   } catch (err) {
     console.error('Failed to save draft to IndexedDB:', err);
   }

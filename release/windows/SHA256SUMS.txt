@@ -1,0 +1,2 @@
+﻿c8a88ed96491b53ab13ac39d9c461fda1ece1262ca7aabc7dde9011fab6ee4d4  Atkin_1.0.0_x64_en-US.msi
+b659768689b4c742da92b49f5beef007ee05cbad499cdb1fc2d4e64d009f0586  Atkin_1.0.0_x64-setup.exe

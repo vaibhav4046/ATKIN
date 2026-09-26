@@ -1,13 +1,13 @@
 [package]
-name = "proofline"
+name = "atkin"
 version = "1.0.0"
-description = "Proofline — Sovereign Legal Copilot & Evidential Workbench"
+description = "Atkin — Sovereign Legal AI Workspace"
 authors = ["Vaibhav Lalwani <v.lalwani@liverpool.ac.uk>"]
 edition = "2021"
 license = "Apache-2.0"
 
 [lib]
-name = "proofline_lib"
+name = "atkin_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
@@ -25,7 +25,7 @@ pbkdf2 = { version = "0.12", features = ["simple"] }
 sha2 = "0.10"
 rand = "0.8"
 zeroize = { version = "1.8", features = ["zeroize_derive"] }
-reqwest = { version = "0.12", features = ["json", "stream"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "stream"] }
 chrono = { version = "0.4", features = ["serde"] }
 thiserror = "1.0"
 dirs = "5.0"

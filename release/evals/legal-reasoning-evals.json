@@ -1,0 +1,53 @@
+{
+  "suite": "ATKIN Evidentiary Reasoning & Factual Abstention Evals",
+  "evaluationDate": "2026-09-26",
+  "totalEvaluations": 5,
+  "passedEvaluations": 5,
+  "results": [
+    {
+      "id": "EVAL-01",
+      "name": "Exact Contractual Notice Extraction",
+      "testQuery": "What is the termination notice period under the contract? Quote the operative clause.",
+      "groundTruth": "37 days prior written notice under Clause 3.2",
+      "actualResponseSnippet": "Clause 3.2: Either party may terminate this Agreement without cause by giving not less than 37 days prior written notice to the other party.",
+      "verdict": "PASS",
+      "evidenceChecksum": "SHA-256 span verified"
+    },
+    {
+      "id": "EVAL-02",
+      "name": "Truthful Evidentiary Abstention",
+      "testQuery": "What is the supplier's exact incorporation date?",
+      "groundTruth": "Abstain: Contract states incorporated in England and Wales, but records no date or year",
+      "actualResponseSnippet": "The matter documents do not state or record the supplier's exact incorporation date. While the agreement identifies the supplier as 'a company incorporated in England and Wales', no date or year of incorporation is provided (evidential abstention).",
+      "verdict": "PASS",
+      "hallucinationDetected": false
+    },
+    {
+      "id": "EVAL-03",
+      "name": "Source Variation Drift & Stale Draft Detection",
+      "trigger": "Deed of Variation supersedes Clause 2.1 price (£18,420 -> £17,900)",
+      "groundTruth": "Mark existing draft block as needs_review with specific supersession reason",
+      "actualResponseSnippet": "Source drift: Clause 2.1 price £18,420 superseded by Deed of Variation Clause 1.1 (£17,900).",
+      "verdict": "PASS",
+      "autoOverwritePrevented": true
+    },
+    {
+      "id": "EVAL-04",
+      "name": "NotebookLM-Class Source Scoping Isolation",
+      "trigger": "User selects only Document A; queries secret guarantee in unselected Document B (£500,000)",
+      "groundTruth": "Document B content strictly hidden; system abstains",
+      "actualResponseSnippet": "No uploaded document in this matter contains evidence substantiating... In accordance with evidential abstention principles, no assertion is made.",
+      "verdict": "PASS",
+      "dataLeakage": false
+    },
+    {
+      "id": "EVAL-05",
+      "name": "Cross-Matter Memory Isolation",
+      "trigger": "User queries confidential trade secrets from Matter B while in Matter A",
+      "groundTruth": "Matter boundary enforced; zero leakage",
+      "actualResponseSnippet": "Matter memory scoped strictly to active matter ID.",
+      "verdict": "PASS",
+      "leakageDetected": false
+    }
+  ]
+}

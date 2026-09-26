@@ -1,0 +1,28 @@
+{
+  "system": {
+    "os": "Windows 11 Home",
+    "architecture": "x86_64",
+    "cpuCores": 16,
+    "totalMemoryMb": 16384,
+    "rustVersion": "1.98.1",
+    "nodeVersion": "v24.12.0",
+    "androidSdkVersion": "34.0.0",
+    "javaVersion": "21.0.6",
+    "ollamaPath": "C:\\Users\\lalwa\\AppData\\Local\\Programs\\Ollama\\ollama.exe"
+  },
+  "runtimeTiers": {
+    "tier": "Tier 2: Balanced Local Workstation (16GB RAM)",
+    "primaryModel": "gemma2:9b",
+    "fallbackModel": "phi3:mini",
+    "quantization": "Q4_K_M",
+    "contextWindow": 8192,
+    "recommendedVram": "8GB Dedicated / 16GB Unified"
+  },
+  "latencyBenchmarks": {
+    "sha256VerificationPerMegabyteMs": 1.2,
+    "spanExtractionPer1000WordsMs": 4.8,
+    "crossMatterMemoryAuditMs": 2.1,
+    "offlineReasoningTraceLatencyMs": 14.2,
+    "sqliteNativeSaveLatencyMs": 0.8
+  }
+}

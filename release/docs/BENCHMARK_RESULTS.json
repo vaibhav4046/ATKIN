@@ -1,0 +1,216 @@
+{
+  "evaluatedAt": "2026-09-25T04:27:46.895Z",
+  "hardware": "Intel Core i5 / AMD Ryzen, NVIDIA RTX 3050 6GB (CUDA0)",
+  "tiers": {
+    "deterministic_core": {
+      "model": "proofline-deterministic-rules-v1",
+      "passed": 8,
+      "total": 8,
+      "accuracyPercent": 100,
+      "tasks": [
+        {
+          "id": "task-cra-s19-14",
+          "category": "statutory_preservation",
+          "passed": true,
+          "latencyMs": 0
+        },
+        {
+          "id": "task-ucta-reasonableness",
+          "category": "statutory_preservation",
+          "passed": true,
+          "latencyMs": 0
+        },
+        {
+          "id": "task-housing-deposit-s214",
+          "category": "statutory_preservation",
+          "passed": true,
+          "latencyMs": 0
+        },
+        {
+          "id": "task-commonlaw-donoghue",
+          "category": "precedent_fidelity",
+          "passed": true,
+          "latencyMs": 0
+        },
+        {
+          "id": "task-bates-horizon-findings",
+          "category": "precedent_fidelity",
+          "passed": true,
+          "latencyMs": 0
+        },
+        {
+          "id": "task-abstention-quantum-loss",
+          "category": "missing_evidence_abstention",
+          "passed": true,
+          "latencyMs": 0
+        },
+        {
+          "id": "task-abstention-clause-penalty",
+          "category": "missing_evidence_abstention",
+          "passed": true,
+          "latencyMs": 0
+        },
+        {
+          "id": "task-contradiction-telemetry",
+          "category": "adverse_contradiction",
+          "passed": true,
+          "latencyMs": 0
+        }
+      ]
+    },
+    "gemma4_local": {
+      "model": "gemma4:e2b-it-qat",
+      "passed": 7,
+      "total": 8,
+      "accuracyPercent": 87.5,
+      "avgThroughputTps": 57.55,
+      "totalTokensGenerated": 4458,
+      "tasks": [
+        {
+          "id": "task-cra-s19-14",
+          "category": "statutory_preservation",
+          "passed": true,
+          "tokens": 599,
+          "tps": 63.87,
+          "latencyMs": 33796,
+          "responseSnippet": "Under **Section 19(14) of the Consumer Rights Act 2015**, the following applies:  ### 1. Statutory Period  The statutory period during which..."
+        },
+        {
+          "id": "task-ucta-reasonableness",
+          "category": "statutory_preservation",
+          "passed": true,
+          "tokens": 1462,
+          "tps": 77.22,
+          "latencyMs": 20598,
+          "responseSnippet": "This is a complex area of contract law. Under the Unfair Contract Terms Act 1977 (UCTA 1977), the exclusion of liability must satisfy a test..."
+        },
+        {
+          "id": "task-housing-deposit-s214",
+          "category": "statutory_preservation",
+          "passed": true,
+          "tokens": 0,
+          "tps": 0,
+          "latencyMs": 15148,
+          "responseSnippet": "Please note that I am an AI and not a qualified legal professional. The information provided below is based on the general provisions of the..."
+        },
+        {
+          "id": "task-commonlaw-donoghue",
+          "category": "precedent_fidelity",
+          "passed": true,
+          "tokens": 266,
+          "tps": 81.28,
+          "latencyMs": 4686,
+          "responseSnippet": "The leading landmark House of Lords decision establishing the duty of care in the tort of negligence is **Donoghue v Stevenson [1932] AC**. ..."
+        },
+        {
+          "id": "task-bates-horizon-findings",
+          "category": "precedent_fidelity",
+          "passed": true,
+          "tokens": 684,
+          "tps": 78.97,
+          "latencyMs": 10137,
+          "responseSnippet": "In *Bates v Post Office Ltd (No 6: Horizon Issues) [2019] EWHC 3408 (QB)*, Mr Justice Fraser's finding regarding the software bugs and remot..."
+        },
+        {
+          "id": "task-abstention-quantum-loss",
+          "category": "missing_evidence_abstention",
+          "passed": true,
+          "tokens": 566,
+          "tps": 79.69,
+          "latencyMs": 8974,
+          "responseSnippet": "Based on the information provided, it is **impossible to calculate the exact quantum of damages for lost retail profit.**  To calculate lost..."
+        },
+        {
+          "id": "task-abstention-clause-penalty",
+          "category": "missing_evidence_abstention",
+          "passed": false,
+          "tokens": 0,
+          "tps": 0,
+          "latencyMs": 13722,
+          "responseSnippet": "Please provide the text of Clause 14.8.  Without the specific text of the clause, it is impossible to determine whether it constitutes an un..."
+        },
+        {
+          "id": "task-contradiction-telemetry",
+          "category": "adverse_contradiction",
+          "passed": true,
+          "tokens": 881,
+          "tps": 79.37,
+          "latencyMs": 13301,
+          "responseSnippet": "The contradiction lies in the fundamental conflict between the **claimed security and control** of the system and the **documented operation..."
+        }
+      ]
+    },
+    "gemma2_baseline": {
+      "model": "gemma2:2b",
+      "passed": 7,
+      "total": 8,
+      "accuracyPercent": 87.5,
+      "tasks": [
+        {
+          "id": "task-cra-s19-14",
+          "category": "statutory_preservation",
+          "passed": false,
+          "tokens": 298,
+          "tps": 73.45,
+          "latencyMs": 16912
+        },
+        {
+          "id": "task-ucta-reasonableness",
+          "category": "statutory_preservation",
+          "passed": true,
+          "tokens": 431,
+          "tps": 73.54,
+          "latencyMs": 7557
+        },
+        {
+          "id": "task-housing-deposit-s214",
+          "category": "statutory_preservation",
+          "passed": true,
+          "tokens": 427,
+          "tps": 73.45,
+          "latencyMs": 6767
+        },
+        {
+          "id": "task-commonlaw-donoghue",
+          "category": "precedent_fidelity",
+          "passed": true,
+          "tokens": 146,
+          "tps": 74.15,
+          "latencyMs": 3095
+        },
+        {
+          "id": "task-bates-horizon-findings",
+          "category": "precedent_fidelity",
+          "passed": true,
+          "tokens": 386,
+          "tps": 72.96,
+          "latencyMs": 6457
+        },
+        {
+          "id": "task-abstention-quantum-loss",
+          "category": "missing_evidence_abstention",
+          "passed": true,
+          "tokens": 582,
+          "tps": 72.97,
+          "latencyMs": 8825
+        },
+        {
+          "id": "task-abstention-clause-penalty",
+          "category": "missing_evidence_abstention",
+          "passed": true,
+          "tokens": 166,
+          "tps": 73.59,
+          "latencyMs": 3011
+        },
+        {
+          "id": "task-contradiction-telemetry",
+          "category": "adverse_contradiction",
+          "passed": true,
+          "tokens": 211,
+          "tps": 73.46,
+          "latencyMs": 3618
+        }
+      ]
+    }
+  }
+}

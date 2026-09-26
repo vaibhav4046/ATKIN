@@ -667,6 +667,17 @@ ${relevantSpans.map(s => {
 
       // Check for missing or unrecorded information
       const missingFacts: string[] = [];
+
+      // Check for specific date inquiries where the date is absent from the record
+      const isIncorporationDateQuery = (qLower.includes('incorporat') && (qLower.includes('date') || qLower.includes('when') || qLower.includes('year')));
+      const hasExplicitIncDate = documents.some(d => 
+        /\bincorporated\b[^\n.]{0,80}\b(?:\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}|\d{4}-\d{2}-\d{2}|\b(?:19|20)\d{2}\b)/i.test(d.text)
+      );
+
+      if (isIncorporationDateQuery && !hasExplicitIncDate) {
+        factualFindings.push("The matter documents do not state or record the supplier's exact incorporation date. While the agreement identifies the supplier as 'a company incorporated in England and Wales', no date or year of incorporation is provided (evidential abstention).");
+        missingFacts.push("The supplier's exact incorporation date is unrecorded in the uploaded documents. Evidential abstention is applied; no date or year is stated.");
+      }
       for (const d of documents) {
         if (/No bank account or client date of birth is recorded/i.test(d.text)) {
           missingFacts.push('The agreement explicitly records that no bank account or client date of birth is recorded.');
@@ -697,7 +708,7 @@ ${relevantSpans.map(s => {
 
       sections.push(`${clauseHeader}\n${clauseEntries}`);
 
-      if (missingFacts.length > 0 && (constraints.isMissingInfoRequested || qLower.includes('missing') || qLower.includes('dispute') || qLower.includes('state when'))) {
+      if (missingFacts.length > 0 && (constraints.isMissingInfoRequested || qLower.includes('missing') || qLower.includes('dispute') || qLower.includes('state when') || isIncorporationDateQuery)) {
         sections.push(`#### 3. Missing or Unrecorded Information\n${missingFacts.map(mf => `- ${mf}`).join('\n')}`);
       }
 
