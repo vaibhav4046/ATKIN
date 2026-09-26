@@ -61,7 +61,7 @@ describe('ATKIN Section 36: 20 Acceptance Journeys (A–T)', () => {
       ...DEFAULT_USER_PROFILE,
       id: 'solicitor-001',
       name: 'Eleanor Vance',
-      role: 'partner',
+      role: 'solicitor',
       firmOrOrg: 'Vance & Co Commercial Litigators',
       primaryJurisdiction: 'England and Wales',
       onboardingCompleted: true,
@@ -259,7 +259,7 @@ describe('ATKIN Section 36: 20 Acceptance Journeys (A–T)', () => {
           severity: 'high',
           title: 'Invoice Payment Discrepancy',
           description: 'Payment terms stipulate 45 calendar days, but Schedule 2 indicates Net 30.',
-          status: 'open',
+          status: 'pending',
           createdAt: new Date().toISOString()
         }
       ],
@@ -340,7 +340,10 @@ describe('ATKIN Section 36: 20 Acceptance Journeys (A–T)', () => {
       text: 'Clause 5: All notices must be served by recorded delivery within 7 working days.',
       mime: 'text/plain',
       sha256: 'abc1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+      sourceDate: new Date().toISOString(),
       importedAt: new Date().toISOString(),
+      extractionStatus: 'success',
+      pageCount: 1,
       privacyLabel: 'Local Offline'
     };
     const span: Span = {
@@ -395,7 +398,7 @@ describe('ATKIN Section 36: 20 Acceptance Journeys (A–T)', () => {
       id: 'draft-restart-1',
       matterId: MATTER_A_ID,
       title: 'Notice of Dispute and Statutory Claim',
-      type: 'letter_before_action',
+      type: 'matter_brief',
       blocks: [
         {
           id: 'blk-1',
@@ -407,7 +410,7 @@ describe('ATKIN Section 36: 20 Acceptance Journeys (A–T)', () => {
         }
       ],
       generatedBy: 'deterministic_offline',
-      reviewStatus: 'draft',
+      reviewStatus: 'needs_review',
       updatedAt: new Date().toISOString()
     };
     await saveDraftToDB(draft);
