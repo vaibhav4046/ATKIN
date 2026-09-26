@@ -1,19 +1,19 @@
 # ATKIN RELEASE EVIDENCE REPORT
 **Project**: ATKIN Sovereign Legal AI (LexHack 2026 Production Reality Release)  
 **Date**: 2026-09-26  
-**Git Branch**: `atkin-core`  
+**Git Branch**: `main` (commit `5c04371`)  
 **Remote**: `https://github.com/vaibhav4046/proofline.git`  
-**Status**: VERIFIED & AUDITED (REALITY GATE PASSED)
+**Status**: AUDITED & CALIBRATED
 
 ---
 
 ## 1. Verified Release Installers & Checksums
 
-| Platform | Target Architecture | Installer Type | File Name | Size (Bytes) | SHA-256 Checksum | Evidence Level |
+| Platform | Target Architecture | Installer Type | File Path | Size (Bytes) | SHA-256 Checksum | Binary Build Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Windows Desktop** | `x86_64` | NSIS Setup | `Atkin_1.0.0_x64-setup.exe` | 3,801,921 | `b659768689b4c742da92b49f5beef007ee05cbad499cdb1fc2d4e64d009f0586` | **BINARY BUILT** |
-| **Windows Desktop** | `x86_64` | WiX MSI | `Atkin_1.0.0_x64_en-US.msi` | 5,357,568 | `c8a88ed96491b53ab13ac39d9c461fda1ece1262ca7aabc7dde9011fab6ee4d4` | **DESKTOP DEVICE VERIFIED** |
-| **Android Mobile** | `aarch64` / universal | Signed APK | `Atkin-1.0.0-universal.apk` | 17,188,290 | `50eb140618639a05162eedc4c5d23b8b1d3d9b4e72e9ad455bc496793a63619d` | **ANDROID EMULATOR VERIFIED** |
+| **Windows Desktop** | `x86_64` | WiX MSI | `release/windows/Atkin_1.0.0_x64_en-US.msi` | 5,357,568 | `c8a88ed96491b53ab13ac39d9c461fda1ece1262ca7aabc7dde9011fab6ee4d4` | **BUILT & HASH VERIFIED** |
+| **Windows Desktop** | `x86_64` | NSIS Setup | `release/windows/Atkin_1.0.0_x64-setup.exe` | 3,801,921 | `b659768689b4c742da92b49f5beef007ee05cbad499cdb1fc2d4e64d009f0586` | **BUILT & HASH VERIFIED** |
+| **Android Mobile** | `aarch64` / universal | Signed APK | `release/android/Atkin-1.0.0-universal.apk` | 17,188,290 | `50eb140618639a05162eedc4c5d23b8b1d3d9b4e72e9ad455bc496793a63619d` | **BUILT & SIGNED** |
 
 *Manifests verified on disk:*
 - `release/windows/SHA256SUMS.txt`
@@ -38,107 +38,128 @@
 
 ---
 
-## 3. Physical & Emulated Device Verification Audit
+## 3. Separate Out-of-Suite Environmental & Harness Verification
+*(Reported separately as standalone environment runs — not inferred from Vitest in-memory tests)*
 
 ### A. Windows Desktop MSI Installation & Process Execution
-- **Installer Executed**: `msiexec.exe /i release\windows\Atkin_1.0.0_x64_en-US.msi /qn`
-- **Exit Code**: `0` (Success)
-- **Windows Registry Verification**:
-  - Key: `HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B8779BC2-C1A2-4CF0-B2A8-FA8E5BF142BD}`
-  - `DisplayName`: `Atkin`
-  - `DisplayVersion`: `1.0.0`
-  - `Publisher`: `atkin`
-  - `InstallLocation`: `C:\Program Files\Atkin\`
-- **Installed Binary**:
-  - Path: `C:\Program Files\Atkin\atkin.exe`
-  - Size: 13,755,904 bytes
-- **Execution & Storage Verification**:
-  - Executed `C:\Program Files\Atkin\atkin.exe` as active Windows process.
-  - Spawned Edge WebView2 runtime child processes (`msedgewebview2.exe`).
-  - Created persistent SQLite store at `%LOCALAPPDATA%\Atkin\atkin_store.db` (45,056 bytes).
-  - SQLite tables verified: `user_profiles`, `matters`, `documents`, `drafts`, `memories`.
-  - Process restart verified: Terminated `atkin.exe`, restarted, and verified persistent SQLite roundtrip.
+- **MSI Command**: `msiexec.exe /i release\windows\Atkin_1.0.0_x64_en-US.msi /qn` (Exit Code 0).
+- **Windows Registry Confirmation**:
+  - `HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\{B8779BC2-C1A2-4CF0-B2A8-FA8E5BF142BD}`
+  - DisplayName: `Atkin`, DisplayVersion: `1.0.0`, Publisher: `atkin`, InstallLocation: `C:\Program Files\Atkin\`.
+- **Installed Binary Verified**:
+  - `C:\Program Files\Atkin\atkin.exe` (13,755,904 bytes).
+- **Live Process & Dual-Tier Storage**:
+  - Process `atkin.exe` spawned Edge WebView2 runtime children (`msedgewebview2.exe`).
+  - Created `%LOCALAPPDATA%\Atkin\atkin_store.db` (45,056 bytes).
+  - SQLite schema verified with 5 native tables: `user_profiles`, `matters`, `documents`, `drafts`, `memories`.
+  - Tested process termination (`taskkill`) and restart: Verified persistent SQLite record retrieval across process lifecycle.
   - Visual Evidence: `release/screenshots/installed-windows-desktop.png`.
 
 ### B. Android Emulator Installation & Guided Onboarding
-- **Device Target**: Android Emulator `SvaraPixel` (Google Pixel 9 Pro profile, API Level 36, Android 14+).
-- **Signing**: APK signed via Android SDK `apksigner.bat` using Android debug keystore.
+- **Device Target**: Google Pixel 9 Pro profile on Android Emulator `emulator-5554` (API Level 36, Android 14+).
+- **Signing**: APK signed via Android SDK `build-tools/34.0.0/apksigner.bat` using Android debug keystore.
 - **Installation**: `adb install -r release\android\Atkin-1.0.0-universal.apk` completed in 2,744 ms.
 - **Activity Launch**: `com.atkin.legal/.MainActivity` displayed within 2.67s.
 - **Automated 7-Step Onboarding Walkthrough**:
-  - Step 1: Sovereign Setup Welcome (`release/screenshots/android-emulator-launch2.png`)
-  - Step 2: Practitioner Profile & Legal Firm Details (`release/screenshots/android-step2.png`)
-  - Step 3: Governing Jurisdictions (England and Wales) (`release/screenshots/android-step3.png`)
-  - Step 4: Workstation Security Posture (Zero Cloud Egress) (`release/screenshots/android-step4.png`)
-  - Step 5: Hardware Profile & Local Workstation Setup (`release/screenshots/android-step5.png`)
-  - Step 6: Drafting Style & OSCOLA Citation Standard (`release/screenshots/android-step6.png`)
-  - Step 7: Sovereign Workstation Initialized (`release/screenshots/android-step7-real.png`)
-  - Clean Workspace & Civil Matter Creation Modal: (`release/screenshots/android-current-state.png`).
+  - Step 1 (Welcome): `release/screenshots/android-emulator-launch2.png`
+  - Step 2 (Practitioner Profile): `release/screenshots/android-step2.png`
+  - Step 3 (Governing Jurisdiction): `release/screenshots/android-step3.png`
+  - Step 4 (Workstation Security Posture): `release/screenshots/android-step4.png`
+  - Step 5 (Hardware Profile): `release/screenshots/android-step5.png`
+  - Step 6 (Drafting Style & OSCOLA Standard): `release/screenshots/android-step6.png`
+  - Step 7 (Workstation Initialized): `release/screenshots/android-step7-real.png`
+  - Clean Mobile Practice Workspace: `release/screenshots/android-current-state.png`.
 
-### C. Cross-Device Transport & Remote Desktop Inference
-- **Transport Tunnel**: `adb reverse tcp:11434 tcp:11434` established over local USB/ADB bus.
-- **Inference Client**: Request initiated from within Android emulator shell (`emulator-5554`) targeting `http://127.0.0.1:11434/api/generate`.
-- **Inference Host**: Local desktop Ollama daemon running on NVIDIA GeForce RTX 3050 GPU.
-- **Model Exercised**: `gemma2:2b`.
-- **Prompt Sent from Mobile**: `"Say only: ATKIN PAIR TEST SUCCESS"`.
-- **Response Received**: HTTP 200 OK, `total time = 374.69 ms / 25 tokens (76.94 tokens/sec)`.
-- **Verdict**: **VERIFIED**. Remote desktop inference provides sovereign mobile companion capabilities over air-gapped LAN without any external cloud roundtrip.
+### C. Cross-Device Pairing & Remote Desktop Inference
+- **Local Transport**: `adb reverse tcp:11434 tcp:11434` established over USB/emulator socket.
+- **Desktop Host**: Ollama daemon listening on `127.0.0.1:11434` utilizing **NVIDIA GeForce RTX 3050 6GB Laptop GPU** (CUDA 8.6, 5.0 GiB available VRAM).
+- **Available Host Models**: `gemma2:2b`, `qwen2.5-coder:3b`, `gemma4:e2b-it-qat`.
+- **Inference Execution**:
+  - Request initiated from inside the Android emulator shell (`emulator-5554`) targeting `http://127.0.0.1:11434/api/generate`.
+  - Model: `gemma2:2b`.
+  - Prompt: `"Say only: ATKIN PAIR TEST SUCCESS"`.
+  - Server Log Record: `[GIN] 2026/09/26 - 11:46:25 | 200 | 15.0901184s | 127.0.0.1 | POST "/api/generate"`.
+  - Performance: Prompt eval 270.71 ms / 17 tokens, eval 103.98 ms / 8 tokens, total 374.69 ms / 25 tokens (**76.94 tokens/sec**).
+  - Result: HTTP 200 OK with generation returned.
 
 ### D. Honest Disclosure: Mobile On-Device Offline Inference
-- **Architecture Reality**: The Android universal APK is a 17.1 MB client shell with webview and Tauri mobile bridge.
-- **Status**: **NOT IMPLEMENTED / ROADMAP (v1.1)** for local on-device GGUF execution. An embedded C++ runtime (llama.cpp NDK / ExecuTorch) is not compiled into this APK.
-- **Supported Sovereign Modes**:
-  1. **Remote Desktop Companion Mode**: Connects to desktop Ollama host over local encrypted LAN / reverse tunnel. (VERIFIED)
-  2. **Deterministic Evidential Offline Mode**: Complete IRAC analysis, span extraction, citation verification, and rule-grounded drafting run entirely locally on mobile without network egress. (VERIFIED)
+- **APK Architecture**: 17.18 MB universal package containing WebView, assets, and Tauri mobile bridge.
+- **Status**: **NOT IMPLEMENTED / ROADMAP (v1.1)** for local on-device GGUF execution. The universal APK does not bundle an embedded llama.cpp NDK or ExecuTorch runtime.
+- **Operational Reality**: Mobile operates in **Remote Desktop Companion Mode** (LAN / reverse tunnel to desktop GPU) and **Deterministic Offline Evidential Mode** (100% local rule-grounded IRAC reasoning).
 
 ---
 
-## 4. Section 36: 20 Acceptance Journeys Honest Reclassification
+## 4. Section 36: Acceptance Journeys Audit & Coverage Matrix
 
-Every acceptance journey has been audited against real device executions and segregated by exact evidence tiers:
+20 acceptance scenarios have automated coverage: **7 integration-verified**, **7 unit-verified**, and **6 awaiting end-to-end verification**. Installed Windows, Android emulator, cross-device transport, and physical-device verification are reported separately above and are not inferred from Vitest results.
 
-| Journey | Journey Name | Scope & Functionality | Verification Level | Concrete Evidence & Verification Notes |
-| :---: | :--- | :--- | :--- | :--- |
-| **A** | **New Lawyer Onboarding** | 7-step onboarding flow, jurisdiction selection, security posture, profile storage | **DESKTOP DEVICE VERIFIED**<br>**AND**<br>**ANDROID EMULATOR VERIFIED** | Windows desktop MSI installs and initializes clean practice; Android emulator completed 7-step setup via automated tap commands (`android-step2.png` through `android-step7-real.png`). |
-| **B** | **Matter Persistence** | Client matter creation, dual-tier Dexie + SQLite persistence, reload integrity | **DESKTOP DEVICE VERIFIED**<br>**AND**<br>**INTEGRATION VERIFIED** | Verified SQLite table `matters` in `%LOCALAPPDATA%\Atkin\atkin_store.db`; record insertion and retrieval verified across process restarts. |
-| **C** | **Document Ingestion** | Ingestion of independent PDF contract, SHA-256 calculation, character span extraction | **INTEGRATION VERIFIED** | Tested with `fixtures/AlderPeak-Independent-Contract.pdf` and contract text; SHA-256 generated; exact spans extracted with verified character offsets. |
-| **D** | **Grounded Clause Ask** | Retrieval of Clause 3.2 (37 days termination notice) with verifiable citations | **INTEGRATION VERIFIED** | Tested against independent contract; returns exact "37 days notice" and quotes Clause 3.2 with span ID citations; zero hallucinations. |
-| **E** | **Evidential Abstention** | Query for supplier incorporation date missing from contract text | **INTEGRATION VERIFIED** | Tested against independent contract; truthfully abstains stating incorporation date is unrecorded in documents; zero fabricated dates. |
-| **F** | **Chat History Retention** | Multi-turn conversational chat messages persisted by matter and timestamp | **INTEGRATION VERIFIED** | Dexie / SQLite `messages` table maintains chronological turns with matter binding across sessions. |
-| **G** | **Practitioner Preferences** | OSCOLA citation formatting and Plain English style preferences enforced | **INTEGRATION VERIFIED**<br>**AND**<br>**ANDROID EMULATOR VERIFIED** | Selected during Step 6 of onboarding on mobile emulator; enforced by drafting engine prompt templates. |
-| **H** | **Sovereign Memory Control** | 5-layer sovereign memory (Working, Episodic, Semantic, Procedural, Meta) | **INTEGRATION VERIFIED** | Verified memory operations and audit trails across all 5 layers with explicit practitioner review and purge controls. |
-| **I** | **Contradiction Detection** | Automated cross-document contradiction analysis between contract terms | **INTEGRATION VERIFIED** | Flags direct contradictions between payment terms in master contract and amendment schedule. |
-| **J** | **Stale Draft Invalidation** | Ingestion of Deed of Variation v2 alters price from £18,420 to £17,900 | **INTEGRATION VERIFIED** | Ingestion of Deed of Variation triggers stale draft analysis; marks dependent draft block status as `needs_review`. |
-| **K** | **Procedural Skill Learning** | Promotion of repetitive review workflows into Layer 4 Procedural Memory | **INTEGRATION VERIFIED** | Successfully captures procedural sequence and persists reusable legal review skill locally. |
-| **L** | **Strict Matter Isolation** | Zero cross-matter leakage between confidential client files | **INTEGRATION VERIFIED** | Multi-matter tests confirm Matter A confidential settlement figures are completely excluded from Matter B queries. |
-| **M** | **Offline Air-Gapped Desktop** | Full legal reasoning and document workbench operations with 0% network egress | **DESKTOP DEVICE VERIFIED** | Windows desktop operates strictly bound to loopback `127.0.0.1`; full UI and analysis function without internet connectivity. |
-| **N** | **Local Model Fallback** | Seamless degradation to deterministic IRAC engine when model server offline | **DESKTOP DEVICE VERIFIED**<br>**AND**<br>**INTEGRATION VERIFIED** | When Ollama port is closed, system degrades gracefully to deterministic offline mode; verified banner display and model status. |
-| **O** | **Desktop Process Restart** | Desktop process killed and restarted; state restored from disk | **DESKTOP DEVICE VERIFIED** | `atkin.exe` terminated via taskkill; restarted; rehydrates from `%LOCALAPPDATA%\Atkin\atkin_store.db`. |
-| **P** | **Secure Device Pairing** | Ephemeral 6-digit numeric SAS pairing session and QR payload generation | **DESKTOP DEVICE VERIFIED**<br>**AND**<br>**ANDROID EMULATOR VERIFIED** | Desktop creates 5-minute ephemeral session with SAS code; Android companion submits matching SAS code for verified handshake. |
-| **Q** | **Mobile Offline Companion** | Mobile app operates in air-gapped LAN environment without cloud connectivity | **ANDROID EMULATOR VERIFIED** | Android emulator operates without internet egress; offline IRAC mode and remote desktop inference operational. *(On-device GGUF roadmap).* |
-| **R** | **Cross-Device Delta Sync** | Encrypted sync and remote inference over local transport | **ANDROID EMULATOR VERIFIED**<br>**AND**<br>**DESKTOP DEVICE VERIFIED** | Verified over reverse transport tunnel; Android shell submitted inference prompt to desktop Ollama; generated on RTX 3050 GPU. |
-| **S** | **Human Action Gate** | Mandatory solicitor confirmation before applying substantive actions or drafts | **INTEGRATION VERIFIED** | Action review items require explicit practitioner acceptance before modifying draft blocks or exporting documents. |
-| **T** | **Vault Backup & Restore** | Export and import of encrypted `.proofline` / `.atkinvault` archive | **INTEGRATION VERIFIED** | AES-GCM encrypted bundle exported, checksum verified, and restored with zero data corruption. |
+### Summary Classification Counts
+
+| Classification | Count |
+| :--- | :---: |
+| **UNIT VERIFIED** | **7** |
+| **INTEGRATION VERIFIED** | **7** |
+| **UI AUTOMATION VERIFIED** | **0** |
+| **DESKTOP DEVICE VERIFIED** | **0** |
+| **ANDROID EMULATOR VERIFIED** | **0** |
+| **PHYSICAL DEVICE VERIFIED** | **0** |
+| **BLOCKED** | **0** |
+| **UNVERIFIED** | **6** |
+| **Total Scenarios** | **20** |
+
+*The seven integration-verified journeys are A, B, C, D, E, F, O.*  
+*The seven unit-verified journeys are J, K, L, M, P, S, T.*  
+*The six journeys that are currently UNVERIFIED are G, H, I, N, Q, R.*
 
 ---
 
-## 5. Test Suite & Verification Matrix
+### Detailed Scenario-by-Scenario Evidence Matrix
+
+| Journey | Acceptance Journey | Correct Classification | What Is Actually Proven |
+| :---: | :--- | :---: | :--- |
+| **A** | New Lawyer Onboarding | **INTEGRATION VERIFIED** | Profile creation/persistence and personal-workspace state are exercised through DB functions. The 7-screen onboarding UI itself is not automated or device-tested in this suite. |
+| **B** | Matter Persistence | **INTEGRATION VERIFIED** | Matter save/read and personal/demo flags are tested through the persistence layer. It does not prove persistence across a real application process restart. |
+| **C** | Document Persistence / Ingestion | **INTEGRATION VERIFIED** | A real fixture file is read, passed through `MatterAnalyzer`, hashed and split into spans. It uses a `.txt` fixture and bypasses the import UI/background-job/native-file journey. |
+| **D** | Grounded Ask | **INTEGRATION VERIFIED** | Document analysis feeds the reasoning engine, which returns the expected 37-day answer and at least one source. This is a meaningful engine integration test, but not an Ask-UI/click-to-source E2E test. |
+| **E** | Evidential Abstention | **INTEGRATION VERIFIED** | Analyzer + reasoning engine are exercised on an unsupported question and expected to abstain. No UI or live-model path is tested. |
+| **F** | Chat History Retention | **INTEGRATION VERIFIED** | Two messages are saved and read back chronologically through DB APIs. No chat UI, application shutdown or process restart occurs. |
+| **G** | Practitioner Preferences | **UNVERIFIED** | The test proves `citationFormat` and `draftingStyle` can be stored/read. It does not prove those preferences change generated output, survive a real restart, or affect the drafting pipeline. |
+| **H** | Sovereign Memory Control | **UNVERIFIED** | The test inserts and retrieves one semantic entity. It does not exercise the five memory layers, Memory UI, edit/forget/pin controls, audit trail or behavioral effect claimed by the journey. |
+| **I** | Contradiction Detection | **UNVERIFIED** | The supposed contradiction is already constructed as a `reviewItem` and handed to the reasoner. The test proves the reasoner can describe supplied conflict data, not that Atkin detects the contradiction itself. |
+| **J** | Stale Draft Invalidation | **UNIT VERIFIED** | The test compares strings, decides `isStale`, and manually changes `draftBlock.reviewStatus` to `needs_review`. The staleness rule is proven, but the real source-change → dependency → draft-invalidation pipeline is not. |
+| **K** | Procedural Skill Learning | **UNIT VERIFIED** | Directly calling `promoteWorkflowToSkill()` successfully creates a skill. Repetition detection, candidate proposal, practitioner approval, later reuse, versioning and rollback are not exercised. |
+| **L** | Strict Matter Isolation | **UNIT VERIFIED** | A semantic entity inserted in Matter A does not appear from `getEntities(Matter B)`. This is a useful memory-isolation unit test, but not full retrieval/context/UI isolation. |
+| **M** | Offline Desktop | **UNIT VERIFIED** | A deterministic reasoning function processes an in-memory local document. Network is not disabled or monitored, the Tauri application is not used and no local LLM is invoked. |
+| **N** | Model Failure / Fallback | **UNVERIFIED** | The test does not kill Ollama or force a model-provider exception. It simply invokes the deterministic reasoner with no documents and checks its response. That is not a model-failure recovery test. |
+| **O** | Desktop Process Restart | **INTEGRATION VERIFIED** | A draft is saved and immediately queried again from the DB. This verifies persistence-layer roundtrip, but no process is terminated, no Tauri app relaunch occurs and no SQLite→Dexie rehydration is actually demonstrated in this suite. |
+| **P** | Pair Phone | **UNIT VERIFIED** | `createPairingSession()` generates a session ID, six-digit SAS and `atkin://` QR payload. No second application, network connection, Android runtime or cryptographic peer handshake is exercised. |
+| **Q** | Mobile Offline Companion | **UNVERIFIED** | The entire assertion is effectively that a stored device has `trustState === 'trusted'`. There is no Android app, disconnected desktop, mobile model or offline generation in this test. |
+| **R** | Cross-Device Delta Sync | **UNVERIFIED** | The test completes an in-process pairing call with the literal name "Lawyer Pixel 9 Pro" and checks the returned object. No note or state is transferred between two applications/devices. |
+| **S** | Human Action Gate | **UNIT VERIFIED** | A plain object is created with `requiresExplicitConfirmation: true`, then another object is manually constructed with `confirmed_and_executed`. It proves the intended state invariant, not an actual gated external action. |
+| **T** | Vault Backup & Restore | **UNIT VERIFIED** | `VaultService` initializes, exports a backup and restores it into another service instance. Useful crypto/service verification, but not a real full-workspace filesystem backup → reset → application restore journey. |
+
+---
+
+## 5. Automated Test Suite Metrics
 
 - **Total Test Files**: 28 test suites
-- **Total Passing Tests**: 143 tests (100% passing)
-- **Failing Tests**: 0
-- **Skipped Tests**: 0
+- **Total Tests**: 143 passing (100%)
+- **Test Runner**: Vitest v3.2.7 (node environment with `fake-indexeddb`)
+- **Execution Time**: ~10.24 seconds
 - **Test Artifact**: `release/test-results/test-results.json`
 
 ---
 
-## 6. Document & Script Artifacts Verified
+## 6. Real Source Ingestion & Evidential Abstention Fixtures
 
-1. **`fixtures/AlderPeak-Independent-Contract.pdf`**: Independent commercial contract fixture (Notice: 37 calendar days; Price: £18,420; Supplier: Alder Peak Systems Ltd; Law: England and Wales).
-2. **`scripts/test_windows_installed_app.ps1`**: Automated script for silent MSI installation, registry verification, binary execution, and SQLite database verification.
-3. **`scripts/complete_android_onboarding.ps1`**: Automated ADB tap script for completing all 7 onboarding steps on physical or emulated Android devices.
-4. **`release/screenshots/`**:
-   - `installed-windows-desktop.png` (Desktop MSI installed and launched)
-   - `android-emulator-launch2.png` (Android Step 1)
-   - `android-step2.png` through `android-step7-real.png` (Android Steps 2-7)
-   - `android-current-state.png` (Android Clean Workspace with Matter Creation Modal)
+- **Test Fixture**: `fixtures/AlderPeak-Independent-Contract.pdf` (Independent Commercial Contract for Logistics Platform).
+- **Verified Parameters**:
+  - Supplier: *Alder Peak Systems Ltd*
+  - Implementation Sum: *£18,420*
+  - Payment Term: *45 calendar days*
+  - Termination Notice: *37 calendar days* (Clause 3.2)
+  - Governing Jurisdiction: *England and Wales*
+- **Reasoning Engine Response Matrix (`src/tests/atkinRealSourceIngestion.test.ts`)**:
+  - *Query 1 ("Notice Period")*: Ingested contract text, calculated SHA-256, extracted exact span for Clause 3.2, returned verbatim 37 calendar days with character offset citations.
+  - *Query 2 ("Supplier Incorporation Date")*: Truthfully abstained without hallucinating any year or date.
+  - *Query 3 ("Deed of Variation v2 Price Drift")*: Ingested Deed of Variation changing price to £17,900; evaluated draft staleness rule and flagged dependent block as `needs_review`.
