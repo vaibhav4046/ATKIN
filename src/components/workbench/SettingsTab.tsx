@@ -36,6 +36,7 @@ import { benchmarkHarness } from '../../engine/benchmark/benchmarkHarness.ts';
 import { conflictCheckEngine } from '../../engine/conflicts/conflictCheckEngine.ts';
 import { ConnectorRegistry } from '../../engine/connectors/connectorRegistry.ts';
 import { Badge } from '../common/Badge.tsx';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 interface SettingsTabProps {
   modelStatus: ModelStatus;
@@ -211,19 +212,22 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
     <div className="space-y-6 max-w-[960px] mx-auto py-2">
       {/* Header */}
       <div className="bg-gallery-white border border-border-hairline p-5 rounded-[6px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Badge variant="blue" size="sm">Sovereign Control Center</Badge>
-            <Badge variant={modelStatus.state === 'connected' ? 'green' : 'slate'} size="sm">
-              {modelStatus.state === 'connected' ? 'Local Gemma 4 Connected' : 'Deterministic Offline Core'}
-            </Badge>
+        <div className="flex items-start gap-3.5">
+          <AtkinLogo className="w-11 h-11 rounded-full border border-border-hairline shadow-2xs mt-0.5" variant="badge" />
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <Badge variant="blue" size="sm">Atkin Legal OS</Badge>
+              <Badge variant={modelStatus.state === 'connected' ? 'green' : 'slate'} size="sm">
+                {modelStatus.state === 'connected' ? 'Local Gemma 4 Connected' : 'Deterministic Offline Core'}
+              </Badge>
+            </div>
+            <h2 className="text-[17px] font-semibold text-ink">
+              Model Manager, Encrypted Vault &amp; Diagnostics
+            </h2>
+            <p className="text-[12px] text-ink-slate mt-0.5">
+              Manage local runtimes, zero-cloud isolation, VRAM budgeting, and encrypted database life-cycle.
+            </p>
           </div>
-          <h2 className="text-[17px] font-semibold text-ink">
-            Model Manager, Encrypted Vault &amp; Diagnostics
-          </h2>
-          <p className="text-[12px] text-ink-slate mt-0.5">
-            Manage local runtimes, zero-cloud isolation, VRAM budgeting, and encrypted database life-cycle.
-          </p>
         </div>
 
         {/* Sub-tab Navigation */}

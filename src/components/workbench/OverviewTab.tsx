@@ -16,6 +16,7 @@ import { Badge } from '../common/Badge.tsx';
 import type { WorkbenchTab } from '../layout/Sidebar.tsx';
 import { MorningReviewQueue } from './MorningReviewQueue.tsx';
 import { StrategyLabEngine } from '../../engine/strategy/strategyLabEngine.ts';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 interface OverviewTabProps {
   matter: Matter;
@@ -106,8 +107,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       {/* Matter Master Card */}
       <div className="bg-white border border-border-hairline rounded-[6px] p-5 shadow-card">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex items-start gap-3.5">
+            <AtkinLogo className="w-11 h-11 rounded-full border border-border-hairline shadow-2xs mt-1 shrink-0" variant="badge" />
+            <div className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-1.5">
               <Badge variant="blue" size="sm">{categoryBadge}</Badge>
               <Badge variant="slate" size="sm">{trackBadge}</Badge>
               <Badge variant="green" size="sm">{matter.jurisdiction}</Badge>
@@ -118,6 +121,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <p className="text-[13px] text-ink-slate leading-relaxed max-w-[680px]">
               {matter.notes || 'Matter file under active evidential audit and statutory assessment.'}
             </p>
+          </div>
           </div>
 
           <div className="shrink-0 flex sm:flex-col items-end justify-between gap-2.5">

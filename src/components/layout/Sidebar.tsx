@@ -17,6 +17,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import type { Matter, WorkspaceType } from '../../types/index.ts';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 export type WorkbenchTab = 
   | 'overview' 
@@ -89,6 +90,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside className="w-[248px] bg-canvas-subtle border-r border-border-hairline flex flex-col justify-between shrink-0 select-none min-h-[calc(100vh-106px)] font-sans">
       <div>
+        {/* Atkin Practice Brand Badge */}
+        <div className="px-3.5 py-2.5 bg-white border-b border-border-hairline flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AtkinLogo className="w-6 h-6 rounded-full shadow-2xs border border-border-hairline" variant="badge" />
+            <div className="flex flex-col">
+              <span className="text-[12.5px] font-semibold text-ink leading-tight">Atkin Workspace</span>
+              <span className="text-[9.5px] font-mono text-emerald-600 font-medium">Sovereign Air-Gap</span>
+            </div>
+          </div>
+          <span className="text-[10px] font-mono text-ink-steel px-1.5 py-0.5 bg-slate-100 rounded border border-slate-200">v1.2.0</span>
+        </div>
+
         {/* Workspace Partition Selector */}
         <div className="p-2 border-b border-border-hairline bg-slate-50">
           <div className="flex bg-slate-200/80 p-0.5 rounded-[5px] text-[11px] font-medium">

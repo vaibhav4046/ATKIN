@@ -1,0 +1,31 @@
+{
+  "name": "Atkin — Sovereign Legal AI Workspace",
+  "short_name": "Atkin",
+  "description": "Local-first sovereign legal AI workspace for solicitors: source-grounded claim ledger, contradiction discovery, and audit-ready drafting.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF9F5",
+  "theme_color": "#0F172A",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/atkin-logo-badge.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/atkin-logo-badge.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/atkin-logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

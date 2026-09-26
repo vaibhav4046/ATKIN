@@ -12,6 +12,7 @@ import {
   Database
 } from 'lucide-react';
 import { Badge } from '../common/Badge.tsx';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 interface HeroDimensionalProps {
   onOpenWorkbench: () => void;
@@ -146,6 +147,16 @@ export const HeroDimensional: React.FC<HeroDimensionalProps> = ({
           className="text-center space-y-6 max-w-[960px] mx-auto transition-transform duration-75 will-change-transform"
           style={{ transform: `translate3d(0, ${typoY}px, 0)` }}
         >
+          {/* Universal Atkin Emblem */}
+          <div className="flex justify-center pb-1">
+            <div className="relative p-1.5 rounded-full bg-white border border-border-hairline shadow-md group">
+              <AtkinLogo className="w-16 h-16 sm:w-20 sm:h-20 rounded-full" variant="badge" />
+              <div className="absolute -bottom-1 -right-1 bg-ink text-white font-mono text-[9px] font-semibold px-2 py-0.5 rounded-full border border-white shadow-xs">
+                ATKIN
+              </div>
+            </div>
+          </div>
+
           {/* Institutional Jurisdiction Tag */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-white border border-border-hairline shadow-subtle">
             <Badge variant="blue" size="sm">LexHack 2026</Badge>

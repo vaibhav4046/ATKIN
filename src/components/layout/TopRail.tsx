@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import type { Matter, ModelStatus, NetworkMode } from '../../types/index.ts';
 import { Badge } from '../common/Badge.tsx';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 interface TopRailProps {
   matter: Matter;
@@ -56,6 +57,9 @@ export const TopRail: React.FC<TopRailProps> = ({
   return (
     <div className="h-[58px] bg-white border-b border-border-hairline px-6 flex items-center justify-between sticky top-[52px] z-40 select-none">
       <div className="flex items-center gap-3">
+        <div className="hidden sm:flex items-center">
+          <AtkinLogo className="w-8 h-8 rounded-full border border-border-hairline shadow-2xs" variant="badge" />
+        </div>
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-[15px] font-semibold text-ink tracking-tight font-serif">

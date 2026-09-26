@@ -18,6 +18,7 @@ import {
   type PairingSession 
 } from '../../engine/sync/devicePairing.ts';
 import { Badge } from '../common/Badge.tsx';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 interface DevicePairingModalProps {
   isOpen: boolean;
@@ -84,8 +85,8 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
         {/* Header */}
         <div className="p-6 border-b border-border-hairline flex items-start justify-between bg-stone-50/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-proofline-blue/10 flex items-center justify-center text-proofline-blue">
-              <Smartphone className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-full border border-border-hairline bg-white shadow-xs flex items-center justify-center overflow-hidden">
+              <AtkinLogo className="w-9 h-9 rounded-full" variant="badge" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -112,9 +113,14 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
           {/* QR & OTP Code Panel */}
           <div className="grid grid-cols-2 gap-5 items-center p-5 bg-stone-50 border border-stone-200 rounded-[6px]">
             <div className="flex flex-col items-center justify-center p-4 bg-white border border-stone-200 rounded-[6px] shadow-xs text-center space-y-2">
-              {/* Scalable SVG QR Code Representation */}
-              <div className="w-36 h-36 bg-stone-900 rounded p-2 flex items-center justify-center text-white">
+              {/* Scalable SVG QR Code Representation with Atkin Logo Emblem */}
+              <div className="relative w-36 h-36 bg-stone-900 rounded p-2 flex items-center justify-center text-white">
                 <QrCode className="w-28 h-28 text-white" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="p-1 bg-white rounded-full shadow-sm border border-stone-300">
+                    <AtkinLogo className="w-6 h-6 rounded-full" variant="badge" />
+                  </div>
+                </div>
               </div>
               <span className="text-[11px] text-ink-steel font-mono">Scan in ATKIN Android App</span>
             </div>

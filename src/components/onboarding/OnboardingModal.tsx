@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { UserProfile, LegalRole, Jurisdiction, DraftingStyle, CitationFormat, MemoryPolicy, WorkspaceType } from '../../types/index.ts';
 import { DEFAULT_USER_PROFILE, saveUserProfileToDB } from '../../db/index.ts';
 import { checkOllamaConnection } from '../../engine/modelBridge.ts';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -91,8 +92,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
         {/* Header / Stepper */}
         <div className="px-6 py-4 border-b border-stone-800 flex items-center justify-between bg-stone-900/90">
           <div className="flex items-center space-x-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-mono uppercase tracking-widest text-stone-400">
+            <AtkinLogo className="w-6 h-6 rounded-full border border-stone-700 shadow-xs" variant="badge" />
+            <span className="text-xs font-mono uppercase tracking-widest text-stone-300 font-semibold">
               Atkin Sovereign Setup — Step {step} of 7
             </span>
           </div>
@@ -114,18 +115,23 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           {/* STEP 1: WELCOME */}
           {step === 1 && (
             <div className="space-y-6">
-              <div className="space-y-2">
-                <span className="px-2.5 py-1 text-[11px] font-mono tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 rounded">
-                  SOVEREIGN LEGAL INTELLIGENCE
-                </span>
-                <h2 className="text-2xl font-serif text-stone-100 tracking-tight pt-1">
-                  Private AI for legal work, running on hardware you control.
-                </h2>
-                <p className="text-stone-300 leading-relaxed">
-                  Atkin is engineered for legal practitioners who cannot compromise client confidentiality. 
-                  Zero cloud telemetry, strict matter isolation, and every assertion verifiable against SHA-256 document spans.
-                </p>
+              <div className="flex items-start gap-4">
+                <div className="p-1 rounded-full bg-stone-800 border border-stone-700 shrink-0">
+                  <AtkinLogo className="w-16 h-16 rounded-full" variant="badge" />
+                </div>
+                <div className="space-y-2">
+                  <span className="px-2.5 py-1 text-[11px] font-mono tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 rounded">
+                    SOVEREIGN LEGAL INTELLIGENCE
+                  </span>
+                  <h2 className="text-2xl font-serif text-stone-100 tracking-tight pt-1">
+                    Private AI for legal work, running on hardware you control.
+                  </h2>
+                </div>
               </div>
+              <p className="text-stone-300 leading-relaxed">
+                Atkin is engineered for legal practitioners who cannot compromise client confidentiality. 
+                Zero cloud telemetry, strict matter isolation, and every assertion verifiable against SHA-256 document spans.
+              </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                 <div className="p-4 rounded-lg bg-stone-850 border border-stone-800 space-y-1">

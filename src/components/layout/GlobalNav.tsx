@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShieldCheck, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import { LegalModal } from '../common/LegalModal.tsx';
+import { AtkinLogo } from '../common/AtkinLogo.tsx';
 
 interface GlobalNavProps {
   onOpenWorkbench: () => void;
@@ -24,18 +25,16 @@ export const GlobalNav: React.FC<GlobalNavProps> = ({
         <div className="flex items-center gap-6">
           <button 
             onClick={onNavigateHome}
-            className="flex items-center gap-2 group text-left focus-visible:outline-none cursor-pointer"
-            aria-label="Proofline Legal Workbench Home"
+            className="flex items-center gap-2.5 group text-left focus-visible:outline-none cursor-pointer"
+            aria-label="Atkin Sovereign Legal AI Home"
           >
-            <div className="w-5 h-5 rounded-[3px] bg-ink flex items-center justify-center text-white font-mono font-bold text-[10px]">
-              P
-            </div>
+            <AtkinLogo className="w-7 h-7 rounded-full shadow-xs border border-border-hairline" variant="badge" />
             <div className="flex items-baseline gap-1.5">
               <span className="font-semibold text-[15px] tracking-tight text-ink group-hover:text-proofline-blue transition-colors">
-                Proofline
+                Atkin
               </span>
               <span className="text-[10px] font-mono uppercase tracking-wider text-ink-steel hidden sm:inline">
-                Sovereign Counsel
+                Sovereign Legal AI
               </span>
             </div>
           </button>
@@ -109,6 +108,10 @@ export const GlobalNav: React.FC<GlobalNavProps> = ({
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="fixed top-[52px] left-0 right-0 bg-white border-b border-border-hairline z-40 p-4 space-y-3 shadow-lg md:hidden text-[13px]">
+          <div className="flex items-center gap-2 pb-2 border-b border-border-hairline">
+            <AtkinLogo className="w-6 h-6 rounded-full" variant="badge" />
+            <span className="font-semibold text-ink text-[14px]">Atkin Mobile Web</span>
+          </div>
           <a 
             href="#workflow-evidence" 
             onClick={() => setMobileMenuOpen(false)}
