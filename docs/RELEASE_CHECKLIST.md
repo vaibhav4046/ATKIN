@@ -30,30 +30,31 @@
 ```bash
 npm test -- --run
 ```
-- **Test Files**: 20 passed (20 total)
-- **Tests**: 82 passed (82 total)
-- **Execution Duration**: ~2.5s
+- **Test Files**: 21 passed (21 total)
+- **Tests**: 92 passed (92 total)
+- **Execution Duration**: ~2.2s
 - **Suites Covered**:
-  1. `legalReasoningEngine.test.ts` (4 tests) — Multi-jurisdictional legal doctrine verification
-  2. `matterAnalyzer.test.ts` (3 tests) — Document ingestion, SHA-256 digest, span extraction
-  3. `networkBroker.test.ts` (3 tests) — Hardware-enforced network egress boundaries
-  4. `contractReview.test.ts` (7 tests) — Declarative playbook rule matching and redline generation
-  5. `memoryIsolation.test.ts` (4 tests) — Canary token protection & 4-tier memory separation
-  6. `notebookStudio.test.ts` (6 tests) — Grounded chat, selective abstention, podcast generation
-  7. `realityVerification.test.ts` (3 tests) — Input dependence, scope isolation, failure honesty
-  8. `vault.test.ts` (4 tests) — PBKDF2 key derivation and AES-GCM-256 authenticated encryption
-  9. `bundleAndExport.test.ts` (5 tests) — Cryptographic bundle integrity & calendar generation
-  10. `persistence.test.ts` (5 tests) — IndexedDB CRUD and transaction isolation
-  11. `productionSlices.test.ts` (13 tests) — Production slices 1 through 7 complete flow
-  12. `legalSearchEngine.test.ts` (5 tests) — Authority ranking and citation verification
-  13. `notebookExport.test.ts` (1 test) — Obsidian vault bidirectional wikilink export
-  14. `verification.test.ts` (4 tests) — Pre-action protocol and claim verification
-  15. `injection.test.ts` (3 tests) — Prompt injection & adversarial payload neutralization
-  16. `jobQueue.test.ts` (4 tests) — Priority queue, concurrency limits, and job cancellation
-  17. `contradiction.test.ts` (1 test) — Contradiction matrix and opposing factual detection
-  18. `rightsGate.test.ts` (3 tests) — License enforcement and copyright boundary checks
-  19. `generateSampleExports.test.ts` (1 test) — Generation of physical test export files
-  20. `connectorImporter.test.ts` (3 tests) — Zero-cloud EML/Slack/Linear parser and SHA-256 ingestion
+  1. `legalReasoningEngine.test.ts` (4 tests): Multi-jurisdictional legal doctrine verification
+  2. `matterAnalyzer.test.ts` (3 tests): Document ingestion, SHA-256 digest, span extraction
+  3. `networkBroker.test.ts` (3 tests): Hardware-enforced network egress boundaries
+  4. `contractReview.test.ts` (7 tests): Declarative playbook rule matching and redline generation
+  5. `memoryIsolation.test.ts` (4 tests): Canary token protection and 4-tier memory separation
+  6. `notebookStudio.test.ts` (6 tests): Grounded chat, selective abstention, podcast generation
+  7. `realityVerification.test.ts` (3 tests): Input dependence, scope isolation, failure honesty
+  8. `vault.test.ts` (4 tests): PBKDF2 key derivation and AES-GCM-256 authenticated encryption
+  9. `bundleAndExport.test.ts` (5 tests): Cryptographic bundle integrity and calendar generation
+  10. `persistence.test.ts` (6 tests): IndexedDB CRUD and transaction isolation
+  11. `productionSlices.test.ts` (13 tests): Production slices 1 through 7 complete flow
+  12. `legalSearchEngine.test.ts` (5 tests): Authority ranking and citation verification
+  13. `notebookExport.test.ts` (1 test): Obsidian vault bidirectional wikilink export
+  14. `verification.test.ts` (4 tests): Pre-action protocol and claim verification
+  15. `injection.test.ts` (3 tests): Prompt injection and adversarial payload neutralization
+  16. `jobQueue.test.ts` (4 tests): Priority queue, concurrency limits, and job cancellation
+  17. `contradiction.test.ts` (1 test): Contradiction matrix and opposing factual detection
+  18. `rightsGate.test.ts` (3 tests): License enforcement and copyright boundary checks
+  19. `generateSampleExports.test.ts` (1 test): Generation of physical test export files
+  20. `connectorImporter.test.ts` (3 tests): Zero-cloud EML/Slack/Linear parser and SHA-256 ingestion
+  21. `regressionIntegrity.test.ts` (9 tests): Zero-regression guarantee across IRAC, citations, and models
 
 ### TypeScript & Production Distribution Bundle
 ```bash

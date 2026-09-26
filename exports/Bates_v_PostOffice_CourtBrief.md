@@ -2,7 +2,7 @@
 **Matter**: Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB) (England and Wales)
 **Client Reference**: Alan Bates (Lead Claimant for 550 Subpostmasters)
 **Draft Version**: 1 | **Status**: READY FOR REVIEW
-**Date Generated**: 25/09/2026
+**Date Generated**: 26/09/2026
 ---
 
 ## 1. Executive Summary & Factual Matrix
