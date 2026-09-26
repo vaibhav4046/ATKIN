@@ -140,18 +140,28 @@
 
 ---
 
-## 5. Automated Test Suite Metrics
+## 5. Automated Test Suite Metrics & Release Artifacts
 
-- **Total Test Files**: 32 test suites
-- **Total Tests**: 183 passing (100%)
+- **Total Test Files**: 37 test suites
+- **Total Tests**: 212 passing (100%)
 - **Test Runner**: Vitest v3.2.7 (node environment with `fake-indexeddb`)
-- **Execution Time**: ~2.5 seconds
-- **Added Protocol Suites**:
+- **Execution Time**: ~2.9 seconds
+- **Added Protocol & Engine Suites**:
   - `src/tests/astraProtocol.test.ts` (10 tests): Full ASTRA 5-pillar orchestration.
   - `src/tests/timeRuleEngine.test.ts` (7 tests): CPR 2.8 clear days, short-period exclusions, bank holidays, court closure rollover.
   - `src/tests/auditLedger.test.ts` (8 tests): RFC 8785 JCS canonicalization, FIPS 180-4 SHA-256 test vectors, previousReceiptHash chaining, tamper detection.
   - `src/tests/astraRandomizedEval.test.ts` (15 tests): Dynamic randomized notice extraction (13, 17, 29, 37, 41, 63), payment terms (14, 30, 45, 60), evidential abstention, and offline/Ollama model adapters.
-- **Test Artifact**: `release/test-results/test-results.json`
+  - `src/tests/citationGate.test.ts` (8 tests): 7-status byte provenance verification, offset bounds checking, text fidelity, and version mismatch detection.
+  - `src/tests/legalAuthority.test.ts` (6 tests): Normative 8-category hierarchy, ContractVersionResolver, EvidenceWeightResolver (Gestmin principles), and RulePackEngine with UCTA 1977 / CRA 2015 applicability predicates.
+  - `src/tests/toolRegistry.test.ts` (5 tests): Deterministic tool contract with SHA-256 execution records and permission gates.
+  - `src/tests/pairingRemoteInference.test.ts` (5 tests): Ed25519 pairing, SAS verification, and authenticated remote desktop inference.
+  - `src/tests/astraRuntime.test.ts` (5 tests): Full 12-stage ASTRA pipeline execution.
+- **Release Evidence Artifacts**:
+  - Test Artifact: `release/test-results/test-results.json`
+  - Audit Chain (JSONL): `release/audit/audit-chain.jsonl`
+  - Cryptographic Verification Report: `release/audit/audit-verification.txt`
+  - Execution Traces: `release/traces/astra-pipeline-trace.json`
+  - Evaluation Matrix: `release/evals/randomized-eval-report.json`
 
 ---
 

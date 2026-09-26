@@ -1,0 +1,324 @@
+[
+  {
+    "requestId": "req-001",
+    "matterId": "matter-alder-peak",
+    "answer": "The required termination notice period is 37 calendar days pursuant to Clause 3.2.",
+    "irac": {
+      "issue": "Contractual notice required to terminate commercial agreement without cause.",
+      "rule": "Operative Clause 3.2 (Notice of Termination).",
+      "application": "Under Clause 3.2, the notice period is stipulated as: \"Clause 3.2: Notice of termination without cause shall be 37 calendar days in writing.\"",
+      "conclusion": "The required termination notice period is 37 calendar days pursuant to Clause 3.2.",
+      "citations": [
+        {
+          "spanId": "span-cl-3.2",
+          "exactText": "Clause 3.2: Notice of termination without cause shall be 37 calendar days in writing."
+        }
+      ],
+      "isAbstention": false,
+      "confidenceScore": 0.98
+    },
+    "verifications": [
+      {
+        "citationId": "cite-span-cl-3.2-1790428648103",
+        "spanId": "span-cl-3.2",
+        "documentId": "doc-001",
+        "status": "VERIFIED",
+        "isValid": true,
+        "checkedAt": "2026-09-26T13:17:28.103Z",
+        "details": {
+          "matterMatch": true,
+          "documentFound": true,
+          "versionMatch": true,
+          "hashMatch": true,
+          "spanBoundsValid": true,
+          "textFidelity": true
+        }
+      }
+    ],
+    "claimSupportStatus": "FULLY_SUPPORTED",
+    "approvalDecision": {
+      "tier": "tier_1_autonomous_read_only",
+      "status": "autonomous_executed",
+      "receipt": {
+        "receiptId": "rcpt-0-1790428648103-fr8s",
+        "sequenceNumber": 0,
+        "actionType": "astra_ask",
+        "tier": "tier_1_autonomous_read_only",
+        "userId": "system:autonomous",
+        "deviceId": "workstation-local",
+        "authorizedPolicy": "policy:autonomous_read",
+        "authenticatedAt": "2026-09-26T13:17:28.103Z",
+        "decision": "autonomous_executed",
+        "timestamp": "2026-09-26T13:17:28.103Z",
+        "details": {
+          "requestId": "req-001",
+          "mode": "ask",
+          "claimSupportStatus": "FULLY_SUPPORTED",
+          "citationCount": 1,
+          "isAbstention": false
+        },
+        "previousReceiptHash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "receiptHash": "f728e963436aac9726b00caebfe6a3fce905f01b98832ae7dee5cbfea0e784cd",
+        "isConfirmed": true,
+        "confirmedBy": "system:autonomous_read_only",
+        "confirmedAt": "2026-09-26T13:17:28.103Z",
+        "auditTrailHash": "f728e963436aac9726b00caebfe6a3fce905f01b98832ae7dee5cbfea0e784cd"
+      }
+    },
+    "memoryUpdate": {
+      "workingMemoryRecorded": true,
+      "episodicCandidateEmitted": true,
+      "semanticWriteApproved": true
+    },
+    "auditReceiptHash": "f728e963436aac9726b00caebfe6a3fce905f01b98832ae7dee5cbfea0e784cd",
+    "executionTrace": {
+      "stages": [
+        "1.request_validation",
+        "2.scope_enforcement",
+        "3.authority_resolution",
+        "4.memory_retrieval",
+        "5.retrieval_tool_execution",
+        "6.context_planning",
+        "7.legal_model_generation",
+        "8.citation_gate_verification",
+        "9.claim_support_status",
+        "10.approval_service",
+        "11.audit_ledger_chaining",
+        "12.memory_write_gate"
+      ],
+      "durationMs": 2,
+      "modelUsed": "deterministic-offline-v1"
+    }
+  },
+  {
+    "requestId": "req-002",
+    "matterId": "matter-alder-peak",
+    "answer": "The matter documents do not state or record the supplier exact incorporation date. Evidential abstention is applied; no date or year is stated.",
+    "irac": {
+      "issue": "Determination of supplier legal incorporation date under corporate record.",
+      "rule": "Companies Act 2006 s.15 (Certificate of Incorporation establishes date of incorporation).",
+      "application": "The matter documents identify the entity as incorporated in England and Wales, but do not state the date of incorporation.",
+      "conclusion": "The matter documents do not state or record the supplier exact incorporation date. Evidential abstention is applied; no date or year is stated.",
+      "citations": [],
+      "isAbstention": true,
+      "abstentionReason": "Factual matrix is silent; document contains no evidentiary span stating incorporation date.",
+      "confidenceScore": 1
+    },
+    "verifications": [],
+    "claimSupportStatus": "EVIDENTIALLY_ABSTAINED",
+    "approvalDecision": {
+      "tier": "tier_1_autonomous_read_only",
+      "status": "autonomous_executed",
+      "receipt": {
+        "receiptId": "rcpt-1-1790428648104-qnly",
+        "sequenceNumber": 1,
+        "actionType": "astra_ask",
+        "tier": "tier_1_autonomous_read_only",
+        "userId": "system:autonomous",
+        "deviceId": "workstation-local",
+        "authorizedPolicy": "policy:autonomous_read",
+        "authenticatedAt": "2026-09-26T13:17:28.104Z",
+        "decision": "autonomous_executed",
+        "timestamp": "2026-09-26T13:17:28.104Z",
+        "details": {
+          "requestId": "req-002",
+          "mode": "ask",
+          "claimSupportStatus": "EVIDENTIALLY_ABSTAINED",
+          "citationCount": 0,
+          "isAbstention": true
+        },
+        "previousReceiptHash": "f728e963436aac9726b00caebfe6a3fce905f01b98832ae7dee5cbfea0e784cd",
+        "receiptHash": "95bfb4f9173b7ccbb19d4c07135ebb8a728ea0c99094b1a3aa04027ac7cc9a28",
+        "isConfirmed": true,
+        "confirmedBy": "system:autonomous_read_only",
+        "confirmedAt": "2026-09-26T13:17:28.104Z",
+        "auditTrailHash": "95bfb4f9173b7ccbb19d4c07135ebb8a728ea0c99094b1a3aa04027ac7cc9a28"
+      }
+    },
+    "memoryUpdate": {
+      "workingMemoryRecorded": true,
+      "episodicCandidateEmitted": true,
+      "semanticWriteApproved": false
+    },
+    "auditReceiptHash": "95bfb4f9173b7ccbb19d4c07135ebb8a728ea0c99094b1a3aa04027ac7cc9a28",
+    "executionTrace": {
+      "stages": [
+        "1.request_validation",
+        "2.scope_enforcement",
+        "3.authority_resolution",
+        "4.memory_retrieval",
+        "5.retrieval_tool_execution",
+        "6.context_planning",
+        "7.legal_model_generation",
+        "8.citation_gate_verification",
+        "9.claim_support_status",
+        "10.approval_service",
+        "11.audit_ledger_chaining",
+        "12.memory_write_gate"
+      ],
+      "durationMs": 1,
+      "modelUsed": "deterministic-offline-v1"
+    }
+  },
+  {
+    "requestId": "req-003",
+    "matterId": "matter-alder-peak",
+    "answer": "The required termination notice period is 37 calendar days pursuant to Clause 3.2.",
+    "irac": {
+      "issue": "Contractual notice required to terminate commercial agreement without cause.",
+      "rule": "Operative Clause 3.2 (Notice of Termination).",
+      "application": "Under Clause 3.2, the notice period is stipulated as: \"Clause 3.2: Notice of termination without cause shall be 37 calendar days in writing.\"",
+      "conclusion": "The required termination notice period is 37 calendar days pursuant to Clause 3.2.",
+      "citations": [
+        {
+          "spanId": "span-cl-3.2",
+          "exactText": "Clause 3.2: Notice of termination without cause shall be 37 calendar days in writing."
+        }
+      ],
+      "isAbstention": false,
+      "confidenceScore": 0.98
+    },
+    "verifications": [
+      {
+        "citationId": "cite-span-cl-3.2-1790428648218",
+        "spanId": "span-cl-3.2",
+        "documentId": "doc-001",
+        "status": "VERIFIED",
+        "isValid": true,
+        "checkedAt": "2026-09-26T13:17:28.218Z",
+        "details": {
+          "matterMatch": true,
+          "documentFound": true,
+          "versionMatch": true,
+          "hashMatch": true,
+          "spanBoundsValid": true,
+          "textFidelity": true
+        }
+      }
+    ],
+    "claimSupportStatus": "FULLY_SUPPORTED",
+    "approvalDecision": {
+      "tier": "tier_2_solicitor_review_required",
+      "status": "solicitor_review_required",
+      "receipt": {
+        "receiptId": "rcpt-2-1790428648218-2lur",
+        "sequenceNumber": 2,
+        "actionType": "astra_draft",
+        "tier": "tier_2_solicitor_review_required",
+        "userId": "solicitor:eleanor_vance",
+        "deviceId": "workstation-local",
+        "authorizedPolicy": "policy:lawyer_review",
+        "authenticatedAt": "2026-09-26T13:17:28.218Z",
+        "decision": "approved",
+        "timestamp": "2026-09-26T13:17:28.218Z",
+        "details": {
+          "requestId": "req-003",
+          "mode": "draft",
+          "claimSupportStatus": "FULLY_SUPPORTED",
+          "citationCount": 1,
+          "isAbstention": false
+        },
+        "previousReceiptHash": "95bfb4f9173b7ccbb19d4c07135ebb8a728ea0c99094b1a3aa04027ac7cc9a28",
+        "receiptHash": "334dfec01354d82baac578df07337818035266f5908526b6a40d55957c5fc947",
+        "isConfirmed": true,
+        "confirmedBy": "solicitor:eleanor_vance",
+        "confirmedAt": "2026-09-26T13:17:28.218Z",
+        "auditTrailHash": "334dfec01354d82baac578df07337818035266f5908526b6a40d55957c5fc947"
+      }
+    },
+    "memoryUpdate": {
+      "workingMemoryRecorded": true,
+      "episodicCandidateEmitted": true,
+      "semanticWriteApproved": true
+    },
+    "auditReceiptHash": "334dfec01354d82baac578df07337818035266f5908526b6a40d55957c5fc947",
+    "executionTrace": {
+      "stages": [
+        "1.request_validation",
+        "2.scope_enforcement",
+        "3.authority_resolution",
+        "4.memory_retrieval",
+        "5.retrieval_tool_execution",
+        "6.context_planning",
+        "7.legal_model_generation",
+        "8.citation_gate_verification",
+        "9.claim_support_status",
+        "10.approval_service",
+        "11.audit_ledger_chaining",
+        "12.memory_write_gate"
+      ],
+      "durationMs": 1,
+      "modelUsed": "deterministic-offline-v1"
+    }
+  },
+  {
+    "requestId": "req-004",
+    "matterId": "matter-alder-peak",
+    "answer": "Evidential abstention applied: no matching factual spans in matter record.",
+    "irac": {
+      "issue": "Legal inquiry: \"Issue statutory Letter Before Claim under CPR Pre-Action Protocol\"",
+      "rule": "Governing law of England and Wales.",
+      "application": "No relevant factual spans found in current matter.",
+      "conclusion": "Evidential abstention applied: no matching factual spans in matter record.",
+      "citations": [],
+      "isAbstention": true,
+      "abstentionReason": "No evidentiary spans found matching query.",
+      "confidenceScore": 0
+    },
+    "verifications": [],
+    "claimSupportStatus": "EVIDENTIALLY_ABSTAINED",
+    "approvalDecision": {
+      "tier": "tier_3_partner_signoff_required",
+      "status": "partner_signoff_required",
+      "receipt": {
+        "receiptId": "rcpt-3-1790428648218-sn5f",
+        "sequenceNumber": 3,
+        "actionType": "astra_act",
+        "tier": "tier_3_partner_signoff_required",
+        "userId": "partner:arthur_pendleton",
+        "deviceId": "workstation-local",
+        "authorizedPolicy": "policy:lawyer_review",
+        "authenticatedAt": "2026-09-26T13:17:28.218Z",
+        "decision": "approved",
+        "timestamp": "2026-09-26T13:17:28.218Z",
+        "details": {
+          "requestId": "req-004",
+          "mode": "act",
+          "claimSupportStatus": "EVIDENTIALLY_ABSTAINED",
+          "citationCount": 0,
+          "isAbstention": true
+        },
+        "previousReceiptHash": "334dfec01354d82baac578df07337818035266f5908526b6a40d55957c5fc947",
+        "receiptHash": "936d1017fe9afe39e80e60b7da9049764c9de207d3cbf12b881cc56c3cd9e935",
+        "isConfirmed": true,
+        "confirmedBy": "partner:arthur_pendleton",
+        "confirmedAt": "2026-09-26T13:17:28.218Z",
+        "auditTrailHash": "936d1017fe9afe39e80e60b7da9049764c9de207d3cbf12b881cc56c3cd9e935"
+      }
+    },
+    "memoryUpdate": {
+      "workingMemoryRecorded": true,
+      "episodicCandidateEmitted": true,
+      "semanticWriteApproved": false
+    },
+    "auditReceiptHash": "936d1017fe9afe39e80e60b7da9049764c9de207d3cbf12b881cc56c3cd9e935",
+    "executionTrace": {
+      "stages": [
+        "1.request_validation",
+        "2.scope_enforcement",
+        "3.authority_resolution",
+        "4.memory_retrieval",
+        "5.retrieval_tool_execution",
+        "6.context_planning",
+        "7.legal_model_generation",
+        "8.citation_gate_verification",
+        "9.claim_support_status",
+        "10.approval_service",
+        "11.audit_ledger_chaining",
+        "12.memory_write_gate"
+      ],
+      "durationMs": 0,
+      "modelUsed": "deterministic-offline-v1"
+    }
+  }
+]
