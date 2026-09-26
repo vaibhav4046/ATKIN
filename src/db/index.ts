@@ -52,6 +52,12 @@ import {
   COMMERCIAL_CONTRACT_AUTHORITIES, 
   TENANCY_HOUSING_AUTHORITIES 
 } from './fixtures/authorities.ts';
+import {
+  GOLDEN_MATTER,
+  GOLDEN_DOCUMENTS,
+  GOLDEN_CLAIMS,
+  GOLDEN_REVIEWS
+} from '../domain/matters/goldenMatter.ts';
 
 export class ProoflineDatabase extends Dexie {
   matters!: Table<Matter, string>;
@@ -127,6 +133,13 @@ export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
       db.drafts, 
       db.reviewItems
     ], async () => {
+      // 0. Golden Commercial Matter (Flagship 3-Minute Demo)
+      await db.matters.put({ ...GOLDEN_MATTER, isDemo: true, workspaceType: 'demo' });
+      await db.documents.bulkPut(GOLDEN_DOCUMENTS);
+      await db.claims.bulkPut(GOLDEN_CLAIMS);
+      await db.authorities.bulkPut(COMMERCIAL_CONTRACT_AUTHORITIES);
+      await db.reviewItems.bulkPut(GOLDEN_REVIEWS);
+
       // 1. Bates Post Office Matter
       await db.matters.put({ ...BATES_MATTER, isDemo: true, workspaceType: 'demo' });
       await db.documents.bulkPut(BATES_DOCUMENTS);

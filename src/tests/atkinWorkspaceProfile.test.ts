@@ -28,9 +28,9 @@ describe('Atkin Workspace Partition & User Profile Integrity', () => {
     const personalMatters = await getMattersFromDB('personal');
     expect(personalMatters).toEqual([]);
 
-    // Demo workspace must contain exactly the synthetic sandbox matters
+    // Demo workspace must contain exactly the synthetic sandbox matters (Golden Matter + Bates + Contract + Tenancy + Laptop)
     const demoMatters = await getMattersFromDB('demo');
-    expect(demoMatters.length).toBe(4);
+    expect(demoMatters.length).toBe(5);
     expect(demoMatters.every(m => m.workspaceType === 'demo' || m.isDemo === true)).toBe(true);
 
     // Creating a matter in Personal Workspace does not pollute Demo Workspace
@@ -53,7 +53,7 @@ describe('Atkin Workspace Partition & User Profile Integrity', () => {
     expect(personalAfter[0].id).toBe('matter-solicitor-001');
 
     const demoAfter = await getMattersFromDB('demo');
-    expect(demoAfter.length).toBe(4);
+    expect(demoAfter.length).toBe(5);
     expect(demoAfter.some(m => m.id === 'matter-solicitor-001')).toBe(false);
   });
 
