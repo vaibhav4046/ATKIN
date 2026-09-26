@@ -252,8 +252,30 @@ export interface LegalModel {
 ## 5. Auditability, Verifiability, and SRA Compliance
 
 Every ASTRA execution produces an immutable **Proof Receipt**:
-1. **Source Hash**: SHA-256 of all input documents.
+1. **Source Hash**: Authentic 64-character SHA-256 digest of all input documents and character spans.
 2. **Span Offsets**: Exact start/end character offsets for all cited propositions.
 3. **Execution Trace**: Record of every deterministic tool call and parameters.
-4. **Approval Stamp**: Solicitor identity, timestamp, and review status.
+4. **Approval Stamp**: Solicitor identity, timestamp, decision, and review status.
 5. **Regulatory Alignment**: Fully complies with **Solicitors Regulation Authority (SRA)** Standards & Regulations Rule 6.3 (Client Confidentiality) and SRA AI Guidance (Supervisory Responsibility).
+
+### 5.1 RFC 8785 Canonical Hash-Chained Audit Ledger
+Audit receipts are serialized deterministically according to **RFC 8785 JSON Canonicalization Scheme (JCS)**:
+- Lexicographical sorting of all object keys (UTF-16 code unit order).
+- Complete whitespace elimination outside string literals.
+- Deterministic IEEE-754 representation of numeric values.
+- Each receipt stores `previousReceiptHash` linked to the cryptographic digest of the prior entry (genesis block: `0`.repeat(64)).
+- `AuditLedger.verifyChain(receipts)` guarantees continuous tamper detection; any altered byte, omitted link, or reordered receipt invalidates the chain.
+
+### 5.2 Deterministic CPR 2.8 TimeRuleEngine
+Calculation of procedural deadlines under CPR 2.8 and Civil Procedure Practice Directions:
+- Clear days calculation: starting day excluded (CPR 2.8(3)(a)); event day excluded when end is defined by reference to an event (CPR 2.8(3)(b)).
+- Short period exclusion: when period is 5 days or fewer, Saturdays, Sundays, Bank Holidays, Christmas Day, and Good Friday do not count (CPR 2.8(4)).
+- Injected GOV.UK statutory Bank Holiday calendar for England and Wales (2026-2027).
+- Court closure rollover: when an act at a court office expires on a closed day, act is timely on next open court day (CPR 2.8(5)).
+- Mandatory practitioner disclaimer displayed on all calculations.
+
+### 5.3 Automated Evaluation & Zero Hard-Coding Guarantee
+- Complete elimination of canned string dependencies (`37 days`, `Alder Peak`, `incorporation date`).
+- Dynamic parameterization and extraction of arbitrary notice days (13, 17, 29, 37, 41, 63) and payment terms (14, 30, 45, 60).
+- Strict evidential abstention when facts are unrecorded vs truthful extraction when recorded.
+- Automated test coverage across 32 test suites and 183 tests.

@@ -142,10 +142,15 @@
 
 ## 5. Automated Test Suite Metrics
 
-- **Total Test Files**: 28 test suites
-- **Total Tests**: 143 passing (100%)
+- **Total Test Files**: 32 test suites
+- **Total Tests**: 183 passing (100%)
 - **Test Runner**: Vitest v3.2.7 (node environment with `fake-indexeddb`)
-- **Execution Time**: ~10.24 seconds
+- **Execution Time**: ~2.5 seconds
+- **Added Protocol Suites**:
+  - `src/tests/astraProtocol.test.ts` (10 tests): Full ASTRA 5-pillar orchestration.
+  - `src/tests/timeRuleEngine.test.ts` (7 tests): CPR 2.8 clear days, short-period exclusions, bank holidays, court closure rollover.
+  - `src/tests/auditLedger.test.ts` (8 tests): RFC 8785 JCS canonicalization, FIPS 180-4 SHA-256 test vectors, previousReceiptHash chaining, tamper detection.
+  - `src/tests/astraRandomizedEval.test.ts` (15 tests): Dynamic randomized notice extraction (13, 17, 29, 37, 41, 63), payment terms (14, 30, 45, 60), evidential abstention, and offline/Ollama model adapters.
 - **Test Artifact**: `release/test-results/test-results.json`
 
 ---

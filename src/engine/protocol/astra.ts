@@ -9,6 +9,43 @@
  */
 
 import type { Span, Claim, Authority, Document } from '../../types/index.ts';
+import { 
+  TimeRuleEngine, 
+  type TimeRuleInput, 
+  type DeadlineResult 
+} from './timeRuleEngine.ts';
+import { 
+  AuditLedger, 
+  type AuditReceipt, 
+  type ApprovalTier, 
+  GENESIS_PREVIOUS_HASH 
+} from './auditLedger.ts';
+import { 
+  DeterministicOfflineLegalModel, 
+  OllamaLegalModel, 
+  type LegalModel, 
+  type LegalContext, 
+  type LegalModelRequest, 
+  type LegalModelResult,
+  type ModelCapabilities 
+} from './models.ts';
+
+// Re-export core types and classes
+export { 
+  TimeRuleEngine, 
+  type TimeRuleInput, 
+  type DeadlineResult,
+  AuditLedger, 
+  type AuditReceipt, 
+  type ApprovalTier,
+  DeterministicOfflineLegalModel,
+  OllamaLegalModel,
+  type LegalModel,
+  type LegalContext,
+  type LegalModelRequest,
+  type LegalModelResult,
+  type ModelCapabilities
+};
 
 // -------------------------------------------------------------
 // Pillar A: Authority Hierarchy
@@ -145,6 +182,13 @@ export class DeadlineCalculatorTool {
       isCourtWorkingDay: adjustedDays === 0
     };
   }
+
+  /**
+   * High-precision CPR 2.8 Calculation Engine
+   */
+  public static calculateCpr28(input: TimeRuleInput): DeadlineResult {
+    return TimeRuleEngine.calculate(input);
+  }
 }
 
 // -------------------------------------------------------------
@@ -163,8 +207,10 @@ export interface IracResult {
 }
 
 export class RetrievalReasoningEngine {
+  private static defaultModel = new DeterministicOfflineLegalModel();
+
   /**
-   * Evidence-first reasoning with strict evidential abstention
+   * Evidence-first reasoning with dynamic span extraction and strict evidential abstention
    */
   public static evaluateQuery(params: {
     query: string;
@@ -173,14 +219,32 @@ export class RetrievalReasoningEngine {
   }): IracResult {
     const queryLower = params.query.toLowerCase();
 
-    // Check if query seeks a fact not supported by any span (e.g. incorporation date)
-    const isIncorporationQuery = queryLower.includes('incorporation') || queryLower.includes('incorporated date');
-    const hasIncorporationFact = params.spans.some(s => 
-      s.exactText.toLowerCase().includes('incorporated on') || 
-      s.exactText.toLowerCase().includes('incorporation date')
-    );
+    // 1. Incorporation query
+    const isIncorporationQuery = queryLower.includes('incorporation') || queryLower.includes('incorporated');
+    if (isIncorporationQuery) {
+      const dateSpan = params.spans.find(s => {
+        const txt = s.exactText.toLowerCase();
+        return txt.includes('incorporat') && (
+          /\b(?:on|dated|date:?)\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}/i.test(txt) ||
+          /\b\d{4}-\d{2}-\d{2}\b/.test(txt)
+        );
+      });
 
-    if (isIncorporationQuery && !hasIncorporationFact) {
+      if (dateSpan) {
+        const dateMatch = dateSpan.exactText.match(/\b(?:\d{1,2}\s+[A-Za-z]+\s+\d{4}|\d{4}-\d{2}-\d{2})\b/);
+        const dateStr = dateMatch ? dateMatch[0] : 'the date recorded';
+        return {
+          issue: 'Determination of supplier legal incorporation date under corporate record.',
+          rule: 'Companies Act 2006 s.15 (Certificate of Incorporation establishes date of incorporation).',
+          application: `Contemporaneous documentary evidence states: "${dateSpan.exactText.trim()}"`,
+          conclusion: `The supplier was incorporated on ${dateStr} pursuant to the corporate documentation.`,
+          citations: [{ spanId: dateSpan.id, exactText: dateSpan.exactText }],
+          isAbstention: false,
+          confidenceScore: 0.98
+        };
+      }
+
+      // Check if entity is mentioned without date -> Abstain
       return {
         issue: 'Determination of supplier legal incorporation date under corporate record.',
         rule: 'Companies Act 2006 s.15 (Certificate of Incorporation establishes date of incorporation).',
@@ -193,37 +257,87 @@ export class RetrievalReasoningEngine {
       };
     }
 
-    // Notice period query (e.g. 37 days notice)
-    const isNoticeQuery = queryLower.includes('notice') || queryLower.includes('termination');
-    const noticeSpan = params.spans.find(s => 
-      s.exactText.toLowerCase().includes('notice') || 
-      s.exactText.toLowerCase().includes('37 days') ||
-      s.exactText.toLowerCase().includes('terminate')
-    );
+    // 2. Notice / Termination query
+    const isNoticeQuery = queryLower.includes('notice') || queryLower.includes('terminat');
+    if (isNoticeQuery) {
+      const noticeSpan = params.spans.find(s => {
+        const txt = s.exactText.toLowerCase();
+        return (txt.includes('notice') || txt.includes('terminat')) && /\d+\s*(?:calendar\s+|working\s+|business\s+)?days/i.test(txt);
+      }) || params.spans.find(s => {
+        const txt = s.exactText.toLowerCase();
+        return txt.includes('notice') || txt.includes('terminat');
+      });
 
-    if (isNoticeQuery && noticeSpan) {
-      return {
-        issue: 'Contractual notice required to terminate commercial agreement without cause.',
-        rule: 'Operative Clause 3.2 (Notice of Termination).',
-        application: `Under Clause 3.2 of the Master Agreement, notice period is stipulated as: "${noticeSpan.exactText}"`,
-        conclusion: `The required termination notice period is 37 calendar days pursuant to Clause 3.2.`,
-        citations: [{ spanId: noticeSpan.id, exactText: noticeSpan.exactText }],
-        isAbstention: false,
-        confidenceScore: 0.98
-      };
+      if (noticeSpan) {
+        const daysMatch = noticeSpan.exactText.match(/(\d+)\s*(?:calendar\s+|working\s+|business\s+)?days/i);
+        const days = daysMatch ? daysMatch[1] : null;
+
+        const clauseMatch = noticeSpan.exactText.match(/(?:clause|section|article)\s*([0-9A-Za-z.]+)/i);
+        const clauseRef = clauseMatch ? `Clause ${clauseMatch[1]}` : 'Clause 3.2';
+
+        return {
+          issue: 'Contractual notice required to terminate commercial agreement without cause.',
+          rule: `Operative ${clauseRef} (Notice of Termination).`,
+          application: `Under ${clauseRef} of the Master Agreement, notice period is stipulated as: "${noticeSpan.exactText.trim()}"`,
+          conclusion: days 
+            ? `The required termination notice period is ${days} calendar days pursuant to ${clauseRef}.`
+            : `Termination notice terms governed by ${clauseRef}: "${noticeSpan.exactText.trim()}".`,
+          citations: [{ spanId: noticeSpan.id, exactText: noticeSpan.exactText }],
+          isAbstention: false,
+          confidenceScore: 0.98
+        };
+      }
     }
 
-    // Default bounded IRAC
+    // 3. Payment query
+    const isPaymentQuery = queryLower.includes('payment') || queryLower.includes('invoice') || queryLower.includes('fee');
+    if (isPaymentQuery) {
+      const paymentSpan = params.spans.find(s => {
+        const txt = s.exactText.toLowerCase();
+        return (txt.includes('payment') || txt.includes('invoice') || txt.includes('pay')) && /\d+\s*(?:calendar\s+|working\s+|business\s+)?days/i.test(txt);
+      });
+
+      if (paymentSpan) {
+        const daysMatch = paymentSpan.exactText.match(/(\d+)\s*(?:calendar\s+|working\s+|business\s+)?days/i);
+        const days = daysMatch ? daysMatch[1] : null;
+        const clauseMatch = paymentSpan.exactText.match(/(?:clause|section|article)\s*([0-9A-Za-z.]+)/i);
+        const clauseRef = clauseMatch ? `Clause ${clauseMatch[1]}` : 'operative payment terms';
+
+        return {
+          issue: 'Contractual payment and invoicing timeframe.',
+          rule: `Operative ${clauseRef}.`,
+          application: `Payment terms stipulated as: "${paymentSpan.exactText.trim()}"`,
+          conclusion: days
+            ? `The required payment period is ${days} calendar days pursuant to ${clauseRef}.`
+            : `Payment terms governed by ${clauseRef}: "${paymentSpan.exactText.trim()}".`,
+          citations: [{ spanId: paymentSpan.id, exactText: paymentSpan.exactText }],
+          isAbstention: false,
+          confidenceScore: 0.98
+        };
+      }
+    }
+
+    // 4. Default Bounded IRAC
+    const matchingSpans = params.spans.filter(s => {
+      const words = queryLower.split(/\s+/).filter(w => w.length > 3);
+      const spanLower = s.exactText.toLowerCase();
+      return words.some(w => spanLower.includes(w));
+    });
+
+    const selectedSpans = matchingSpans.length > 0 ? matchingSpans : params.spans.slice(0, 3);
+
     return {
       issue: `Legal inquiry: "${params.query}"`,
       rule: `Governing law of ${params.scope.jurisdiction}.`,
-      application: `Evaluated across ${params.spans.length} evidentiary spans.`,
-      conclusion: params.spans.length > 0 
-        ? `Analysis completed with ${params.spans.length} verified citations.` 
+      application: selectedSpans.length > 0
+        ? `Evaluated across ${selectedSpans.length} evidentiary spans.`
+        : 'No evidentiary spans found in current matter record.',
+      conclusion: selectedSpans.length > 0 
+        ? `Analysis completed with ${selectedSpans.length} verified citations.` 
         : `No evidential spans found in current matter record.`,
-      citations: params.spans.slice(0, 3).map(s => ({ spanId: s.id, exactText: s.exactText })),
-      isAbstention: params.spans.length === 0,
-      confidenceScore: params.spans.length > 0 ? 0.9 : 0.0
+      citations: selectedSpans.map(s => ({ spanId: s.id, exactText: s.exactText })),
+      isAbstention: selectedSpans.length === 0,
+      confidenceScore: selectedSpans.length > 0 ? 0.9 : 0.0
     };
   }
 }
@@ -232,73 +346,42 @@ export class RetrievalReasoningEngine {
 // Pillar A: Approval & Gated Action Tiers
 // -------------------------------------------------------------
 
-export type ApprovalTier = 
-  | 'tier_1_autonomous_read_only'    // Parse, hash, detect contradiction
-  | 'tier_2_solicitor_review_required'// Edit draft, approve review item
-  | 'tier_3_partner_signoff_required';// Court filing, formal notice letter, client file purge
-
-export interface ActionReceipt {
-  actionId: string;
-  actionType: string;
-  tier: ApprovalTier;
-  isConfirmed: boolean;
-  confirmedBy?: string;
-  confirmedAt?: string;
-  auditTrailHash: string;
-}
-
 export class ApprovalGate {
+  private static ledger = new AuditLedger();
+
+  public static getLedger(): AuditLedger {
+    return this.ledger;
+  }
+
   public static createActionReceipt(
     actionType: string,
     tier: ApprovalTier,
-    confirmedBy?: string
-  ): ActionReceipt {
-    const now = new Date().toISOString();
+    confirmedBy?: string,
+    options: {
+      userId?: string;
+      deviceId?: string;
+      authorizedPolicy?: string;
+      details?: Record<string, unknown>;
+    } = {}
+  ): AuditReceipt {
     const isAuto = tier === 'tier_1_autonomous_read_only';
+    const isConfirmed = isAuto || Boolean(confirmedBy);
+    const userId = confirmedBy || (isAuto ? 'system:autonomous_read_only' : (options.userId || 'unassigned'));
+    const deviceId = options.deviceId || 'local-workstation';
+    const authorizedPolicy = options.authorizedPolicy || (isAuto ? 'policy:autonomous_read' : 'policy:solicitor_review');
 
-    return {
-      actionId: `act-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    const decision = isConfirmed ? (isAuto ? 'autonomous_executed' : 'approved') : 'pending_approval';
+
+    return this.ledger.append({
       actionType,
       tier,
-      isConfirmed: isAuto || Boolean(confirmedBy),
-      confirmedBy: isAuto ? 'system:autonomous_read_only' : confirmedBy,
-      confirmedAt: isAuto || confirmedBy ? now : undefined,
-      auditTrailHash: `SHA256:${Date.now()}`
-    };
+      userId,
+      deviceId,
+      authorizedPolicy,
+      decision,
+      details: options.details || {}
+    });
   }
-}
-
-// -------------------------------------------------------------
-// Model Abstraction Interface (Replaceable Engine)
-// -------------------------------------------------------------
-
-export interface LegalContext {
-  matterId: string;
-  jurisdiction: string;
-  governingLaw: string;
-  spans: Span[];
-  claims: Claim[];
-  authorities: Authority[];
-  prompt: string;
-}
-
-export interface ModelResponse {
-  rawText: string;
-  irac: IracResult;
-  latencyMs: number;
-}
-
-export interface LegalModel {
-  id: string;
-  name: string;
-  provider: 'ollama_local' | 'anthropic' | 'google' | 'openai' | 'deterministic_offline';
-  generate(context: LegalContext): Promise<ModelResponse>;
-  capabilities: {
-    toolCalling: boolean;
-    structuredOutput: boolean;
-    maxContextTokens: number;
-    airgapCompliant: boolean;
-  };
 }
 
 // -------------------------------------------------------------
@@ -308,9 +391,27 @@ export interface LegalModel {
 export class AstraProtocolEngine {
   private scope: AstraScope;
   private tools: AstraToolCall[] = [];
+  private ledger: AuditLedger;
+  private model: LegalModel;
 
-  constructor(scope: AstraScope) {
+  constructor(
+    scope: AstraScope, 
+    options: { 
+      ledger?: AuditLedger; 
+      model?: LegalModel;
+    } = {}
+  ) {
     this.scope = scope;
+    this.ledger = options.ledger || new AuditLedger();
+    this.model = options.model || new DeterministicOfflineLegalModel();
+  }
+
+  public getLedger(): AuditLedger {
+    return this.ledger;
+  }
+
+  public getModel(): LegalModel {
+    return this.model;
   }
 
   public executeTask(params: {
@@ -324,7 +425,7 @@ export class AstraProtocolEngine {
     scope: AstraScope;
     rankedSources: RankedSource[];
     irac: IracResult;
-    approval: ActionReceipt;
+    approval: AuditReceipt;
     statutoryOverrides: Array<{ clauseId: string; statuteId: string; reason: string }>;
   } {
     // 1. A — Authority
@@ -354,12 +455,24 @@ export class AstraProtocolEngine {
       scope: this.scope
     });
 
-    // 5. A — Approval
-    const approval = ApprovalGate.createActionReceipt(
-      params.actionType,
-      params.requiredApprovalTier,
-      params.approver
-    );
+    // 5. A — Approval (Hash-chained audit logging)
+    const isAuto = params.requiredApprovalTier === 'tier_1_autonomous_read_only';
+    const isConfirmed = isAuto || Boolean(params.approver);
+    const decision = isConfirmed ? (isAuto ? 'autonomous_executed' : 'approved') : 'pending_approval';
+
+    const approval = this.ledger.append({
+      actionType: params.actionType,
+      tier: params.requiredApprovalTier,
+      userId: params.approver || (isAuto ? 'system:autonomous_read_only' : 'unassigned'),
+      deviceId: 'workstation-local',
+      authorizedPolicy: isAuto ? 'policy:autonomous_read' : 'policy:practitioner_signoff',
+      decision,
+      details: {
+        query: params.query,
+        spanCount: params.spans.length,
+        isAbstention: irac.isAbstention
+      }
+    });
 
     return {
       scope: this.scope,
