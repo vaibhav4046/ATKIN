@@ -7,47 +7,63 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 5-tier surface hierarchy: canvas -> surface-1 -> surface-2 -> surface-recessed -> surface-elevated
+        atkin: {
+          bg: 'var(--atkin-bg)',
+          'bg-subtle': 'var(--atkin-bg-subtle)',
+          surface: 'var(--atkin-surface)',
+          'surface-raised': 'var(--atkin-surface-raised)',
+          paper: 'var(--atkin-paper)',
+          ink: 'var(--atkin-ink)',
+          'ink-secondary': 'var(--atkin-ink-secondary)',
+          muted: 'var(--atkin-muted)',
+          border: 'var(--atkin-border)',
+          'border-strong': 'var(--atkin-border-strong)',
+          focus: 'var(--atkin-focus)',
+          success: 'var(--atkin-success)',
+          warning: 'var(--atkin-warning)',
+          danger: 'var(--atkin-danger)',
+        },
+        // 5-tier surface hierarchy mapped to tokens
         canvas: {
-          DEFAULT: '#f8f9fa',
-          subtle: '#f1f3f5',
-          paper: '#ffffff',
+          DEFAULT: 'var(--atkin-bg)',
+          subtle: 'var(--atkin-bg-subtle)',
+          paper: 'var(--atkin-paper)',
         },
         surface: {
-          base: '#ffffff',
-          recessed: '#f1f3f5',
-          panel: '#ffffff',
-          elevated: '#ffffff',
-          hover: '#f8fafc',
-          selected: '#f1f5f9',
+          base: 'var(--atkin-surface)',
+          recessed: 'var(--atkin-bg-subtle)',
+          panel: 'var(--atkin-surface)',
+          elevated: 'var(--atkin-surface-raised)',
+          hover: 'var(--atkin-bg-subtle)',
+          selected: 'var(--atkin-bg-subtle)',
         },
         // Restrained, semantic legal borders
         border: {
-          hairline: '#e2e4e8',
-          subtle: '#ebecee',
-          strong: '#cbd5e1',
-          focus: '#1d4ed8',
-          control: '#d8dade',
+          hairline: 'var(--atkin-border)',
+          subtle: 'var(--atkin-border)',
+          strong: 'var(--atkin-border-strong)',
+          focus: 'var(--atkin-focus)',
+          control: 'var(--atkin-border)',
         },
         // Dignified ink hierarchy
         ink: {
-          DEFAULT: '#0f172a',    // Deep slate black
-          light: '#1e293b',      // Heading ink
-          slate: '#475569',      // Body text
-          steel: '#64748b',      // Secondary metadata
-          muted: '#94a3b8',      // Tertiary labels
+          DEFAULT: 'var(--atkin-ink)',
+          light: 'var(--atkin-ink-secondary)',
+          slate: 'var(--atkin-muted)',
+          steel: 'var(--atkin-muted)',
+          muted: 'var(--atkin-muted)',
         },
-        // Domain-specific legal palette (No neon, no random rainbow)
+        // Compatibility mapping for existing components
         proofline: {
-          blue: '#1d4ed8',       // Scholarly cobalt (Primary law, citations, primary actions)
-          navy: '#0f2744',       // Deep English navy
-          ochre: '#9a3412',      // Deep amber/ochre (Adverse records, contradictions)
-          green: '#166534',      // British forest green (Verified admissibility, CEA s.9)
-          crimson: '#991b1b',    // Deep crimson (Prompt injection quarantine, critical risks)
-          amber: '#b45309',      // Warning/caution
+          blue: 'var(--atkin-ink)',
+          navy: 'var(--atkin-surface)',
+          ochre: 'var(--atkin-warning)',
+          green: 'var(--atkin-success)',
+          crimson: 'var(--atkin-danger)',
+          amber: 'var(--atkin-warning)',
         }
       },
-      // Restrained, semantic radius scale (Rule 19: No 28px or pill everywhere)
+      // Restrained, semantic radius scale
       borderRadius: {
         'none': '0px',
         'xs': '2px',
@@ -56,13 +72,13 @@ export default {
         'lg': '8px',
         'xl': '12px',
         'pill': '9999px',
-        // Legacy aliases mapped to restrained radius for backward compatibility
         'card': '8px',
         'full-pill': '9999px',
         'nav': '8px',
       },
       fontFamily: {
         sans: [
+          '"Instrument Sans"',
           '"IBM Plex Sans"',
           '-apple-system',
           'BlinkMacSystemFont',
@@ -85,6 +101,7 @@ export default {
           'serif'
         ],
         mono: [
+          '"IBM Plex Mono"',
           '"JetBrains Mono"',
           '"SF Mono"',
           'Menlo',

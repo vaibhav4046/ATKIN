@@ -1,41 +1,46 @@
 import React from 'react';
 import { X, ShieldCheck, Scale } from 'lucide-react';
+import { BRAND } from '../../content/brand';
 
 interface LegalModalProps {
-  type: 'terms' | 'privacy';
   isOpen: boolean;
   onClose: () => void;
+  type?: 'terms' | 'privacy';
+  initialTab?: 'terms' | 'privacy';
 }
 
 export const LegalModal: React.FC<LegalModalProps> = ({
-  type,
   isOpen,
-  onClose
+  onClose,
+  type = 'terms',
+  initialTab
 }) => {
+  const activeTab = initialTab || type;
   if (!isOpen) return null;
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs select-none"
+      onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-labelledby="legal-modal-title"
     >
       <div 
-        className="bg-white border border-border-hairline rounded-md max-w-[720px] w-full max-h-[85vh] flex flex-col shadow-modal overflow-hidden"
+        className="bg-atkin-surface border border-atkin-border rounded-md max-w-[720px] w-full max-h-[85vh] flex flex-col shadow-lg overflow-hidden text-atkin-ink"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-border-hairline flex items-center justify-between bg-canvas-subtle">
+        <div className="px-6 py-4 border-b border-atkin-border flex items-center justify-between bg-atkin-bg-subtle">
           <div className="flex items-center gap-2">
-            <Scale className="w-4 h-4 text-proofline-blue" />
-            <h2 id="legal-modal-title" className="text-base font-semibold text-ink">
-              {type === 'terms' ? 'Terms of Use & Professional Boundaries' : 'Privacy Notice & Operational Boundaries'}
+            <Scale className="w-4 h-4 text-atkin-ink" />
+            <h2 id="legal-modal-title" className="text-base font-semibold text-atkin-ink font-serif">
+              {activeTab === 'terms' ? 'Terms of Use & Professional Boundaries' : 'Privacy Notice & Operational Boundaries'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded text-ink-steel hover:text-ink hover:bg-slate-200/60 transition-colors cursor-pointer"
+            className="p-1 rounded text-atkin-muted hover:text-atkin-ink hover:bg-atkin-bg transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-4 h-4" />
@@ -43,84 +48,84 @@ export const LegalModal: React.FC<LegalModalProps> = ({
         </div>
 
         {/* Modal Content */}
-        <div className="px-6 py-5 overflow-y-auto space-y-5 text-[13px] text-ink-slate leading-relaxed">
-          {type === 'terms' ? (
+        <div className="px-6 py-5 overflow-y-auto space-y-5 text-[13px] text-atkin-muted leading-relaxed font-sans">
+          {activeTab === 'terms' ? (
             <>
-              <div className="p-3 bg-blue-50/70 border border-blue-200/80 rounded-[4px] text-blue-950 space-y-1">
+              <div className="p-3 bg-atkin-bg border border-atkin-border rounded-[4px] text-atkin-ink space-y-1">
                 <div className="font-semibold text-[13px] flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-proofline-blue" />
-                  <span>SRA &amp; Bar Standards Regulatory Notice</span>
+                  <ShieldCheck className="w-4 h-4 text-atkin-ink" />
+                  <span>Professional Regulatory Notice</span>
                 </div>
-                <p className="text-[12px] text-blue-900">
-                  Proofline is an evidential organization and audit-trail workbench engineered for legal practitioners and researchers. It does not provide legal advice, conduct automated litigation, or substitute for human legal judgment.
+                <p className="text-[12px] text-atkin-muted">
+                  {BRAND.name} is an evidential organization and audit-trail workbench engineered for legal practitioners and researchers. It does not provide legal advice, conduct automated litigation, or substitute for human legal judgment.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">1. Nature of the Software</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">1. Nature of the Software</h3>
                 <p>
-                  Proofline provides deterministic span extraction, cryptographic hash verification, cross-document contradiction discovery, and preliminary drafting tools. All outputs, citations, and calculations must be reviewed and verified by a qualified fee earner prior to delivery to clients, opposing parties, or the court.
+                  {BRAND.name} provides deterministic span extraction, cryptographic hash verification, cross-document contradiction discovery, and preliminary drafting tools. All outputs, citations, and calculations must be reviewed and verified by a qualified fee earner prior to delivery to clients, opposing parties, or the court.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">2. Civil Evidence &amp; Practitioner Verification</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">2. Civil Evidence &amp; Practitioner Verification</h3>
                 <p>
-                  Documents generated by Proofline include an Evidence Index and SHA-256 integrity schedule for practitioner review. The certifying solicitor or barrister retains sole professional responsibility under CPR 32.14 for signing and verifying statements of truth and court bundles submitted to court. Proofline does not provide automated court certification.
+                  Documents generated by {BRAND.name} include an Evidence Index and SHA-256 integrity schedule for practitioner review. The certifying solicitor or barrister retains sole professional responsibility under CPR 32.14 for signing and verifying statements of truth and court bundles submitted to court. {BRAND.name} does not provide automated court certification.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">3. Open Justice Licence v2.0 Compliance</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">3. Open Justice Licence v2.0 Compliance</h3>
                 <p>
-                  Judicial materials cited within Proofline originate from public High Court records and The National Archives Find Case Law service under Open Justice Licence (OJL) v2.0. In compliance with OJL v2.0, Proofline prohibits bulk computational data scraping, mass LLM pre-training, or commercial republishing of judgment data.
+                  Judicial materials cited within {BRAND.name} originate from public High Court records and The National Archives Find Case Law service under Open Justice Licence (OJL) v2.0. In compliance with OJL v2.0, {BRAND.name} prohibits bulk computational data scraping, mass LLM pre-training, or commercial republishing of judgment data.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">4. Open Source Licence</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">4. Open Source Licence</h3>
                 <p>
-                  The Proofline codebase is made available under the Apache License, Version 2.0. Users are granted rights to run, modify, and inspect the software locally without fee.
+                  The {BRAND.name} codebase is made available under the MIT License. Users are granted rights to run, modify, and inspect the software locally without fee.
                 </p>
               </div>
             </>
           ) : (
             <>
-              <div className="p-3 bg-emerald-50/70 border border-emerald-200/80 rounded-[4px] text-emerald-950 space-y-1">
+              <div className="p-3 bg-atkin-bg border border-atkin-border rounded-[4px] text-atkin-ink space-y-1">
                 <div className="font-semibold text-[13px] flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-proofline-green" />
+                  <ShieldCheck className="w-4 h-4 text-atkin-ink" />
                   <span>Privacy Boundaries by Deployment Mode</span>
                 </div>
-                <p className="text-[12px] text-emerald-900">
-                  Static web application assets (HTML/JS/CSS) are served via Vercel CDN. Ingested matter documents, extracted spans, and notes are processed and stored exclusively in your browser&apos;s local IndexedDB sandbox.
+                <p className="text-[12px] text-atkin-muted">
+                  Static web application assets (HTML/JS/CSS) are served via CDN. Ingested matter documents, extracted spans, and notes are processed and stored exclusively in your local device sandbox.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">1. Local Browser Storage</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">1. Local Storage Sandbox</h3>
                 <p>
-                  All case files, character spans, and memory records are stored exclusively in your browser&apos;s local IndexedDB database on your local device. They are not uploaded to Vercel, Supabase, Firebase, or any cloud datastore.
+                  All case files, character spans, and memory records are stored exclusively in your local IndexedDB or SQLite database on your local device. They are not uploaded to any central cloud datastore.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">2. Model Inference &amp; Zero Cloud Egress</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">2. Model Inference &amp; Local Execution</h3>
                 <p>
-                  Proofline does not send document text to third-party proprietary LLM APIs (such as OpenAI or Anthropic). If a local model is connected, inference calls are routed strictly via loopback socket (<code>127.0.0.1:11434</code>) to your local Ollama daemon. If local inference is offline, Proofline operates in 100% deterministic IRAC mode without making any external AI calls.
+                  {BRAND.name} does not send document text to third-party proprietary LLM APIs unless explicitly configured. If a local model is connected, inference calls are routed strictly via loopback socket (<code>127.0.0.1:11434</code>) to your local Ollama daemon. If local inference is offline, {BRAND.name} operates in deterministic IRAC mode without making external AI calls.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">3. Optional External Connectors</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">3. Optional External Connectors</h3>
                 <p>
                   Optional legal research integrations (e.g. legislation.gov.uk lookups) require explicit practitioner selection and use read-only queries with zero client document text transmitted.
                 </p>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-semibold text-ink text-[14px]">4. Telemetry &amp; Analytics</h3>
+                <h3 className="font-semibold text-atkin-ink text-[14px]">4. Telemetry &amp; Analytics</h3>
                 <p>
-                  Proofline contains zero advertising SDKs, zero user tracking pixels, and zero third-party telemetry scripts.
+                  {BRAND.name} contains zero advertising SDKs, zero user tracking pixels, and zero third-party telemetry scripts.
                 </p>
               </div>
             </>
@@ -128,13 +133,13 @@ export const LegalModal: React.FC<LegalModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3 border-t border-border-hairline bg-canvas-subtle flex items-center justify-between">
-          <span className="text-[11px] text-ink-steel font-mono">
-            Proofline Sovereign Architecture · Version 1.2.0
+        <div className="px-6 py-3 border-t border-atkin-border bg-atkin-bg-subtle flex items-center justify-between">
+          <span className="text-[11px] text-atkin-muted font-mono">
+            {BRAND.name} Sovereign Architecture · Version 1.2.0
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-ink text-white hover:bg-ink-light text-xs font-medium rounded-[4px] transition-colors cursor-pointer"
+            className="px-4 py-1.5 bg-atkin-ink text-atkin-bg hover:opacity-90 text-xs font-medium rounded-[4px] transition-opacity cursor-pointer"
           >
             Close Notice
           </button>

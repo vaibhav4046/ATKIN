@@ -483,7 +483,7 @@ export function App() {
       authorities,
       [draft]
     );
-    let fullNotebook = `# Proofline Knowledge Notebook: ${activeMatter.title}\n\n`;
+    let fullNotebook = `# ATKIN Knowledge Notebook: ${activeMatter.title}\n\n`;
     for (const f of files) {
       fullNotebook += `\n<!-- ========================================== -->\n`;
       fullNotebook += `<!-- FILE: ${f.relativePath} -->\n`;
@@ -658,15 +658,15 @@ export function App() {
           {modelStatus.state !== 'connected' && !isOfflineBannerDismissed && (
             <div className="bg-[#FAF8F5] border-b border-border-hairline px-4 py-2 flex items-center justify-between text-[12px] text-ink-slate shadow-xs shrink-0">
               <div className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-proofline-ochre inline-block shrink-0 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-amber-500 inline-block shrink-0 animate-pulse" />
                 <span>
-                  <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong>: Local Ollama endpoint offline. Proofline is operating in deterministic evidential mode with SHA-256 verifiable citations.
+                  <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong>: Local Ollama endpoint offline. ATKIN is operating in deterministic evidential mode with SHA-256 verifiable citations.
                 </span>
               </div>
               <div className="flex items-center gap-3 shrink-0">
                 <button
                   onClick={() => setCurrentTab('settings')}
-                  className="text-proofline-blue hover:text-proofline-navy font-medium underline cursor-pointer"
+                  className="text-atkin-ink hover:underline font-medium cursor-pointer"
                 >
                   Configure Local Model
                 </button>
@@ -716,7 +716,7 @@ export function App() {
                       <button
                         type="button"
                         onClick={() => setIsNewMatterOpen(true)}
-                        className="w-full py-2.5 px-4 bg-proofline-blue hover:bg-proofline-navy text-white text-xs font-semibold rounded-md shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                        className="w-full py-2.5 px-4 bg-atkin-ink hover:opacity-90 text-white text-xs font-semibold rounded-md shadow-xs transition-opacity flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <span>Create First Client Matter</span>
                         <span className="font-mono text-xs">→</span>
@@ -903,12 +903,12 @@ export function App() {
                 placeholder="Enter vault passphrase..."
                 value={passphraseInput}
                 onChange={(e) => setPassphraseInput(e.target.value)}
-                className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-atkin-ink focus:outline-none"
                 required
                 autoFocus
               />
               {unlockError && (
-                <div className="text-[12px] text-proofline-crimson font-medium">
+                <div className="text-[12px] text-rose-600 font-medium">
                   {unlockError}
                 </div>
               )}
@@ -949,7 +949,7 @@ export function App() {
                   placeholder="e.g. Smith v NorthStar Electronics Ltd"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-atkin-ink focus:outline-none"
                   required
                 />
               </div>
@@ -963,7 +963,7 @@ export function App() {
                   placeholder="e.g. Jane Smith"
                   value={newClient}
                   onChange={(e) => setNewClient(e.target.value)}
-                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[13px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-atkin-ink focus:outline-none"
                 />
               </div>
 
@@ -981,7 +981,7 @@ export function App() {
                 </button>
                 <button
                   type="submit"
-                  className="text-[12px] px-4 py-1.5 bg-proofline-blue hover:bg-proofline-navy text-white rounded-[4px] font-medium transition-colors"
+                  className="text-[12px] px-4 py-1.5 bg-atkin-ink hover:opacity-90 text-white rounded-[4px] font-medium transition-opacity"
                 >
                   Create Matter
                 </button>

@@ -86,10 +86,10 @@ export const ChatTab: React.FC<ChatTabProps> = ({
         id: 'msg-welcome-001',
         matterId,
         role: 'assistant',
-        content: `**Proofline Evidential Consultation Active**\n\nOperating in **${networkBroker.getCurrentMode().toUpperCase()}** mode with local matter memory. Queries are evaluated against indexed matter documents and statutory authorities with verifiable citation anchors.\n\nHow may I assist with the evidential or statutory review of this matter?`,
+        content: `**ATKIN Evidential Consultation**\n\nOperating in **${networkBroker.getCurrentMode().toUpperCase()}** mode with local matter memory. Queries are evaluated against indexed matter documents and statutory authorities with verifiable citation anchors.\n\nHow may I assist with the evidential or statutory review of this matter?`,
         timestamp: new Date().toISOString(),
         generationDetails: {
-          modelTag: 'proofline-sovereign-core',
+          modelTag: 'atkin-sovereign-core',
           localRuntime: true,
           latencyMs: 12
         }
@@ -217,7 +217,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
         id: `evt-${Date.now()}`,
         matterId,
         title: summary,
-        description: `Grounded in Proofline matter record (${matterId}):\n${msg.content.slice(0, 300)}...`,
+        description: `Grounded in ATKIN matter record (${matterId}):\n${msg.content.slice(0, 300)}...`,
         startDate: new Date(Date.now() + 14 * 86400000).toISOString(),
         priority: 'HIGH' as const,
         category: 'statutory_deadline' as const
@@ -243,8 +243,8 @@ export const ChatTab: React.FC<ChatTabProps> = ({
       setActionFeedback({ msgId: msg.id, text: 'Finding pinned to Evidence Matrix!' });
       setTimeout(() => setActionFeedback(null), 3000);
     } else {
-      navigator.clipboard.writeText(`LEGAL MEMORANDUM\nMATTER: ${matterId}\nDATE: ${new Date().toLocaleDateString()}\n\n${msg.content}\n\n[Proofline Sovereign Audit Trail: Zero Cloud Egress Verified]`);
-      setActionFeedback({ msgId: msg.id, text: 'Copied SRA-compliant legal memorandum to clipboard!' });
+      navigator.clipboard.writeText(`LEGAL MEMORANDUM\nMATTER: ${matterId}\nDATE: ${new Date().toLocaleDateString()}\n\n${msg.content}\n\n[ATKIN Sovereign Audit Trail: Local Execution Verified]`);
+      setActionFeedback({ msgId: msg.id, text: 'Copied verified legal memorandum to clipboard!' });
       setTimeout(() => setActionFeedback(null), 3000);
     }
   };
@@ -338,10 +338,10 @@ export const ChatTab: React.FC<ChatTabProps> = ({
         {/* Workspace Top Rail */}
         <div className="bg-white border-b border-border-hairline px-5 py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Scale className="w-4 h-4 text-proofline-blue" />
+            <Scale className="w-4 h-4 text-atkin-ink" />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[13px] font-semibold text-ink">Proofline Evidential Counsel</span>
+                <span className="text-[13px] font-semibold text-ink">ATKIN Evidential Consultation</span>
                 <span className="text-[10.5px] font-mono px-1.5 py-0.2 rounded-[2px] bg-canvas-subtle text-ink-steel border border-border-hairline">
                   IRAC Analytical Gate
                 </span>
@@ -351,8 +351,8 @@ export const ChatTab: React.FC<ChatTabProps> = ({
 
           <div className="flex items-center gap-3 text-[11.5px] text-ink-steel font-mono">
             <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-proofline-green" />
-              <span>SRA Principle 1 &amp; 2 Grounded</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-atkin-ink" />
+              <span>Matter Evidence Grounded</span>
             </div>
             <div className="h-3 w-px bg-border-hairline" />
             <Badge variant="blue" size="sm">Airgap: {networkBroker.getCurrentMode().toUpperCase()}</Badge>

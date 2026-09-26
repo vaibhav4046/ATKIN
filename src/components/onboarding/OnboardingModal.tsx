@@ -92,9 +92,9 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
         {/* Header / Stepper */}
         <div className="px-6 py-4 border-b border-stone-800 flex items-center justify-between bg-stone-900/90">
           <div className="flex items-center space-x-3">
-            <AtkinLogo className="w-6 h-6 rounded-full border border-stone-700 shadow-xs" variant="badge" />
+            <AtkinLogo className="w-6 h-6 rounded-[4px] border border-stone-700 shadow-xs" />
             <span className="text-xs font-mono uppercase tracking-widest text-stone-300 font-semibold">
-              Atkin Sovereign Setup — Step {step} of 7
+              ATKIN Sovereign Setup — Step {step} of 7
             </span>
           </div>
           <div className="flex items-center space-x-1.5">
@@ -116,8 +116,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
           {step === 1 && (
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="p-1 rounded-full bg-stone-800 border border-stone-700 shrink-0">
-                  <AtkinLogo className="w-16 h-16 rounded-full" variant="badge" />
+                <div className="p-1 rounded-[6px] bg-stone-800 border border-stone-700 shrink-0">
+                  <AtkinLogo className="w-16 h-16 rounded-[4px]" />
                 </div>
                 <div className="space-y-2">
                   <span className="px-2.5 py-1 text-[11px] font-mono tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 rounded">

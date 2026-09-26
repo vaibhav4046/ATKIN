@@ -41,7 +41,7 @@ function renderInline(text: string, isUser = false): React.ReactNode {
           className={`font-mono text-[11.5px] px-1 py-0.5 rounded ${
             isUser 
               ? 'bg-white/20 text-white' 
-              : 'bg-slate-100 text-proofline-navy border border-border-hairline'
+              : 'bg-atkin-bg text-atkin-ink border border-atkin-border'
           }`}
         >
           {part.slice(1, -1)}
@@ -106,7 +106,7 @@ export const MarkdownView: React.FC<MarkdownViewProps> = ({ content, className =
               className={`pl-3 border-l-2 py-0.5 my-1.5 italic ${
                 isUser 
                   ? 'border-white/50 text-white/90' 
-                  : 'border-proofline-blue/50 text-ink-slate bg-blue-50/20'
+                  : 'border-atkin-ink/40 text-atkin-muted bg-atkin-bg'
               }`}
             >
               {quoteLines.map((line, lIdx) => (

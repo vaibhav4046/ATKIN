@@ -1,0 +1,61 @@
+/**
+ * ATKIN Canonical Design Tokens
+ * Strict monochrome legal palette with dual light (warm paper) and dark (deep ink) themes.
+ */
+
+:root,
+[data-theme="light"] {
+  --atkin-bg: #F2F0EA;             /* Warm paper background */
+  --atkin-bg-subtle: #EAE7DF;      /* Recessed paper */
+  --atkin-surface: #FAFAF8;        /* Raised pure light sheet */
+  --atkin-surface-raised: #FFFFFF; /* High card surface */
+  --atkin-paper: #F2F0EA;
+  --atkin-ink: #0A0A0A;            /* Deep black typography */
+  --atkin-ink-secondary: #2A2A2A;  /* Secondary heading ink */
+  --atkin-muted: #6F6D68;          /* Muted metadata / captions */
+  --atkin-border: rgba(10, 10, 10, 0.10);
+  --atkin-border-strong: rgba(10, 10, 10, 0.20);
+  --atkin-focus: #0A0A0A;
+  --atkin-success: #1C6B38;
+  --atkin-warning: #945300;
+  --atkin-danger: #9E2A2B;
+  
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+}
+
+[data-theme="dark"] {
+  --atkin-bg: #0A0A0A;             /* Deep ink background */
+  --atkin-bg-subtle: #111111;      /* Deep surface */
+  --atkin-surface: #171717;        /* Raised dark panel */
+  --atkin-surface-raised: #212121; /* High dark panel */
+  --atkin-paper: #1A1A1A;
+  --atkin-ink: #F2F0EA;            /* Warm off-white typography */
+  --atkin-ink-secondary: #E0DDD5;
+  --atkin-muted: #8E8C85;          /* Soft dark muted text */
+  --atkin-border: rgba(255, 255, 255, 0.10);
+  --atkin-border-strong: rgba(255, 255, 255, 0.20);
+  --atkin-focus: #F2F0EA;
+  --atkin-success: #2E8B57;
+  --atkin-warning: #D97706;
+  --atkin-danger: #DC2626;
+}
+
+/* Backward compatibility mappings for legacy components during transition */
+:root {
+  --proofline-blue: var(--atkin-ink);
+  --proofline-navy: var(--atkin-surface);
+  --proofline-green: var(--atkin-success);
+  --proofline-ochre: var(--atkin-warning);
+  --proofline-crimson: var(--atkin-danger);
+  --canvas-base: var(--atkin-bg);
+  --surface-panel: var(--atkin-surface);
+  --surface-recessed: var(--atkin-bg-subtle);
+  --border-hairline: var(--atkin-border);
+  --border-strong: var(--atkin-border-strong);
+  --ink-primary: var(--atkin-ink);
+  --ink-slate: var(--atkin-muted);
+  --ink-steel: var(--atkin-muted);
+}

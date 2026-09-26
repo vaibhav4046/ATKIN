@@ -139,8 +139,8 @@ const CASES: Record<CaseKey, CaseData> = {
     },
     tensionScore: 100,
     tensionSeverity: 'abstention',
-    legalImplication: 'Strict Evidential Abstention: Where an evidentiary predicate is absent from disclosure, Proofline emits zero citations and explicitly refuses confabulation. Prevents court sanctions under CPR 32.14.',
-    cprNotice: 'Zero Citations Emitted • Proofline Selective Abstention Enforced'
+    legalImplication: 'Strict Evidential Abstention: Where an evidentiary predicate is absent from disclosure, ATKIN emits zero citations and explicitly refuses confabulation. Prevents court sanctions under CPR 32.14.',
+    cprNotice: 'Zero Citations Emitted • ATKIN Selective Abstention Enforced'
   }
 };
 
@@ -162,32 +162,32 @@ export const LivingSpanAssembler: React.FC<LivingSpanAssemblerProps> = ({
 
   return (
     <div 
-      className="bg-white border border-border-hairline rounded-[8px] shadow-card overflow-hidden"
+      className="bg-atkin-surface border border-atkin-border rounded-[8px] shadow-sm overflow-hidden"
       id="signature-span-assembler"
     >
       {/* Top Controller Bar */}
-      <div className="bg-[#FAF9F5] border-b border-border-hairline p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-atkin-bg-subtle border-b border-atkin-border p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-proofline-blue bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
-              Signature Interaction
+            <span className="text-[11px] font-mono font-semibold uppercase tracking-wider text-atkin-ink bg-atkin-bg border border-atkin-border px-2 py-0.5 rounded">
+              Interactive Inspector
             </span>
-            <span className="text-[11.5px] font-mono text-ink-steel">
+            <span className="text-[11.5px] font-mono text-atkin-muted">
               Living Evidentiary Span Grounding
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-serif font-semibold text-ink tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-serif font-semibold text-atkin-ink tracking-tight">
             The Living Evidentiary Span Assembler &amp; Contradiction Radar
           </h2>
-          <p className="text-[13px] text-ink-slate mt-0.5">
-            Select a dispute scenario below. Watch how Proofline isolates verbatim character spans and exposes documentary contradictions in real time:
+          <p className="text-[13px] text-atkin-muted mt-0.5">
+            Select a dispute scenario below. Watch how ATKIN isolates verbatim character spans and exposes documentary contradictions in real time:
           </p>
         </div>
 
         {/* Action Button */}
         <button
           onClick={onOpenWorkbench}
-          className="self-start md:self-auto px-4 py-2 bg-proofline-blue hover:bg-proofline-navy text-white text-[12.5px] font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-subtle cursor-pointer shrink-0"
+          className="self-start md:self-auto px-4 py-2 bg-atkin-ink hover:opacity-90 text-atkin-bg text-[12.5px] font-medium rounded-[4px] transition-opacity flex items-center gap-1.5 shadow-sm cursor-pointer shrink-0"
         >
           <span>Examine in Workbench</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -246,53 +246,53 @@ export const LivingSpanAssembler: React.FC<LivingSpanAssemblerProps> = ({
           <span className="text-ink font-semibold">Matter Record: </span>
           <span className="text-ink-slate">{current.matterTitle}</span>
         </div>
-        <div className="text-proofline-blue font-medium">
+        <div className="text-atkin-ink font-medium">
           {current.jurisdiction}
         </div>
       </div>
 
       {/* Side-by-Side Dual Documentary Comparison Stage */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-hairline bg-white">
+      <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-atkin-border bg-atkin-surface">
         {/* Document A Column (Primary Grounding) */}
-        <div className="p-5 sm:p-6 space-y-4 bg-white">
-          <div className="flex items-center justify-between border-b border-border-hairline pb-2.5">
+        <div className="p-5 sm:p-6 space-y-4 bg-atkin-surface">
+          <div className="flex items-center justify-between border-b border-atkin-border pb-2.5">
             <div className="flex items-center gap-2">
-              <FileText className="w-4 h-4 text-proofline-blue" />
-              <span className="text-[12.5px] font-semibold text-ink font-sans">
+              <FileText className="w-4 h-4 text-atkin-ink" />
+              <span className="text-[12.5px] font-semibold text-atkin-ink font-sans">
                 {current.docA.label}
               </span>
             </div>
-            <span className="text-[11px] font-mono text-proofline-blue font-semibold">
+            <span className="text-[11px] font-mono text-atkin-ink font-semibold">
               {current.docA.lineNo}
             </span>
           </div>
 
           {/* Primary Text Stage with Active Highlight */}
-          <div className="bg-[#FAF9F5] border border-border-hairline rounded-[6px] p-4 text-[12.5px] font-mono space-y-3 leading-relaxed text-ink">
-            <div className="text-[11px] text-ink-steel flex items-center justify-between border-b border-border-hairline/60 pb-1.5">
+          <div className="bg-atkin-bg border border-atkin-border rounded-[6px] p-4 text-[12.5px] font-mono space-y-3 leading-relaxed text-atkin-ink">
+            <div className="text-[11px] text-atkin-muted flex items-center justify-between border-b border-atkin-border/60 pb-1.5">
               <span>File: {current.docA.filename}</span>
-              <span className="text-proofline-green font-medium">Verified UTF-8</span>
+              <span className="text-emerald-700 font-medium">Verified UTF-8</span>
             </div>
 
-            <div className="p-2 bg-white rounded border border-border-hairline/80 font-sans text-ink leading-relaxed">
-              <span className="text-ink-slate">{current.docA.fullText.slice(0, 32)}</span>{' '}
+            <div className="p-2 bg-atkin-surface rounded border border-atkin-border font-sans text-atkin-ink leading-relaxed">
+              <span className="text-atkin-muted">{current.docA.fullText.slice(0, 32)}</span>{' '}
               <mark className="bg-amber-100 text-ink font-medium px-1 py-0.5 rounded border border-amber-300">
                 &quot;{current.docA.highlightedText}&quot;
               </mark>{' '}
-              <span className="text-ink-slate">{current.docA.fullText.slice(current.docA.highlightedText.length + 32)}</span>
+              <span className="text-atkin-muted">{current.docA.fullText.slice(current.docA.highlightedText.length + 32)}</span>
             </div>
 
             {/* Live Character Offset & Hash Readout */}
-            <div className="pt-1 text-[11px] space-y-1 text-ink-steel">
+            <div className="pt-1 text-[11px] space-y-1 text-atkin-muted">
               <div className="flex justify-between">
                 <span>Character Offset Range:</span>
-                <span className="text-ink font-semibold">
+                <span className="text-atkin-ink font-semibold">
                   [{current.docA.spanStart} to {currentEndOffset}] ({activeByteLength} bytes)
                 </span>
               </div>
               <div className="truncate" title={current.docA.sha256}>
                 <span>SHA-256 Digest: </span>
-                <span className="text-ink font-mono text-[10.5px]">{current.docA.sha256}</span>
+                <span className="text-atkin-ink font-mono text-[10.5px]">{current.docA.sha256}</span>
               </div>
             </div>
           </div>
@@ -300,12 +300,12 @@ export const LivingSpanAssembler: React.FC<LivingSpanAssemblerProps> = ({
           {/* Tactile Span Scrubber Slider */}
           {totalBytes > 0 && (
             <div className="pt-1 space-y-1.5">
-              <div className="flex items-center justify-between text-[11.5px] font-mono text-ink-slate">
+              <div className="flex items-center justify-between text-[11.5px] font-mono text-atkin-muted">
                 <span className="flex items-center gap-1.5">
-                  <Sliders className="w-3.5 h-3.5 text-proofline-blue" />
+                  <Sliders className="w-3.5 h-3.5 text-atkin-ink" />
                   <span>Interactive Span Assembly Window:</span>
                 </span>
-                <span className="font-semibold text-ink">{scrubberValue}% span length</span>
+                <span className="font-semibold text-atkin-ink">{scrubberValue}% span length</span>
               </div>
               <input
                 type="range"
@@ -313,10 +313,10 @@ export const LivingSpanAssembler: React.FC<LivingSpanAssemblerProps> = ({
                 max="100"
                 value={scrubberValue}
                 onChange={(e) => setScrubberValue(Number(e.target.value))}
-                className="w-full h-1.5 bg-border-hairline rounded-lg appearance-none cursor-pointer accent-proofline-blue"
+                className="w-full h-1.5 bg-atkin-border rounded-lg appearance-none cursor-pointer accent-atkin-ink"
                 aria-label="Span Scrubber Control"
               />
-              <div className="flex justify-between text-[10.5px] font-mono text-ink-steel">
+              <div className="flex justify-between text-[10.5px] font-mono text-atkin-muted">
                 <span>Start: Offset {current.docA.spanStart}</span>
                 <span>Active End: Offset {currentEndOffset}</span>
               </div>
@@ -325,57 +325,57 @@ export const LivingSpanAssembler: React.FC<LivingSpanAssemblerProps> = ({
         </div>
 
         {/* Document B Column (Opposing Record or Confabulation Contrast) */}
-        <div className="p-5 sm:p-6 space-y-4 bg-[#FCFBF8]">
-          <div className="flex items-center justify-between border-b border-border-hairline pb-2.5">
+        <div className="p-5 sm:p-6 space-y-4 bg-atkin-bg-subtle">
+          <div className="flex items-center justify-between border-b border-atkin-border pb-2.5">
             <div className="flex items-center gap-2">
-              <AlertTriangle className={`w-4 h-4 ${current.tensionSeverity === 'critical' ? 'text-proofline-crimson' : current.tensionSeverity === 'warning' ? 'text-proofline-ochre' : 'text-proofline-green'}`} />
-              <span className="text-[12.5px] font-semibold text-ink font-sans">
+              <AlertTriangle className={`w-4 h-4 ${current.tensionSeverity === 'critical' ? 'text-rose-700' : current.tensionSeverity === 'warning' ? 'text-amber-700' : 'text-emerald-700'}`} />
+              <span className="text-[12.5px] font-semibold text-atkin-ink font-sans">
                 {current.docB.label}
               </span>
             </div>
-            <span className="text-[11px] font-mono text-ink-steel">
+            <span className="text-[11px] font-mono text-atkin-muted">
               {current.docB.lineNo}
             </span>
           </div>
 
           {/* Opposing Text Stage */}
-          <div className="bg-white border border-border-hairline rounded-[6px] p-4 text-[12.5px] font-mono space-y-3 leading-relaxed text-ink">
-            <div className="text-[11px] text-ink-steel flex items-center justify-between border-b border-border-hairline/60 pb-1.5">
+          <div className="bg-atkin-surface border border-atkin-border rounded-[6px] p-4 text-[12.5px] font-mono space-y-3 leading-relaxed text-atkin-ink">
+            <div className="text-[11px] text-atkin-muted flex items-center justify-between border-b border-atkin-border/60 pb-1.5">
               <span>File: {current.docB.filename}</span>
-              <span className={current.tensionSeverity === 'critical' ? 'text-proofline-crimson font-medium' : 'text-proofline-ochre font-medium'}>
+              <span className={current.tensionSeverity === 'critical' ? 'text-rose-700 font-medium' : 'text-amber-700 font-medium'}>
                 {current.tensionSeverity === 'abstention' ? 'Ungrounded Confabulation' : 'Contemporaneous Record'}
               </span>
             </div>
 
-            <div className="p-2 bg-[#FAF9F5] rounded border border-border-hairline/80 font-sans text-ink leading-relaxed">
+            <div className="p-2 bg-atkin-bg rounded border border-atkin-border font-sans text-atkin-ink leading-relaxed">
               <mark className={`px-1 py-0.5 rounded border ${current.tensionSeverity === 'critical' ? 'bg-rose-100 text-rose-950 border-rose-300' : current.tensionSeverity === 'warning' ? 'bg-amber-100 text-amber-950 border-amber-300' : 'bg-slate-100 text-slate-900 border-slate-300'}`}>
                 &quot;{current.docB.highlightedText}&quot;
               </mark>{' '}
-              <span className="text-ink-slate">{current.docB.fullText.slice(current.docB.highlightedText.length)}</span>
+              <span className="text-atkin-muted">{current.docB.fullText.slice(current.docB.highlightedText.length)}</span>
             </div>
 
             {/* Hash & Verification Status */}
-            <div className="pt-1 text-[11px] space-y-1 text-ink-steel">
+            <div className="pt-1 text-[11px] space-y-1 text-atkin-muted">
               <div className="flex justify-between">
                 <span>Span Boundaries:</span>
-                <span className="text-ink font-semibold">
+                <span className="text-atkin-ink font-semibold">
                   [{current.docB.spanStart} to {current.docB.spanEnd}]
                 </span>
               </div>
               <div className="truncate" title={current.docB.sha256}>
                 <span>Digest Status: </span>
-                <span className="text-ink font-mono text-[10.5px]">{current.docB.sha256}</span>
+                <span className="text-atkin-ink font-mono text-[10.5px]">{current.docB.sha256}</span>
               </div>
             </div>
           </div>
 
           {/* Dynamic Legal Implication Card */}
-          <div className="p-3.5 bg-white border border-border-hairline rounded-[6px] space-y-1.5 shadow-subtle">
-            <div className="flex items-center gap-1.5 text-[12px] font-semibold text-ink">
-              <Scale className="w-3.5 h-3.5 text-proofline-blue" />
+          <div className="p-3.5 bg-atkin-surface border border-atkin-border rounded-[6px] space-y-1.5 shadow-xs">
+            <div className="flex items-center gap-1.5 text-[12px] font-semibold text-atkin-ink">
+              <Scale className="w-3.5 h-3.5 text-atkin-ink" />
               <span>Procedural Analysis &amp; Finding:</span>
             </div>
-            <p className="text-[12px] text-ink-slate leading-relaxed font-sans">
+            <p className="text-[12px] text-atkin-muted leading-relaxed font-sans">
               {current.legalImplication}
             </p>
           </div>
@@ -383,9 +383,9 @@ export const LivingSpanAssembler: React.FC<LivingSpanAssemblerProps> = ({
       </div>
 
       {/* Bottom Forensic Bar: CPR 32.14 Human Statement of Truth Notice */}
-      <div className="bg-[#FAF9F5] border-t border-border-hairline px-6 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[12px]">
-        <div className="flex items-center gap-2 text-ink">
-          <ShieldCheck className="w-4 h-4 text-proofline-green shrink-0" />
+      <div className="bg-atkin-bg-subtle border-t border-atkin-border px-6 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[12px]">
+        <div className="flex items-center gap-2 text-atkin-ink">
+          <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
           <span className="font-medium font-sans">
             {current.cprNotice}
           </span>
@@ -393,7 +393,7 @@ export const LivingSpanAssembler: React.FC<LivingSpanAssemblerProps> = ({
 
         <button
           onClick={onLoadSample}
-          className="text-proofline-blue hover:text-proofline-navy font-medium underline flex items-center gap-1 cursor-pointer shrink-0"
+          className="text-atkin-ink hover:underline font-medium flex items-center gap-1 cursor-pointer shrink-0"
         >
           <span>Open Full Matter in Sovereign Workbench</span>
           <ArrowRight className="w-3.5 h-3.5" />

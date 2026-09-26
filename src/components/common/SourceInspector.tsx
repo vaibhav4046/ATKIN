@@ -68,15 +68,15 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
         {/* Verification Status */}
         <div className="p-4 space-y-3">
           {isInjection ? (
-            <div className="p-2.5 rounded-lg bg-proofline-ochre/10 border border-proofline-ochre/25 text-proofline-ochre text-[12px] flex items-start gap-2">
+            <div className="p-2.5 rounded bg-amber-500/10 border border-amber-500/25 text-amber-800 text-[12px] flex items-start gap-2">
               <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
               <div>
                 <span className="font-semibold block">Adversarial Injection Quarantined</span>
-                <span>This span contains an adversarial directive. Proofline isolates it strictly as inert source text.</span>
+                <span>This span contains an adversarial directive. ATKIN isolates it strictly as inert source text.</span>
               </div>
             </div>
           ) : (
-            <div className="p-2.5 rounded-lg bg-proofline-green/10 border border-proofline-green/20 text-proofline-green text-[12px] flex items-center gap-2">
+            <div className="p-2.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-[12px] flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span className="font-medium">Character-Grounded in Source Text</span>
             </div>
@@ -91,19 +91,19 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
 
           {/* Exact Extracted Text */}
           <div>
-            <div className="flex items-center justify-between text-[11px] font-medium text-ink-slate mb-1.5">
+            <div className="flex items-center justify-between text-[11px] font-medium text-atkin-muted mb-1.5">
               <span>Verified Excerpt</span>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 text-[11px] text-proofline-blue hover:underline"
+                className="flex items-center gap-1 text-[11px] text-atkin-ink hover:underline cursor-pointer"
               >
-                {copied ? <Check className="w-3 h-3 text-proofline-green" /> : <Copy className="w-3 h-3" />}
+                {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
                 <span>{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
 
-            <div className="p-3 bg-gallery-white rounded-lg border border-border-hairline text-[13px] text-ink font-sans leading-relaxed selection:bg-proofline-blue/20">
-              <mark className="bg-proofline-blue/15 text-ink p-0.5 rounded">
+            <div className="p-3 bg-atkin-surface rounded border border-atkin-border text-[13px] text-atkin-ink font-sans leading-relaxed">
+              <mark className="bg-amber-100 text-black p-0.5 rounded">
                 "{span.exactText}"
               </mark>
             </div>

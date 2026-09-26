@@ -13,12 +13,12 @@ import {
   Package, 
   Calendar, 
   BookOpen,
-  Award,
   Smartphone
 } from 'lucide-react';
-import type { Matter, ModelStatus, NetworkMode } from '../../types/index.ts';
-import { Badge } from '../common/Badge.tsx';
-import { AtkinLogo } from '../common/AtkinLogo.tsx';
+import type { Matter, ModelStatus, NetworkMode } from '../../types/index';
+import { Badge } from '../common/Badge';
+import { AtkinLogo } from '../common/AtkinLogo';
+import { BRAND, TERMINOLOGY } from '../../content/brand';
 
 interface TopRailProps {
   matter: Matter;
@@ -55,36 +55,36 @@ export const TopRail: React.FC<TopRailProps> = ({
   const [isNetMenuOpen, setIsNetMenuOpen] = useState(false);
 
   return (
-    <div className="h-[58px] bg-white border-b border-border-hairline px-6 flex items-center justify-between sticky top-[52px] z-40 select-none">
+    <div className="h-[58px] bg-atkin-surface border-b border-atkin-border px-6 flex items-center justify-between sticky top-[52px] z-40 select-none text-atkin-ink">
       <div className="flex items-center gap-3">
         <div className="hidden sm:flex items-center">
-          <AtkinLogo className="w-8 h-8 rounded-full border border-border-hairline shadow-2xs" variant="badge" />
+          <AtkinLogo className="w-8 h-8 rounded-[4px] border border-atkin-border shadow-xs" />
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-[15px] font-semibold text-ink tracking-tight font-serif">
+            <h1 className="text-[15px] font-semibold text-atkin-ink tracking-tight font-serif">
               {matter.title}
             </h1>
-            <Badge variant="slate" size="sm">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-muted">
               {matter.jurisdiction}
-            </Badge>
+            </span>
             {matter.matterType && (
-              <Badge variant="blue" size="sm">
-                {matter.matterType.toUpperCase()}
-              </Badge>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-ink uppercase">
+                {matter.matterType}
+              </span>
             )}
             {(matter.isDemo || matter.id.includes('bates') || matter.id.includes('contract') || matter.id.includes('tenancy')) ? (
-              <span className="bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
-                Sample Matter
+              <span className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
+                Demo Matter
               </span>
             ) : (
-              <Badge variant="green" size="sm">
+              <span className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
                 Private Matter
-              </Badge>
+              </span>
             )}
           </div>
-          <div className="text-[11px] text-ink-steel mt-0.5 font-mono">
-            Client: <span className="text-ink font-medium">{matter.clientAlias}</span> · Browser-Local Storage
+          <div className="text-[11px] text-atkin-muted mt-0.5 font-mono">
+            Client: <span className="text-atkin-ink font-medium">{matter.clientAlias}</span> · Local device storage
           </div>
         </div>
       </div>
@@ -94,63 +94,63 @@ export const TopRail: React.FC<TopRailProps> = ({
         <div className="relative">
           <button
             onClick={() => setIsNetMenuOpen(!isNetMenuOpen)}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border border-border-hairline hover:bg-canvas-subtle text-[12px] text-ink transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border border-atkin-border hover:bg-atkin-bg text-[12px] text-atkin-ink transition-colors cursor-pointer"
             title="Sovereign Network Broker Egress Policy"
             aria-expanded={isNetMenuOpen}
           >
             {networkMode === 'offline' ? (
               <>
-                <WifiOff className="w-3.5 h-3.5 text-proofline-green" />
-                <span className="font-medium text-proofline-green">Offline (0% Egress)</span>
+                <WifiOff className="w-3.5 h-3.5 text-atkin-ink" />
+                <span className="font-medium">Offline (Local Loopback)</span>
               </>
             ) : networkMode === 'public_research' ? (
               <>
-                <Globe className="w-3.5 h-3.5 text-proofline-blue" />
-                <span className="font-medium text-proofline-blue">Research Whitelist</span>
+                <Globe className="w-3.5 h-3.5 text-atkin-ink" />
+                <span className="font-medium">Public Research Allowed</span>
               </>
             ) : (
               <>
-                <Globe className="w-3.5 h-3.5 text-proofline-ochre" />
-                <span className="font-medium text-proofline-ochre">Connected Mode</span>
+                <Globe className="w-3.5 h-3.5 text-amber-600" />
+                <span className="font-medium">Connected Mode</span>
               </>
             )}
-            <ChevronDown className="w-3 h-3 text-ink-steel ml-0.5" />
+            <ChevronDown className="w-3 h-3 text-atkin-muted ml-0.5" />
           </button>
 
           {isNetMenuOpen && (
-            <div className="absolute right-0 mt-1 w-64 bg-white border border-border-hairline rounded-[4px] shadow-modal py-1 z-50 text-[12px]">
-              <div className="px-3 py-1 font-semibold text-[10px] text-ink-steel uppercase tracking-wider border-b border-border-hairline">
-                Egress Broker Mode
+            <div className="absolute right-0 mt-1 w-64 bg-atkin-surface border border-atkin-border rounded-[4px] shadow-lg py-1 z-50 text-[12px]">
+              <div className="px-3 py-1 font-semibold text-[10px] text-atkin-muted uppercase tracking-wider border-b border-atkin-border">
+                Network Policy Mode
               </div>
               <button
                 onClick={() => { onChangeNetworkMode('offline'); setIsNetMenuOpen(false); }}
-                className={`w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center justify-between ${networkMode === 'offline' ? 'text-proofline-green font-semibold bg-emerald-50/50' : 'text-ink'}`}
+                className={`w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center justify-between cursor-pointer ${networkMode === 'offline' ? 'font-semibold bg-atkin-bg' : ''}`}
               >
                 <div>
-                  <div className="font-medium">Sovereign Offline</div>
-                  <div className="text-[11px] text-ink-steel">Strict zero packet egress. Local only.</div>
+                  <div className="font-medium text-atkin-ink">Sovereign Offline</div>
+                  <div className="text-[11px] text-atkin-muted">Strict local loopback compute.</div>
                 </div>
-                {networkMode === 'offline' && <ShieldCheck className="w-3.5 h-3.5 text-proofline-green shrink-0 ml-2" />}
+                {networkMode === 'offline' && <ShieldCheck className="w-3.5 h-3.5 text-atkin-ink shrink-0 ml-2" />}
               </button>
               <button
                 onClick={() => { onChangeNetworkMode('public_research'); setIsNetMenuOpen(false); }}
-                className={`w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center justify-between ${networkMode === 'public_research' ? 'text-proofline-blue font-semibold bg-blue-50/50' : 'text-ink'}`}
+                className={`w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center justify-between cursor-pointer ${networkMode === 'public_research' ? 'font-semibold bg-atkin-bg' : ''}`}
               >
                 <div>
-                  <div className="font-medium">Public Research Only</div>
-                  <div className="text-[11px] text-ink-steel">legislation.gov.uk &amp; Find Case Law.</div>
+                  <div className="font-medium text-atkin-ink">Public Research Whitelist</div>
+                  <div className="text-[11px] text-atkin-muted">Statutes &amp; judgments research.</div>
                 </div>
-                {networkMode === 'public_research' && <ShieldCheck className="w-3.5 h-3.5 text-proofline-blue shrink-0 ml-2" />}
+                {networkMode === 'public_research' && <ShieldCheck className="w-3.5 h-3.5 text-atkin-ink shrink-0 ml-2" />}
               </button>
               <button
                 onClick={() => { onChangeNetworkMode('connected_imports'); setIsNetMenuOpen(false); }}
-                className={`w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center justify-between ${networkMode === 'connected_imports' ? 'text-proofline-ochre font-semibold bg-amber-50/50' : 'text-ink'}`}
+                className={`w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center justify-between cursor-pointer ${networkMode === 'connected_imports' ? 'font-semibold bg-atkin-bg' : ''}`}
               >
                 <div>
-                  <div className="font-medium">Connected Imports</div>
-                  <div className="text-[11px] text-ink-steel">User-authorized connector ingestion.</div>
+                  <div className="font-medium text-atkin-ink">Connected Mode</div>
+                  <div className="text-[11px] text-atkin-muted">External API gateways enabled.</div>
                 </div>
-                {networkMode === 'connected_imports' && <ShieldCheck className="w-3.5 h-3.5 text-proofline-ochre shrink-0 ml-2" />}
+                {networkMode === 'connected_imports' && <ShieldCheck className="w-3.5 h-3.5 text-amber-600 shrink-0 ml-2" />}
               </button>
             </div>
           )}
@@ -159,21 +159,21 @@ export const TopRail: React.FC<TopRailProps> = ({
         {/* Cryptographic Vault Lock Button */}
         <button
           onClick={onToggleVaultLock}
-          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border text-[12px] font-medium transition-colors ${
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border text-[12px] font-medium transition-colors cursor-pointer ${
             isVaultLocked 
-              ? 'bg-rose-50 border-rose-200 text-rose-900 hover:bg-rose-100' 
-              : 'border-border-hairline text-ink hover:bg-canvas-subtle'
+              ? 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-400' 
+              : 'border-atkin-border text-atkin-ink hover:bg-atkin-bg'
           }`}
-          title={isVaultLocked ? 'Vault is locked. Keys zeroized from memory.' : 'Vault is unlocked. PBKDF2 / AES-GCM-256 active.'}
+          title={isVaultLocked ? 'Vault is locked. Keys zeroized from memory.' : 'Vault is unlocked. Local AES-GCM active.'}
         >
           {isVaultLocked ? (
             <>
-              <Lock className="w-3.5 h-3.5 text-rose-800" />
+              <Lock className="w-3.5 h-3.5 text-rose-600" />
               <span>Vault Locked</span>
             </>
           ) : (
             <>
-              <Unlock className="w-3.5 h-3.5 text-proofline-green" />
+              <Unlock className="w-3.5 h-3.5 text-atkin-ink" />
               <span>Vault Active</span>
             </>
           )}
@@ -182,19 +182,19 @@ export const TopRail: React.FC<TopRailProps> = ({
         {/* Model connection status chip */}
         <button
           onClick={onOpenSettings}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border border-border-hairline hover:bg-canvas-subtle text-[12px] text-ink transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border border-atkin-border hover:bg-atkin-bg text-[12px] text-atkin-ink transition-colors cursor-pointer"
           title="Inspect Local Inference Runtime"
         >
           {modelStatus.state === 'connected' ? (
             <>
-              <span className="w-1.5 h-1.5 rounded-full bg-proofline-green" />
-              <span className="font-medium text-proofline-green">Gemma 4</span>
-              <span className="text-ink-steel text-[11px]">({modelStatus.modelTag})</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+              <span className="font-medium">Local Model</span>
+              <span className="text-atkin-muted text-[11px]">({modelStatus.modelTag})</span>
             </>
           ) : (
             <>
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-              <span className="font-medium text-ink-slate">Deterministic Core</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-atkin-muted" />
+              <span className="font-medium text-atkin-muted">Deterministic Core</span>
             </>
           )}
         </button>
@@ -203,67 +203,67 @@ export const TopRail: React.FC<TopRailProps> = ({
         <div className="relative">
           <button
             onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
-            className="flex items-center gap-1 px-3 py-1 rounded-[4px] bg-ink text-white hover:bg-ink-light text-[12px] font-medium transition-colors shadow-subtle"
+            className="flex items-center gap-1 px-3 py-1 rounded-[4px] bg-atkin-ink text-atkin-bg hover:opacity-90 text-[12px] font-medium transition-opacity shadow-sm cursor-pointer"
             aria-expanded={isExportMenuOpen}
           >
             <Download className="w-3.5 h-3.5" />
-            <span>Export Deliverables</span>
-            <ChevronDown className="w-3 h-3 text-white/70 ml-0.5" />
+            <span>Export</span>
+            <ChevronDown className="w-3 h-3 text-atkin-bg/70 ml-0.5" />
           </button>
 
           {isExportMenuOpen && (
-            <div className="absolute right-0 mt-1 w-60 bg-white border border-border-hairline rounded-[4px] shadow-modal py-1 z-50 text-[12px]">
-              <div className="px-3 py-1 font-semibold text-[10px] text-ink-steel uppercase tracking-wider border-b border-border-hairline">
-                Court &amp; Office Deliverables
+            <div className="absolute right-0 mt-1 w-60 bg-atkin-surface border border-atkin-border rounded-[4px] shadow-lg py-1 z-50 text-[12px]">
+              <div className="px-3 py-1 font-semibold text-[10px] text-atkin-muted uppercase tracking-wider border-b border-atkin-border">
+                Export Deliverables
               </div>
               <button
                 onClick={() => { onExportMarkdown(); setIsExportMenuOpen(false); }}
-                className="w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center gap-2 text-ink"
+                className="w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center gap-2 text-atkin-ink cursor-pointer"
               >
-                <FileText className="w-3.5 h-3.5 text-proofline-blue shrink-0" />
+                <FileText className="w-3.5 h-3.5 text-atkin-ink shrink-0" />
                 <div>
                   <div className="font-medium">Court Brief (Markdown)</div>
-                  <div className="text-[11px] text-ink-steel">With CPR 32.14 Statement of Truth &amp; Evidential Index</div>
+                  <div className="text-[11px] text-atkin-muted">With CPR 32 Statement of Truth</div>
                 </div>
               </button>
               <button
                 onClick={() => { onExportDocx(); setIsExportMenuOpen(false); }}
-                className="w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center gap-2 text-ink"
+                className="w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center gap-2 text-atkin-ink cursor-pointer"
               >
-                <FileText className="w-3.5 h-3.5 text-proofline-ochre shrink-0" />
+                <FileText className="w-3.5 h-3.5 text-atkin-ink shrink-0" />
                 <div>
-                  <div className="font-medium">Word Document (DOCX / XML)</div>
-                  <div className="text-[11px] text-ink-steel">With anchored footnotes &amp; citation table</div>
+                  <div className="font-medium">Word Document (DOCX)</div>
+                  <div className="text-[11px] text-atkin-muted">With footnotes &amp; citation table</div>
                 </div>
               </button>
               <button
                 onClick={() => { onExportBundle(); setIsExportMenuOpen(false); }}
-                className="w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center gap-2 text-ink border-t border-border-hairline"
+                className="w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center gap-2 text-atkin-ink border-t border-atkin-border cursor-pointer"
               >
-                <Package className="w-3.5 h-3.5 text-proofline-green shrink-0" />
+                <Package className="w-3.5 h-3.5 text-atkin-ink shrink-0" />
                 <div>
-                  <div className="font-medium">Encrypted Bundle (.proofline)</div>
-                  <div className="text-[11px] text-ink-steel">Complete client matter archive with checksum</div>
+                  <div className="font-medium">Encrypted Bundle (.atkin)</div>
+                  <div className="text-[11px] text-atkin-muted">Complete matter archive with checksum</div>
                 </div>
               </button>
               <button
                 onClick={() => { onExportNotebook(); setIsExportMenuOpen(false); }}
-                className="w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center gap-2 text-ink"
+                className="w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center gap-2 text-atkin-ink cursor-pointer"
               >
-                <BookOpen className="w-3.5 h-3.5 text-proofline-blue shrink-0" />
+                <BookOpen className="w-3.5 h-3.5 text-atkin-ink shrink-0" />
                 <div>
                   <div className="font-medium">Obsidian Vault Notes (.md)</div>
-                  <div className="text-[11px] text-ink-steel">Bidirectional wikilinks for evidence</div>
+                  <div className="text-[11px] text-atkin-muted">Bidirectional wikilinks for evidence</div>
                 </div>
               </button>
               <button
                 onClick={() => { onExportCalendar(); setIsExportMenuOpen(false); }}
-                className="w-full px-3 py-2 text-left hover:bg-canvas-subtle flex items-center gap-2 text-ink"
+                className="w-full px-3 py-2 text-left hover:bg-atkin-bg flex items-center gap-2 text-atkin-ink cursor-pointer"
               >
-                <Calendar className="w-3.5 h-3.5 text-proofline-ochre shrink-0" />
+                <Calendar className="w-3.5 h-3.5 text-atkin-ink shrink-0" />
                 <div>
                   <div className="font-medium">Court Calendar (.ics)</div>
-                  <div className="text-[11px] text-ink-steel">RFC 5545 statutory limitation deadlines</div>
+                  <div className="text-[11px] text-atkin-muted">Statutory deadlines and hearings</div>
                 </div>
               </button>
             </div>
@@ -274,10 +274,10 @@ export const TopRail: React.FC<TopRailProps> = ({
         {onOpenPairing && (
           <button
             onClick={onOpenPairing}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border border-border-hairline hover:bg-canvas-subtle text-[12px] text-ink transition-colors cursor-pointer"
-            title="Pair Android Mobile Companion (Air-Gapped LAN)"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] border border-atkin-border hover:bg-atkin-bg text-[12px] text-atkin-ink transition-colors cursor-pointer"
+            title="Pair Mobile Companion (LAN)"
           >
-            <Smartphone className="w-3.5 h-3.5 text-proofline-blue" />
+            <Smartphone className="w-3.5 h-3.5 text-atkin-ink" />
             <span className="hidden sm:inline">Pair Phone</span>
           </button>
         )}
@@ -285,7 +285,7 @@ export const TopRail: React.FC<TopRailProps> = ({
         {/* Settings button */}
         <button
           onClick={onOpenSettings}
-          className="p-1 rounded-[4px] hover:bg-canvas-subtle text-ink-steel hover:text-ink transition-colors cursor-pointer"
+          className="p-1 rounded-[4px] hover:bg-atkin-bg text-atkin-muted hover:text-atkin-ink transition-colors cursor-pointer border border-atkin-border"
           aria-label="Matter & Model Settings"
           title="Matter & Model Settings"
         >
