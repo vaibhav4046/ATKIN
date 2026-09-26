@@ -724,6 +724,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                   modelManager={modelManager}
                   networkBroker={networkBroker}
                   onSelectSpan={setSelectedSpan}
+                  onOpenWorkProduct={(prod) => setActiveWorkProduct(prod)}
                 />
               )}
 

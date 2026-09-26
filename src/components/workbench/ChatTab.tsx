@@ -46,6 +46,8 @@ import { IcsHandler } from '../../engine/calendar/icsHandler.ts';
 import { localSpeechEngine } from '../../engine/media/localSpeechEngine.ts';
 import { Badge } from '../common/Badge.tsx';
 import { MarkdownView } from '../common/MarkdownView.tsx';
+import type { WorkProduct } from '../../domain/workProducts/workProduct.ts';
+import { createWorkProduct } from '../../domain/workProducts/workProduct.ts';
 
 interface ChatTabProps {
   matterId: string;
@@ -60,6 +62,7 @@ interface ChatTabProps {
   modelManager: LocalModelManager;
   networkBroker: NetworkBroker;
   onSelectSpan?: (span: Span) => void;
+  onOpenWorkProduct?: (product: WorkProduct) => void;
 }
 
 const chatEngine = new ChatEngine();
@@ -76,7 +79,8 @@ export const ChatTab: React.FC<ChatTabProps> = ({
   memoryEngine,
   modelManager,
   networkBroker,
-  onSelectSpan
+  onSelectSpan,
+  onOpenWorkProduct
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     const existing = chatEngine.getMessagesForMatter(matterId);
@@ -236,8 +240,21 @@ export const ChatTab: React.FC<ChatTabProps> = ({
       setActionFeedback({ msgId: msg.id, text: 'Downloaded RFC 5545 court calendar (.ics)!' });
       setTimeout(() => setActionFeedback(null), 3000);
     } else if (type === 'insert_draft') {
-      navigator.clipboard.writeText(msg.content);
-      setActionFeedback({ msgId: msg.id, text: 'Draft section copied to clipboard for review.' });
+      if (onOpenWorkProduct) {
+        const prod = createWorkProduct({
+          matterId,
+          workspaceId: 'personal',
+          type: 'advice_note',
+          title: `Advice Note — ${matterTitle || matterId}`,
+          body: msg.content,
+          sourceRefs: msg.sourcesUsed?.map(s => s.docId) || []
+        });
+        onOpenWorkProduct(prod);
+        setActionFeedback({ msgId: msg.id, text: 'Opened in Work Product Panel alongside Ask.' });
+      } else {
+        navigator.clipboard.writeText(msg.content);
+        setActionFeedback({ msgId: msg.id, text: 'Draft section copied to clipboard for review.' });
+      }
       setTimeout(() => setActionFeedback(null), 3500);
     } else if (type === 'add_fact') {
       setActionFeedback({ msgId: msg.id, text: 'Finding pinned to Evidence Matrix!' });
@@ -545,6 +562,30 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                         {actionFeedback.text}
                       </span>
                     )}
+                  </div>
+                )}
+
+                {/* Side-Panel Work Product Trigger (Section 20) */}
+                {onOpenWorkProduct && msg.role === 'assistant' && msg.content.length > 80 && (
+                  <div className="mt-2.5 pt-2 border-t border-border-hairline flex items-center justify-between">
+                    <button
+                      onClick={() => {
+                        const prod = createWorkProduct({
+                          matterId,
+                          workspaceId: 'personal',
+                          type: 'advice_note',
+                          title: `Advice Note — ${matterTitle || matterId}`,
+                          body: msg.content,
+                          sourceRefs: msg.sourcesUsed?.map(s => s.docId) || []
+                        });
+                        onOpenWorkProduct(prod);
+                      }}
+                      className="px-2 py-0.5 rounded-[3px] text-[10.5px] font-mono border border-border-hairline text-ink-steel hover:text-ink hover:bg-canvas-subtle flex items-center gap-1.5 transition-colors"
+                      title="Open alongside conversation in Work Product Panel"
+                    >
+                      <FileText className="w-3 h-3 text-atkin-ink" />
+                      <span>Open Work Product Panel</span>
+                    </button>
                   </div>
                 )}
               </div>
