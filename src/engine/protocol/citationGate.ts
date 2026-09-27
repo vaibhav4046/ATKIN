@@ -138,6 +138,30 @@ export class CitationGate {
     }
     details.documentFound = true;
 
+    // 2b. Authoritative matter check.
+    //
+    // The `binding.matterId` check above is only as trustworthy as the caller,
+    // and the caller is the citation generator, which is the component we are
+    // trying to constrain. A citation that declares the active matter while
+    // pointing at a document id belonging to a different matter would otherwise
+    // sail through every remaining check, because the text would genuinely match
+    // that other document.
+    //
+    // The document's own matterId comes from the store, not from the binding, so
+    // this is the check that actually holds the boundary.
+    if (doc.matterId !== context.activeMatterId) {
+      return {
+        citationId,
+        spanId: binding.spanId,
+        documentId: binding.documentId,
+        status: 'WRONG_MATTER',
+        isValid: false,
+        failureReason: `Matter boundary violation: document ${binding.documentId} belongs to matter ${doc.matterId}, but the active matter is ${context.activeMatterId}.`,
+        checkedAt,
+        details
+      };
+    }
+
     // 3. Document Version Check
     if (binding.documentVersionId && doc.currentVersionId !== binding.documentVersionId) {
       // Check if version exists in history
