@@ -108,6 +108,39 @@ const memoryEngine = new MemoryEngine();
 const networkBroker = new NetworkBroker('offline');
 const modelManager = new LocalModelManager();
 
+/**
+ * Load durable state and repair anything the last process left mid-flight.
+ *
+ * Runs once per app mount, before any durable entity is read by the UI. Jobs
+ * and research sessions that were `running` when the process exited are downgraded
+ * to a resumable state here, so the user is never shown work that is not running.
+ */
+let durableBootstrap: Promise<{
+  memories: number;
+  jobs: { loaded: number; interrupted: string[] };
+  interruptedSessions: string[];
+}> | null = null;
+
+function bootstrapDurableState() {
+  if (!durableBootstrap) {
+    durableBootstrap = (async () => {
+      const { JobQueue } = await import('../engine/jobs/jobQueue.ts');
+      const { reconcileOnStartup } = await import('../db/repositories.ts');
+      const [memories, jobs, recon] = await Promise.all([
+        memoryEngine.hydrate(),
+        JobQueue.getInstance().hydrate(),
+        reconcileOnStartup(),
+      ]);
+      return {
+        memories,
+        jobs,
+        interruptedSessions: recon.interruptedSessions,
+      };
+    })();
+  }
+  return durableBootstrap;
+}
+
 interface AppShellProps {
   onNavigateHome: () => void;
   isNewMatterModalRequested?: boolean;
@@ -123,6 +156,15 @@ export const AppShell: React.FC<AppShellProps> = ({
 
   const [currentTab, setCurrentTab] = useState<WorkbenchTab>('overview');
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+
+  // Durable-state bootstrap. `durableReady` gates the workbench so no surface
+  // renders against a partially hydrated store.
+  const [durableReady, setDurableReady] = useState(false);
+  const [durableSummary, setDurableSummary] = useState<{
+    memories: number;
+    jobs: { loaded: number; interrupted: string[] };
+    interruptedSessions: string[];
+  } | null>(null);
 
   // Multi-matter portfolio partitioned by workspace
   const [matters, setMatters] = useState<Matter[]>([]);
@@ -174,6 +216,34 @@ export const AppShell: React.FC<AppShellProps> = ({
   };
 
   const activeMatter = matters.find(m => m.id === activeMatterId) || (matters.length > 0 ? matters[0] : fallbackEmptyMatter);
+
+  // Restore durable state (memories, jobs, tasks, skills, research checkpoints)
+  // and repair anything the previous process left mid-flight. Runs once; the
+  // workbench is not interactive until it settles so no tab can read a
+  // half-hydrated store.
+  useEffect(() => {
+    let cancelled = false;
+    setDurableReady(false);
+    bootstrapDurableState()
+      .then((result) => {
+        if (cancelled) return;
+        setDurableSummary(result);
+        setDurableReady(true);
+        if (result.jobs.interrupted.length > 0) {
+          console.info(
+            `[ATKIN] ${result.jobs.interrupted.length} job(s) were interrupted and are ready to resume.`
+          );
+        }
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.warn('[ATKIN] durable bootstrap failed:', err);
+        setDurableReady(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Load matters when workspace changes or mounts
   useEffect(() => {
@@ -602,7 +672,13 @@ export const AppShell: React.FC<AppShellProps> = ({
   const selectedDocument = selectedSpan ? documents.find(d => d.id === selectedSpan.documentId) || null : null;
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div
+      className="flex-1 flex flex-col"
+      data-durable-ready={durableReady ? 'true' : 'false'}
+      data-durable-memories={durableSummary?.memories ?? 0}
+      data-durable-interrupted-jobs={durableSummary?.jobs.interrupted.length ?? 0}
+      data-durable-interrupted-sessions={durableSummary?.interruptedSessions.length ?? 0}
+    >
       {/* Top Context Rail */}
       <TopRail
         matter={activeMatter}

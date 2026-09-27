@@ -1,0 +1,147 @@
+{
+  "total": 28,
+  "passed": 28,
+  "failures": 0,
+  "results": [
+    {
+      "name": "app booted in the first process",
+      "passed": true,
+      "detail": "title: ATKIN — Sovereign Legal AI Ecosystem"
+    },
+    {
+      "name": "seeded profile, matter, source, chat, draft, memory, task, skill, job, research session",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "browser process closed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "app booted in the second process",
+      "passed": true,
+      "detail": "title: ATKIN — Sovereign Legal AI Ecosystem"
+    },
+    {
+      "name": "profile survived",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "matter survived",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "source survived",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "source text intact",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "conversation survived",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "draft survived with its block text",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "MEMORY survived",
+      "passed": true,
+      "detail": "PERSISTED-PREFERENCE-7731"
+    },
+    {
+      "name": "memory kept its scope and provenance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "TASK survived",
+      "passed": true,
+      "detail": "PERSISTED-TASK-8842 / open"
+    },
+    {
+      "name": "task kept its priority",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "SKILL survived",
+      "passed": true,
+      "detail": "PERSISTED-SKILL-9953"
+    },
+    {
+      "name": "skill kept trigger, steps, permissions, provenance and counters",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "job survived",
+      "passed": true,
+      "detail": "paused @ 42%"
+    },
+    {
+      "name": "JOB restored as interrupted/paused, NOT completed",
+      "passed": true,
+      "detail": "paused"
+    },
+    {
+      "name": "job checkpoint retained",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "job step explains the interruption",
+      "passed": true,
+      "detail": "Interrupted when the application closed. Ready to resume."
+    },
+    {
+      "name": "research session survived",
+      "passed": true,
+      "detail": "idle"
+    },
+    {
+      "name": "RESEARCH SESSION restored as resumable, NOT completed",
+      "passed": true,
+      "detail": "idle"
+    },
+    {
+      "name": "research findings and logs retained",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "app reported durable state ready",
+      "passed": true,
+      "detail": "{\"ready\":\"true\",\"memories\":\"1\",\"interruptedJobs\":\"1\"}"
+    },
+    {
+      "name": "app hydration counted the persisted memory",
+      "passed": true,
+      "detail": "counted 1"
+    },
+    {
+      "name": "app repaired the interrupted job on boot",
+      "passed": true,
+      "detail": "repaired 1"
+    },
+    {
+      "name": "job stays paused across a second restart",
+      "passed": true,
+      "detail": "paused"
+    },
+    {
+      "name": "no further interruption repairs on the third boot",
+      "passed": true,
+      "detail": "repaired 0"
+    }
+  ]
+}

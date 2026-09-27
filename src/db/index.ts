@@ -10,8 +10,12 @@ import type {
   ReviewItem,
   ChatMessage,
   UserProfile,
-  WorkspaceType 
+  WorkspaceType,
+  MemoryRecord,
+  DeepResearchSession
 } from '../types/index.ts';
+import type { MatterTask, SavedSkill } from '../types/persistence.ts';
+import type { WorkJob } from '../engine/jobs/jobQueue.ts';
 import { mirrorToNativeStorage, hydrateFromNativeStorageIfEmpty } from './nativeStorageBridge.ts';
 
 import { 
@@ -71,6 +75,13 @@ export class AtkinDatabase extends Dexie {
   messages!: Table<ChatMessage, string>;
   userProfile!: Table<UserProfile, string>;
 
+  // --- Schema v4: entities that were previously memory-only -------------
+  memories!: Table<MemoryRecord, string>;
+  jobs!: Table<WorkJob, string>;
+  tasks!: Table<MatterTask, string>;
+  skills!: Table<SavedSkill, string>;
+  researchSessions!: Table<DeepResearchSession, string>;
+
   constructor() {
     super('ProoflineLocalDB');
     this.version(1).stores({
@@ -105,6 +116,32 @@ export class AtkinDatabase extends Dexie {
       reviewItems: 'id, matterId, type, severity, status, createdAt',
       messages: 'id, matterId, role, timestamp',
       userProfile: 'id, role, primaryJurisdiction, onboardingCompleted'
+    });
+
+    /**
+     * v4 — durability for the four entities that previously lived only in a
+     * singleton Map and were therefore destroyed on reload: memory, work/research
+     * jobs, tasks, saved skills, plus research session checkpoints.
+     *
+     * These are additive stores. No existing store changed shape, so upgrading
+     * preserves every matter, source, draft and message already on disk.
+     */
+    this.version(4).stores({
+      matters: 'id, title, jurisdiction, clientAlias, status, workspaceType, isDemo, createdAt, updatedAt',
+      documents: 'id, matterId, filename, sha256, sourceDate, importedAt',
+      spans: 'id, documentId, checksum',
+      claims: 'id, matterId, kind, status, polarity, updatedAt',
+      edges: 'id, claimId, spanId, type, reviewState',
+      authorities: 'id, identifier, jurisdiction, verificationLevel',
+      drafts: 'id, matterId, type, reviewStatus, updatedAt',
+      reviewItems: 'id, matterId, type, severity, status, createdAt',
+      messages: 'id, matterId, role, timestamp',
+      userProfile: 'id, role, primaryJurisdiction, onboardingCompleted',
+      memories: 'id, scope, kind, matterId, reviewState, status, createdAt',
+      jobs: 'id, type, matterId, state, createdAt',
+      tasks: 'id, matterId, status, priority, dueDate, createdAt, updatedAt',
+      skills: 'id, category, enabled, updatedAt',
+      researchSessions: 'id, matterId, status, currentStep'
     });
   }
 }

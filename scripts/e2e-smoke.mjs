@@ -330,10 +330,25 @@ async function main() {
       realConsoleErrors.length === 0,
       realConsoleErrors.slice(0, 3).join(' | ')
     );
+    // ERR_ABORTED on an image is normal: when an <img> has both `src` and
+    // `srcset`, the browser starts the `src` request and aborts it once it picks
+    // a srcset candidate. It is not a missing asset. Every image is separately
+    // asserted to have decoded in section 3, and a real 404 still fails here.
     const realFailed = failedRequests.filter(
       (r) => !IGNORABLE_REQUEST_FAILURES.some((p) => r.includes(p))
     );
-    check('no failed or 4xx/5xx requests', realFailed.length === 0, realFailed.slice(0, 4).join(' | '));
+    const genuineFailures = realFailed.filter(
+      (r) => !(/net::ERR_ABORTED/.test(r) && /\.(png|webp|jpg|jpeg|gif|svg|avif)(\?|$)/i.test(r))
+    );
+    check(
+      'no failed or 4xx/5xx requests',
+      genuineFailures.length === 0,
+      genuineFailures.length
+        ? genuineFailures.slice(0, 4).join(' | ')
+        : realFailed.length
+          ? `benign srcset aborts ignored: ${realFailed.length}`
+          : ''
+    );
   } finally {
     await browser.close();
     server.close();

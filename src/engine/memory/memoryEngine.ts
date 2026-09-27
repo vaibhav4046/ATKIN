@@ -34,8 +34,27 @@ export class MemoryEngine {
     this.memories.set(defaultPref.id, defaultPref);
   }
 
+  /**
+   * Memories that are live: neither deleted, superseded, nor invalidated.
+   *
+   * A superseded memory is deliberately excluded. When a user corrects a
+   * preference, the old value must stop being applied, not merely be marked.
+   * The history stays inspectable through `getMemoryHistory()`.
+   */
   public getAllMemories(): MemoryRecord[] {
-    return Array.from(this.memories.values()).filter(m => m.status !== 'deleted');
+    return Array.from(this.memories.values()).filter(
+      (m) => m.status === 'active' || m.status === undefined
+    );
+  }
+
+  /**
+   * Every memory ever recorded, including superseded, invalidated and deleted.
+   *
+   * This is the audit view: a user can see what ATKIN used to believe and why a
+   * memory stopped applying. Nothing here is fed back into recall.
+   */
+  public getMemoryHistory(): MemoryRecord[] {
+    return Array.from(this.memories.values());
   }
 
   public getMemoriesForMatter(matterId: string): MemoryRecord[] {
@@ -80,7 +99,44 @@ export class MemoryEngine {
     };
 
     this.memories.set(record.id, record);
+    this.persist(record);
     return record;
+  }
+
+  /**
+   * Load memories from the canonical database into this engine.
+   *
+   * Called before the UI reads memory. Until it resolves, the engine holds only
+   * the seeded defaults, so callers must await it during startup.
+   *
+   * Persisted records win over seeded defaults: a user preference they have
+   * since changed must not be replaced by the factory default on every reload.
+   */
+  public async hydrate(): Promise<number> {
+    try {
+      const { memoryRepo } = await import('../../db/repositories.ts');
+      const stored = await memoryRepo.all();
+      for (const record of stored) {
+        this.memories.set(record.id, record);
+      }
+      return stored.length;
+    } catch (err) {
+      // A storage failure must not take the app down, but it must be visible.
+      console.warn('[ATKIN] memory hydration failed; running with defaults only:', err);
+      return 0;
+    }
+  }
+
+  /** Write-through to the canonical store. Failures are logged, not swallowed. */
+  private persist(record: MemoryRecord): void {
+    void (async () => {
+      try {
+        const { memoryRepo } = await import('../../db/repositories.ts');
+        await memoryRepo.put(record);
+      } catch (err) {
+        console.warn(`[ATKIN] failed to persist memory ${record.id}:`, err);
+      }
+    })();
   }
 
   public approveMemory(id: string): MemoryRecord | null {
@@ -88,6 +144,7 @@ export class MemoryEngine {
     if (!mem) return null;
     mem.reviewState = 'accepted';
     mem.status = 'active';
+    this.persist(mem);
     return mem;
   }
 
@@ -96,6 +153,7 @@ export class MemoryEngine {
     if (!mem) return null;
     mem.reviewState = 'rejected';
     mem.status = 'deleted';
+    this.persist(mem);
     return mem;
   }
 
@@ -103,6 +161,7 @@ export class MemoryEngine {
     const mem = this.memories.get(id);
     if (!mem) return false;
     mem.status = 'deleted';
+    this.persist(mem);
     return true;
   }
 

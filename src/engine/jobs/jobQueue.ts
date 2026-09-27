@@ -106,6 +106,7 @@ export class JobQueue {
     };
 
     this.jobs.set(job.id, job);
+    this.persist(job);
     this.notify();
     return job;
   }
@@ -124,6 +125,7 @@ export class JobQueue {
       job.completedAt = new Date().toISOString();
     }
 
+    this.persist(job);
     this.notify();
   }
 
@@ -134,6 +136,7 @@ export class JobQueue {
     job.state = 'failed';
     job.errorMessage = error;
     job.completedAt = new Date().toISOString();
+    this.persist(job);
     this.notify();
   }
 
@@ -144,6 +147,7 @@ export class JobQueue {
     job.state = 'cancelled';
     job.currentStep = 'Cancelled by user';
     job.completedAt = new Date().toISOString();
+    this.persist(job);
     this.notify();
   }
 
@@ -153,6 +157,7 @@ export class JobQueue {
 
     job.state = 'paused';
     job.currentStep = 'Paused by user';
+    this.persist(job);
     this.notify();
   }
 
@@ -162,6 +167,7 @@ export class JobQueue {
 
     job.state = 'running';
     job.currentStep = 'Resumed execution';
+    this.persist(job);
     this.notify();
   }
 
@@ -169,6 +175,48 @@ export class JobQueue {
     return Array.from(this.jobs.values()).sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
+  }
+
+  /**
+   * Load persisted jobs and repair anything that was mid-flight when the process
+   * last exited.
+   *
+   * A job recorded as `running` cannot still be running: the process that was
+   * running it is gone. It is restored as `paused` with an explicit
+   * "interrupted" step so the user is offered a resume, never a false
+   * completion.
+   *
+   * Must be awaited during startup, before the UI lists jobs.
+   */
+  public async hydrate(): Promise<{ loaded: number; interrupted: string[] }> {
+    try {
+      const { jobRepo } = await import('../../db/repositories.ts');
+
+      // Repair first, then read, so we never surface a stale "running" job.
+      const interrupted = await jobRepo.reconcileInterrupted();
+
+      const stored = await jobRepo.all();
+      for (const job of stored) {
+        this.jobs.set(job.id, job);
+      }
+      this.notify();
+      return { loaded: stored.length, interrupted };
+    } catch (err) {
+      console.warn('[ATKIN] job hydration failed; running with seed jobs only:', err);
+      return { loaded: 0, interrupted: [] };
+    }
+  }
+
+  /** Write-through to the canonical store. */
+  private persist(job: WorkJob): void {
+    void (async () => {
+      try {
+        const { jobRepo } = await import('../../db/repositories.ts');
+        await jobRepo.put({ ...job });
+      } catch (err) {
+        console.warn(`[ATKIN] failed to persist job ${job.id}:`, err);
+      }
+    })();
   }
 
   public subscribe(fn: (jobs: WorkJob[]) => void): () => void {
