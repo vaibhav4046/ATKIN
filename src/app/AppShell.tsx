@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { TopRail } from '../components/layout/TopRail.tsx';
 import { Sidebar, type WorkbenchTab } from '../components/layout/Sidebar.tsx';
 import { SourceInspector } from '../components/common/SourceInspector.tsx';
+import { TabLoading } from './TabLoading.tsx';
 import { WorkProductPanel } from '../features/workProducts/WorkProductPanel.tsx';
 
 import { OverviewTab } from '../components/workbench/OverviewTab.tsx';
-import { SourcesTab } from '../components/workbench/SourcesTab.tsx';
-import { FactsTab } from '../components/workbench/FactsTab.tsx';
-import { TimelineTab } from '../components/workbench/TimelineTab.tsx';
-import { GraphTab } from '../components/workbench/GraphTab.tsx';
-import { ResearchTab } from '../components/workbench/ResearchTab.tsx';
-import { DraftTab } from '../components/workbench/DraftTab.tsx';
-import { ReviewTab } from '../components/workbench/ReviewTab.tsx';
-import { SettingsTab } from '../components/workbench/SettingsTab.tsx';
-import { ChatTab } from '../components/workbench/ChatTab.tsx';
-import { MemoryTab } from '../components/workbench/MemoryTab.tsx';
-import { ContractTab } from '../components/workbench/ContractTab.tsx';
-import { NotebookStudioTab } from '../components/workbench/NotebookStudioTab.tsx';
+const SourcesTab = React.lazy(() => import('../components/workbench/SourcesTab.tsx').then((m) => ({ default: m.SourcesTab })));
+const FactsTab = React.lazy(() => import('../components/workbench/FactsTab.tsx').then((m) => ({ default: m.FactsTab })));
+const TimelineTab = React.lazy(() => import('../components/workbench/TimelineTab.tsx').then((m) => ({ default: m.TimelineTab })));
+const GraphTab = React.lazy(() => import('../components/workbench/GraphTab.tsx').then((m) => ({ default: m.GraphTab })));
+const ResearchTab = React.lazy(() => import('../components/workbench/ResearchTab.tsx').then((m) => ({ default: m.ResearchTab })));
+const DraftTab = React.lazy(() => import('../components/workbench/DraftTab.tsx').then((m) => ({ default: m.DraftTab })));
+const ReviewTab = React.lazy(() => import('../components/workbench/ReviewTab.tsx').then((m) => ({ default: m.ReviewTab })));
+const SettingsTab = React.lazy(() => import('../components/workbench/SettingsTab.tsx').then((m) => ({ default: m.SettingsTab })));
+const ChatTab = React.lazy(() => import('../components/workbench/ChatTab.tsx').then((m) => ({ default: m.ChatTab })));
+const MemoryTab = React.lazy(() => import('../components/workbench/MemoryTab.tsx').then((m) => ({ default: m.MemoryTab })));
+const ContractTab = React.lazy(() => import('../components/workbench/ContractTab.tsx').then((m) => ({ default: m.ContractTab })));
+const NotebookStudioTab = React.lazy(() => import('../components/workbench/NotebookStudioTab.tsx').then((m) => ({ default: m.NotebookStudioTab })));
 import { OnboardingModal } from '../components/onboarding/OnboardingModal.tsx';
 import { DevicePairingModal } from '../components/sync/DevicePairingModal.tsx';
 
@@ -119,6 +120,7 @@ let durableBootstrap: Promise<{
   memories: number;
   jobs: { loaded: number; interrupted: string[] };
   interruptedSessions: string[];
+  demoSeeded: boolean;
 }> | null = null;
 
 function bootstrapDurableState() {
@@ -126,6 +128,17 @@ function bootstrapDurableState() {
     durableBootstrap = (async () => {
       const { JobQueue } = await import('../engine/jobs/jobQueue.ts');
       const { reconcileOnStartup } = await import('../db/repositories.ts');
+      const { seedInitialFixturesIfEmpty } = await import('../db/index.ts');
+
+      // Seed the Demo workspace before anything reads matters.
+      //
+      // This was previously never called from production code, only from tests,
+      // so a fresh install had a permanently empty Demo workspace and every
+      // "Explore demo matter" entry point landed on an empty state. The seeder
+      // writes only records marked isDemo: true / workspaceType: 'demo', so the
+      // personal workspace stays empty by default.
+      const demoSeeded = await seedInitialFixturesIfEmpty();
+
       const [memories, jobs, recon] = await Promise.all([
         memoryEngine.hydrate(),
         JobQueue.getInstance().hydrate(),
@@ -135,6 +148,7 @@ function bootstrapDurableState() {
         memories,
         jobs,
         interruptedSessions: recon.interruptedSessions,
+        demoSeeded,
       };
     })();
   }
@@ -164,6 +178,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     memories: number;
     jobs: { loaded: number; interrupted: string[] };
     interruptedSessions: string[];
+    demoSeeded: boolean;
   } | null>(null);
 
   // Multi-matter portfolio partitioned by workspace
@@ -248,6 +263,9 @@ export const AppShell: React.FC<AppShellProps> = ({
   // Load matters when workspace changes or mounts
   useEffect(() => {
     async function loadWorkspaceMatters() {
+      // Wait for the durable bootstrap: the Demo workspace is seeded there, so
+      // reading matters before it resolves would show a falsely empty workspace.
+      await bootstrapDurableState();
       const storedMatters = await getMattersFromDB(workspace);
       setMatters(storedMatters);
 
@@ -774,7 +792,7 @@ export const AppShell: React.FC<AppShellProps> = ({
               </div>
             </div>
           ) : (
-            <>
+            <Suspense fallback={<TabLoading label={currentTab} />}>
               {currentTab === 'overview' && (
                 <OverviewTab
                   matter={activeMatter}
@@ -916,7 +934,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                   onExportVaultBackup={handleExportBundle}
                 />
               )}
-            </>
+            </Suspense>
           )}
         </main>
 

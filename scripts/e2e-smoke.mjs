@@ -320,6 +320,134 @@ async function main() {
       check('Launch Workspace control present', false, 'not found');
     }
 
+    section('11b. Every lazily-loaded workbench tab actually loads and renders');
+    // The tabs are code-split. A chunk that fails to resolve renders an empty
+    // region with no error, so this must be asserted by clicking each one and
+    // waiting for real content, not by trusting the build output.
+    //
+    // Uses the Demo workspace because the personal workspace is deliberately
+    // empty, and an empty matter cannot prove a tab rendered.
+    const demo = page.locator('aside button:has-text("Demo Sandbox")').first();
+    if (await demo.count()) {
+      await demo.click();
+      await page.waitForTimeout(1500);
+    }
+
+    // Guard against the false pass this check previously had: an empty personal
+    // workspace renders the same empty state for every tab, so a length check
+    // passes without the tab ever mounting. Require a real matter first.
+    const demoMatterLoaded = await page.evaluate(() => {
+      const t = document.querySelector('main')?.innerText || '';
+      return !/Your Practice is Clean/i.test(t);
+    });
+    check(
+      'Demo workspace actually contains a matter after switching',
+      demoMatterLoaded,
+      demoMatterLoaded ? 'matter present' : 'still showing the empty personal state'
+    );
+    if (!demoMatterLoaded) {
+      check('lazy tab journey', false, 'skipped: no matter to render tabs against');
+    } else {
+
+    // Sidebar sub-items are collapsed under group headers.
+    const expand = async (group) => {
+      const g = page.locator(`aside button:has-text("${group}")`).first();
+      if (await g.count()) {
+        await g.click();
+        await page.waitForTimeout(200);
+      }
+    };
+
+    const openTab = async (label) => {
+      const control = page.locator(`aside button:has-text("${label}")`).first();
+      if ((await control.count()) === 0) return false;
+      await control.click();
+      await page
+        .waitForSelector('[data-testid="tab-loading"]', { state: 'detached', timeout: 20000 })
+        .catch(() => {});
+      await page.waitForTimeout(300);
+      return true;
+    };
+
+    const mainText = async () => {
+      const t = await page.locator('main').first().innerText().catch(() => '');
+      return t.trim();
+    };
+
+    await expand('Matter Intelligence');
+    const exploreTabs = [
+      'Ask',
+      'Fact Ledger',
+      'Timeline & Conflicts',
+      'Evidence Graph',
+      'Research',
+      'Notebook Studio',
+      'Matter Memory',
+    ];
+    // Collect a fingerprint per tab so we can prove they are actually different
+    // surfaces. Identical text across every tab means the tabs are not mounting,
+    // and a length check alone would have passed anyway.
+    const tabFingerprints = [];
+    const recordFingerprint = (label, text) => {
+      tabFingerprints.push({ label, length: text.length, head: text.slice(0, 120) });
+    };
+
+    for (const label of exploreTabs) {
+      const found = await openTab(label);
+      if (!found) {
+        check(`tab "${label}" has a control`, false, 'control not found after expanding group');
+        continue;
+      }
+      const text = await mainText();
+      recordFingerprint(label, text);
+      check(
+        `tab "${label}" loaded and rendered content`,
+        text.length > 40,
+        `${text.length} chars`
+      );
+    }
+
+    await expand('Drafting');
+    for (const label of ['Court Briefs & Pleadings', 'Contract Playbooks']) {
+      const found = await openTab(label);
+      if (!found) {
+        check(`tab "${label}" has a control`, false, 'control not found after expanding group');
+        continue;
+      }
+      const text = await mainText();
+      recordFingerprint(label, text);
+      check(`tab "${label}" loaded and rendered content`, text.length > 40, `${text.length} chars`);
+    }
+
+    for (const [name, locator] of [
+      ['Needs review', 'aside button:has-text("Needs review")'],
+      ['Settings & Connectors', 'aside button:has-text("Settings & Connectors")'],
+      ['Sources', 'aside button:has-text("Sources")'],
+      ['Home', 'aside button:has-text("Home")'],
+    ]) {
+      const control = page.locator(locator).first();
+      if ((await control.count()) === 0) {
+        check(`tab "${name}" has a control`, false, 'control not found');
+        continue;
+      }
+      await control.click();
+      await page
+        .waitForSelector('[data-testid="tab-loading"]', { state: 'detached', timeout: 20000 })
+        .catch(() => {});
+      await page.waitForTimeout(300);
+      const text = await mainText();
+      recordFingerprint(name, text);
+      check(`tab "${name}" loaded and rendered content`, text.length > 40, `${text.length} chars`);
+    }
+
+    const distinctHeads = new Set(tabFingerprints.map((t) => t.head));
+    check(
+      'tabs render distinct surfaces, not one repeated panel',
+      distinctHeads.size >= Math.min(5, tabFingerprints.length),
+      `${distinctHeads.size} distinct of ${tabFingerprints.length} tabs`
+    );
+    }
+
     section('12. Console and network hygiene');
     const realConsoleErrors = consoleErrors.filter(
       (e) => !/favicon|Download the React DevTools/i.test(e)
@@ -338,7 +466,7 @@ async function main() {
       (r) => !IGNORABLE_REQUEST_FAILURES.some((p) => r.includes(p))
     );
     const genuineFailures = realFailed.filter(
-      (r) => !(/net::ERR_ABORTED/.test(r) && /\.(png|webp|jpg|jpeg|gif|svg|avif)(\?|$)/i.test(r))
+      (r) => !(/net::ERR_ABORTED/.test(r) && /\.(png|webp|jpg|jpeg|gif|svg|avif)\b/i.test(r))
     );
     check(
       'no failed or 4xx/5xx requests',

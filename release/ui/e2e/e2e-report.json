@@ -1,6 +1,6 @@
 {
-  "total": 32,
-  "passed": 32,
+  "total": 47,
+  "passed": 47,
   "failures": 0,
   "results": [
     {
@@ -147,6 +147,81 @@
       "name": "workbench still mounted after reload",
       "passed": true,
       "detail": ""
+    },
+    {
+      "name": "Demo workspace actually contains a matter after switching",
+      "passed": true,
+      "detail": "matter present"
+    },
+    {
+      "name": "tab \"Ask\" loaded and rendered content",
+      "passed": true,
+      "detail": "747 chars"
+    },
+    {
+      "name": "tab \"Fact Ledger\" loaded and rendered content",
+      "passed": true,
+      "detail": "2526 chars"
+    },
+    {
+      "name": "tab \"Timeline & Conflicts\" loaded and rendered content",
+      "passed": true,
+      "detail": "2825 chars"
+    },
+    {
+      "name": "tab \"Evidence Graph\" loaded and rendered content",
+      "passed": true,
+      "detail": "1454 chars"
+    },
+    {
+      "name": "tab \"Research\" loaded and rendered content",
+      "passed": true,
+      "detail": "6116 chars"
+    },
+    {
+      "name": "tab \"Notebook Studio\" loaded and rendered content",
+      "passed": true,
+      "detail": "1611 chars"
+    },
+    {
+      "name": "tab \"Matter Memory\" loaded and rendered content",
+      "passed": true,
+      "detail": "1139 chars"
+    },
+    {
+      "name": "tab \"Court Briefs & Pleadings\" loaded and rendered content",
+      "passed": true,
+      "detail": "3021 chars"
+    },
+    {
+      "name": "tab \"Contract Playbooks\" loaded and rendered content",
+      "passed": true,
+      "detail": "1212 chars"
+    },
+    {
+      "name": "tab \"Needs review\" loaded and rendered content",
+      "passed": true,
+      "detail": "958 chars"
+    },
+    {
+      "name": "tab \"Settings & Connectors\" loaded and rendered content",
+      "passed": true,
+      "detail": "1091 chars"
+    },
+    {
+      "name": "tab \"Sources\" loaded and rendered content",
+      "passed": true,
+      "detail": "3857 chars"
+    },
+    {
+      "name": "tab \"Home\" loaded and rendered content",
+      "passed": true,
+      "detail": "3754 chars"
+    },
+    {
+      "name": "tabs render distinct surfaces, not one repeated panel",
+      "passed": true,
+      "detail": "13 distinct of 13 tabs"
     },
     {
       "name": "no uncaught page exceptions",

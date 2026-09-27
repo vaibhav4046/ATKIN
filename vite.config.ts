@@ -4,6 +4,23 @@ import react from '@vitejs/plugin-react';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    // The workbench tabs are lazily loaded, so the entry chunk is no longer one
+    // 1.1 MB blob. These limits make a regression visible instead of silent.
+    chunkSizeWarningLimit: 500,
+    rollupOptions: {
+      output: {
+        // Split the stable, rarely-changing dependencies out of the app chunk so
+        // a code change does not invalidate them in a returning user's cache.
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['framer-motion'],
+          storage: ['dexie', 'dexie-react-hooks'],
+          icons: ['lucide-react'],
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     host: '127.0.0.1', // strictly bind to loopback for privacy
