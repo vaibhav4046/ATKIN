@@ -129,9 +129,9 @@ export class LocalModelManager {
       return {
         state: 'offline',
         endpoint: this.endpoint,
-        modelTag: 'None (Hosted Demo)',
+        modelTag: 'None (Browser Security Policy)',
         detectedTags: [],
-        errorMessage: 'Hosted Web Demo: Cross-origin sandbox restricts direct loopback queries. Operating in Deterministic Offline Mode.',
+        errorMessage: 'This build runs in a cross-origin sandbox that cannot reach your loopback model endpoint. ATKIN is operating in Deterministic Offline Mode with SHA-256 verifiable citations.',
         lastChecked: new Date().toISOString(),
         cloudRoutesDisabled: true
       };

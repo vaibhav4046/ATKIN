@@ -213,9 +213,14 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
   const hasInjection = activeDoc ? checkPromptInjectionRisk(activeDoc.text) : false;
 
   return (
-    <div className="flex h-[calc(100vh-140px)] border border-border-hairline rounded-[6px] overflow-hidden bg-white shadow-card">
+    // Stacks on mobile. Three side-by-side panels (a 300px document list, the
+    // reader, and the inspector) cannot fit a 390px screen, and the inspector
+    // cannot be position:fixed here because a transformed framer-motion ancestor
+    // becomes its containing block, which put it in the wrong place entirely.
+    // Normal flow is both simpler and immune to that.
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-140px)] border border-border-hairline rounded-[6px] overflow-hidden bg-white shadow-card">
       {/* Left Document List Panel */}
-      <div className="w-[300px] border-r border-border-hairline flex flex-col justify-between bg-canvas-subtle shrink-0">
+      <div className="w-full lg:w-[300px] max-h-[30vh] lg:max-h-none border-b lg:border-b-0 lg:border-r border-border-hairline flex flex-col justify-between bg-canvas-subtle shrink-0">
         <div className="p-3 border-b border-border-hairline flex items-center justify-between bg-white">
           <div className="flex items-center gap-2">
             <FileText className="w-4 h-4 text-atkin-ink" />

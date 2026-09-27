@@ -25,6 +25,12 @@ export const ASSET_DIGESTS = {
     sha256: '15cf2f46b5838c401e1a923b1f6a3661359d36ab58abe829d5da4df362d7d00a',
     bytes: 593018,
   } as const,
+  advocateMark: {
+    file: 'public/atkin/characters/atkin-character-files.webp',
+    label: 'Sovereign Advocate artwork shown in the hero verification card',
+    sha256: '19e94f1a7dd5d9395c60f5f8bbc6256a2b5d5d25890baeee94157d3d042ca834',
+    bytes: 63002,
+  } as const,
   demoContractFixture: {
     file: 'fixtures/test-contract-independent.txt',
     label: 'Alder Peak demo contract fixture (the source shown in Product Proof)',

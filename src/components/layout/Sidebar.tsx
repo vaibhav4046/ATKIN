@@ -90,7 +90,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-[248px] bg-atkin-bg-subtle border-r border-atkin-border flex flex-col justify-between shrink-0 select-none min-h-[calc(100vh-106px)] font-sans text-atkin-ink">
+    // h-full rather than min-h-[calc(100vh-106px)]: when this column is an
+    // off-canvas drawer on narrow viewports it is positioned fixed and must fill
+    // the drawer exactly. The previous 106px was also wrong (the real chrome is
+    // 110px) and, being a min-height on a content-driven box, never bound anyway.
+    <aside className="w-[248px] h-full bg-atkin-bg-subtle border-r border-atkin-border flex flex-col justify-between shrink-0 select-none font-sans text-atkin-ink">
       <div>
         {/* Practice Brand Badge */}
         <div className="px-3.5 py-2.5 bg-atkin-surface border-b border-atkin-border flex items-center justify-between">
@@ -127,7 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   : 'text-atkin-muted hover:text-atkin-ink'
               }`}
             >
-              Demo Sandbox
+              Sample Workspace
             </button>
           </div>
         </div>
@@ -181,7 +185,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {activeWorkspace === 'demo' ? (
             <div className="flex items-center justify-between text-[11px] pt-1">
               <span className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 px-1.5 py-0.5 rounded text-[10px] font-mono font-medium">
-                Demo Matter
+                Sample Matter
               </span>
               <button
                 onClick={() => onSelectWorkspace && onSelectWorkspace('personal')}
@@ -368,10 +372,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={onLoadSample}
           className="w-full text-left text-[11px] text-atkin-muted hover:text-atkin-ink hover:bg-atkin-bg p-1.5 rounded-[4px] flex items-center gap-1.5 transition-colors cursor-pointer border border-transparent hover:border-atkin-border"
-          title="Reload Demo Matter"
+          title="Reload Sample Matter"
         >
           <RotateCcw className="w-3 h-3 text-atkin-muted" />
-          <span>Reload Demo Matter</span>
+          <span>Reload Sample Matter</span>
         </button>
 
         <div className="pt-2 border-t border-atkin-border/80 flex items-center gap-1.5 text-[10.5px] text-atkin-muted font-mono">

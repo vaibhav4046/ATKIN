@@ -13,7 +13,8 @@ import {
   Package, 
   Calendar, 
   BookOpen,
-  Smartphone
+  Smartphone,
+  Menu
 } from 'lucide-react';
 import type { Matter, ModelStatus, NetworkMode } from '../../types/index';
 import { Badge } from '../common/Badge';
@@ -34,6 +35,7 @@ interface TopRailProps {
   onExportCalendar: () => void;
   onOpenSettings: () => void;
   onOpenPairing?: () => void;
+  onOpenNav?: () => void;
 }
 
 export const TopRail: React.FC<TopRailProps> = ({
@@ -49,7 +51,8 @@ export const TopRail: React.FC<TopRailProps> = ({
   onExportNotebook,
   onExportCalendar,
   onOpenSettings,
-  onOpenPairing
+  onOpenPairing,
+  onOpenNav
 }) => {
   const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
   const [isNetMenuOpen, setIsNetMenuOpen] = useState(false);
@@ -72,8 +75,21 @@ export const TopRail: React.FC<TopRailProps> = ({
     // rail's static position at y=52, which is exactly the sticky threshold, so
     // the rail no longer shifts and <main> starts below it. LandingPage already
     // reserves the same 52px with pt-[52px].
-    <div className="mt-[52px] min-h-[58px] bg-atkin-surface border-b border-atkin-border px-6 py-2 flex items-center justify-between gap-4 sticky top-[52px] z-40 select-none text-atkin-ink">
-      <div className="flex items-center gap-3 min-w-0">
+    <div className="mt-[52px] min-h-[58px] bg-atkin-surface border-b border-atkin-border px-3 sm:px-6 py-2 flex items-center justify-between gap-2 sm:gap-4 sticky top-[52px] z-40 select-none text-atkin-ink">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        {/* Nav toggle. The sidebar is a fixed 248px column on desktop; below lg it
+            becomes an off-canvas drawer, so without this the workbench has no
+            navigation at all on a phone. */}
+        {onOpenNav && (
+          <button
+            onClick={onOpenNav}
+            className="lg:hidden shrink-0 flex items-center justify-center w-8 h-8 rounded-[4px] border border-atkin-border text-atkin-ink hover:bg-atkin-bg"
+            aria-label="Open navigation"
+            title="Open navigation"
+          >
+            <Menu className="w-4 h-4" />
+          </button>
+        )}
         <div className="hidden sm:flex items-center shrink-0">
           <AtkinLogo className="w-8 h-8 rounded-[4px] border border-atkin-border shadow-xs" />
         </div>
@@ -85,17 +101,20 @@ export const TopRail: React.FC<TopRailProps> = ({
             <h1 className="text-[15px] font-semibold text-atkin-ink tracking-tight font-serif truncate" title={matter.title}>
               {matter.title}
             </h1>
-            <span className="shrink-0 text-[11px] font-mono px-2 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-muted">
+            {/* Jurisdiction and matter type are reference metadata, not identity.
+                They are the first things to go when the rail is width-constrained;
+                the Demo/Private badge below is a trust signal and always stays. */}
+            <span className="hidden lg:inline shrink-0 text-[11px] font-mono px-2 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-muted">
               {matter.jurisdiction}
             </span>
             {matter.matterType && (
-              <span className="shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-ink uppercase">
+              <span className="hidden xl:inline shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-ink uppercase">
                 {matter.matterType}
               </span>
             )}
             {(matter.isDemo || matter.id.includes('bates') || matter.id.includes('contract') || matter.id.includes('tenancy')) ? (
               <span className="shrink-0 bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
-                Demo Matter
+                Sample Matter
               </span>
             ) : (
               <span className="shrink-0 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
@@ -103,13 +122,25 @@ export const TopRail: React.FC<TopRailProps> = ({
               </span>
             )}
           </div>
-          <div className="text-[11px] text-atkin-muted mt-0.5 font-mono">
+          {/* The client line is secondary. It is the tallest single line in the
+              rail and the first thing worth dropping on a narrow viewport. */}
+          <div className="hidden sm:block text-[11px] text-atkin-muted mt-0.5 font-mono truncate">
             Client: <span className="text-atkin-ink font-medium">{matter.clientAlias}</span> · Local device storage
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0">
+      {/* Controls are a fixed-size cluster and must never shrink or wrap.
+          They were originally shrink-0, which on a 390px viewport made the cluster
+          722px wide, stretched the document to 762px and crushed <main> to zero
+          width. Simply allowing it to shrink was worse: the browser squeezed it,
+          the button labels wrapped onto a second line, the rail grew from 58px to
+          63px, and every pane that pins below the chrome slid underneath it.
+          shrink-0 is now safe because each control drops its text label below md,
+          which bounds the cluster to roughly 200px on a phone. whitespace-nowrap
+          stops a label wrapping if the cluster is ever squeezed again. The matter
+          title is the flexible element: min-w-0 plus truncate absorbs the pressure. */}
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 justify-end whitespace-nowrap">
         {/* Network Broker Mode Button */}
         <div className="relative">
           <button
@@ -121,17 +152,17 @@ export const TopRail: React.FC<TopRailProps> = ({
             {networkMode === 'offline' ? (
               <>
                 <WifiOff className="w-3.5 h-3.5 text-atkin-ink" />
-                <span className="font-medium">Offline (Local Loopback)</span>
+                <span className="font-medium hidden md:inline">Offline (Local Loopback)</span>
               </>
             ) : networkMode === 'public_research' ? (
               <>
                 <Globe className="w-3.5 h-3.5 text-atkin-ink" />
-                <span className="font-medium">Public Research Allowed</span>
+                <span className="font-medium hidden md:inline">Public Research Allowed</span>
               </>
             ) : (
               <>
                 <Globe className="w-3.5 h-3.5 text-amber-600" />
-                <span className="font-medium">Connected Mode</span>
+                <span className="font-medium hidden md:inline">Connected Mode</span>
               </>
             )}
             <ChevronDown className="w-3 h-3 text-atkin-muted ml-0.5" />
@@ -189,12 +220,12 @@ export const TopRail: React.FC<TopRailProps> = ({
           {isVaultLocked ? (
             <>
               <Lock className="w-3.5 h-3.5 text-rose-600" />
-              <span>Vault Locked</span>
+              <span className="hidden md:inline">Vault Locked</span>
             </>
           ) : (
             <>
               <Unlock className="w-3.5 h-3.5 text-atkin-ink" />
-              <span>Vault Active</span>
+              <span className="hidden md:inline">Vault Active</span>
             </>
           )}
         </button>
@@ -208,13 +239,13 @@ export const TopRail: React.FC<TopRailProps> = ({
           {modelStatus.state === 'connected' ? (
             <>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-              <span className="font-medium">Local Model</span>
-              <span className="text-atkin-muted text-[11px]">({modelStatus.modelTag})</span>
+              <span className="font-medium hidden lg:inline">Local Model</span>
+              <span className="text-atkin-muted text-[11px] hidden xl:inline">({modelStatus.modelTag})</span>
             </>
           ) : (
             <>
               <span className="w-1.5 h-1.5 rounded-full bg-atkin-muted" />
-              <span className="font-medium text-atkin-muted">Deterministic Core</span>
+              <span className="font-medium text-atkin-muted hidden lg:inline">Deterministic Core</span>
             </>
           )}
         </button>

@@ -579,6 +579,153 @@ estimate is how a real defect gets deferred indefinitely.
 - Restart: 28/28
 - Bundle: 288.49 kB / 79.83 kB gzip (unchanged by this pass, as expected)
 
+## Addendum 4 - real device, real phone, real product pass
+
+### Correction: "no Android emulator on this machine" was wrong
+
+An earlier pass recorded cross-device as blocked because `adb` was not on
+`PATH`. That check was too shallow. The SDK is installed at
+`C:\Users\lalwa\AppData\Local\Android\Sdk` with `platform-tools\adb.exe`,
+`emulator\emulator.exe`, system images, build-tools and NDK, and there is a
+Pixel 9 Pro AVD (`SvaraPixel`, Android 16 / API 36, x86_64). Checking `PATH`
+instead of the SDK location produced a false blocker.
+
+### What the real device actually proved
+
+| check | result |
+|---|---|
+| `adb install` of the shipped APK | Success (660 ms) |
+| cold launch | `Status: ok`, `LaunchState: COLD`, `TotalTime: 1338 ms` |
+| focused activity | `com.atkin.legal/.MainActivity` |
+| crash scan of logcat | no `FATAL`, no `AndroidRuntime` exception |
+| IndexedDB in the real WebView | working, personal workspace correctly empty |
+
+So the APK genuinely installs, launches and persists. Screenshots in
+`release/ui/android/`.
+
+### But the APK is a stale artifact, and that is a release blocker
+
+The device screenshots show three things the current source no longer contains:
+the retired **Proofline** wordmark in the header, **"Optional Local Gemma 4
+Daemon"**, and **"92 Vitest Checks Passing"**. `grep` finds none of those
+strings in `src/` now. The APK therefore predates the credibility fixes in
+`72a6387` and `c983f63`.
+
+This matters: the only distributable Android artifact is out of date and
+contains claims the project has already established as false. It cannot be
+rebuilt here (no Rust toolchain). Shipping it would ship known-false numbers to
+a judge.
+
+### New P0 found and fixed: the workbench was unusable on a phone
+
+Found by running the real APK, then reproduced and fixed in a browser at 390px.
+Three independent width failures, all invisible at 1440px:
+
+| | before | after |
+|---|---|---|
+| document overflow at 390px | **372px** (762px doc in a 390px viewport) | **0px** |
+| `<main>` width at 390px | **0px** | **390px** |
+| rail height at 390px | 157px | 58px |
+
+Root causes and fixes:
+
+1. The rail's control cluster was `shrink-0` and 722px wide, so it stretched the
+   document. Labels are now hidden below `md` (icon plus tooltip), and the
+   cluster carries `whitespace-nowrap`.
+2. The sidebar was a permanent 248px column, leaving `main` zero width. It is now
+   an off-canvas drawer below `lg`, opened by a new rail toggle, starting below
+   the fixed nav so the nav stays reachable, and closing on tab/matter/workspace
+   selection.
+3. The source inspector's empty state was a fixed 300px sibling. It is now hidden
+   below `lg`, and the populated inspector sits in normal flow under the reader
+   on mobile instead of a `position: fixed` overlay.
+
+An intermediate attempt made the inspector a `position: fixed` bottom sheet. That
+failed for a non-obvious reason worth recording: a transformed framer-motion
+ancestor becomes the containing block for `fixed` descendants, so the sheet
+positioned itself against the wrong box and overlapped the document. Normal flow
+is immune to that class of bug, which is why the final fix uses it.
+
+### The rail must be exactly 58px, and that is now enforced
+
+A detour that produced a real invariant: allowing the control cluster to *wrap*
+fixed the overflow but let a long matter title fold the rail from 58px to 81px,
+and every pane that pins below the chrome then slid underneath it. The rule is
+that the title truncates and the chrome height stays constant. Verified: rail is
+58px at 390, 768, 1024, 1280 and 1440 with the long Bates title loaded.
+
+### Prototype language removed, without lying about what is synthetic
+
+The owner asked for the product to stop reading as a prototype. The two worst
+cases told a paying customer they were on a demo:
+
+- `modelBridge` and `localModelManager` both surfaced
+  `"Hosted Web Demo: ..."` with `modelTag: 'None (Hosted Demo)'`. Now: "This
+  build runs in a browser sandbox that cannot reach your loopback model
+  endpoint", tag `None (Browser Security Policy)`.
+
+The rest was renamed rather than deleted, deliberately:
+
+| was | now |
+|---|---|
+| Demo Sandbox | Sample Workspace |
+| Demo Matter | Sample Matter |
+| Reload Demo Matter | Reload Sample Matter |
+| Explore Demo Sandbox | Explore Sample Workspace |
+
+Deleting the sample/demo distinction entirely would have been dishonest: those
+matters are synthetic and the product must not imply a user imported them. "A
+sample workspace" is what shipped software calls the same thing.
+
+Deliberately left alone, because they are honest: `v1.2.0` version badges, the
+`EDITION 1.2` card label, the Horizon Post Office `v1.2.4` fixture text, and
+"stored exclusively in your local device sandbox" in the privacy modal.
+
+### Hero card now shows the Sovereign Advocate, with a seal that is true
+
+The hero's right-hand card now renders
+`public/atkin/characters/atkin-character-files.webp` (900x1125, 4:5) instead of
+the old brand mark.
+
+The card claims `DIGEST VERIFIED` and "Recomputable from the shipped file", so
+the digest had to change with the pixels. Rather than hand-editing a hash,
+`public/atkin/characters/atkin-character-files.webp` was added to
+`scripts/gen-asset-digests.mjs` and the constant regenerated. The e2e guard now
+recomputes it from the real bytes and reports
+`19e94f1a…=atkin/characters/atkin-character-files.webp`. The seal and the image
+cannot drift apart.
+
+### A latent flaky test, exposed and fixed
+
+The "no broken images" check treated `complete === false` as broken, so every
+lazy image below the fold was flagged and the check only passed by luck of the
+page height. Changing the hero artwork shifted the page and turned that into a
+real failure. It now forces lazy images to load, then asserts on
+`naturalWidth === 0`.
+
+### Chrome offsets consolidated, with a test that actually prevents drift
+
+`src/app/chromeMetrics.ts` is now the source of truth for the 52 / 58 / 110
+stack. The call sites keep literal Tailwind classes deliberately, because
+Tailwind's scanner cannot see interpolated class names and `mt-[${N}px]` would
+emit no CSS at all, breaking layout silently. `src/tests/chromeMetrics.test.ts`
+(8 assertions) fails if a literal stops matching the constants.
+
+`NotebookStudioTab` was corrected from `100vh-100px` to `100vh-110px`. The two
+offsets that legitimately subtract their own inner chrome (`SourcesTab` 140,
+`ChatTab` 164) are recorded in `INNER_CHROME_NOTES` so nobody "corrects" them.
+
+That test earned its keep immediately: it failed on a change I had made to the
+Sources tab height without measuring, and I reverted it.
+
+### Results after this pass
+
+- TypeScript: 0 errors
+- Vitest: 53 files, 485 tests (was 52/473; +8 chrome, +4 digest)
+- E2E: **56/56** (was 50; +6 phone checks)
+- Restart: 28/28
+- Bundle: 289.75 kB / 80.18 kB gzip
+
 ## Still unverified
 
 - Cross-device of any kind. No `adb`, no emulator, no second device on this
@@ -593,8 +740,17 @@ estimate is how a real defect gets deferred indefinitely.
   Recorded as a known limitation with the mitigation, not papered over.
 - Offline behaviour, model-failure-during-stream, and PDF/DOCX ingestion are
   covered by unit tests only, not by a process-level or network-level exercise.
-- The application chrome height (52px fixed nav + 58px rail) is still hardcoded
-  in seven places rather than derived from one constant, which is the root cause
-  of the drift found in this pass. Two of the seven were corrected because they
-  were measured to be wrong; the rest were left alone deliberately rather than
-  changed blind. Consolidating them is outstanding work.
+- The application chrome height (52px fixed nav + 58px rail) is now consolidated in
+  `src/app/chromeMetrics.ts` and enforced by `src/tests/chromeMetrics.test.ts`, so
+  the drift that caused this pass's first bug cannot recur silently. The literals
+  remain duplicated by necessity, because Tailwind cannot see interpolated class
+  names.
+- The Android status bar overlaps the app header on a real device. The activity
+  draws edge-to-edge (Android 15+ default for this target SDK) and Android WebView
+  reports `env(safe-area-inset-top)` as 0, so this cannot be fixed in CSS. It needs
+  a native change, which cannot be built or verified here without a Rust toolchain.
+  Not claimed as fixed.
+- The APK in `release/android/` is a stale build. It installs and runs on a real
+  Android 16 device, but predates the credibility fixes and still shows the retired
+  Proofline wordmark, "Gemma 4", and "92 Vitest Checks Passing". Rebuilding needs a
+  Rust toolchain, which is not installed.

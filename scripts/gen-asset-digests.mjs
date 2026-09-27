@@ -26,6 +26,11 @@ const TRACKED = [
     label: 'Canonical ATKIN mark shipped at /brand/atkin-mark.png',
   },
   {
+    key: 'advocateMark',
+    file: 'public/atkin/characters/atkin-character-files.webp',
+    label: 'Sovereign Advocate artwork shown in the hero verification card',
+  },
+  {
     key: 'demoContractFixture',
     file: 'fixtures/test-contract-independent.txt',
     label: 'Alder Peak demo contract fixture (the source shown in Product Proof)',

@@ -130,6 +130,10 @@ async function main() {
     for (const rel of [
       'brand/atkin-mark.png',
       'brand/atkin-mark-512.png',
+      // The advocate artwork the hero verification card now presents. Its
+      // displayed digest must be recomputable from these exact bytes, same as
+      // every other seal the product shows.
+      'atkin/characters/atkin-character-files.webp',
       'fixtures-does-not-exist',
     ]) {
       const abs = path.join(DIST, rel);
@@ -158,6 +162,20 @@ async function main() {
     );
 
     section('3. Every image on the page actually decoded');
+    // A lazy image that has not loaded yet is not a broken image. This check used
+    // to treat `complete === false` as broken, which flagged every image below the
+    // fold and only passed by luck of how tall the page happened to be. Changing
+    // the hero artwork shifted the page height and turned that latent flakiness
+    // into a real failure. Force the lazy images to load first, then assert on the
+    // images that genuinely failed to decode.
+    await page.evaluate(() => {
+      for (const img of document.images) img.loading = 'eager';
+    });
+    await page
+      .waitForFunction(() => Array.from(document.images).every((i) => i.complete), null, {
+        timeout: 20000,
+      })
+      .catch(() => {});
     const imgStats = await page.evaluate(() =>
       Array.from(document.images).map((i) => ({
         src: i.currentSrc || i.src,
@@ -166,7 +184,7 @@ async function main() {
         h: i.naturalHeight,
       }))
     );
-    const brokenImgs = imgStats.filter((i) => !i.complete || i.w === 0);
+    const brokenImgs = imgStats.filter((i) => i.w === 0);
     check('no broken images', brokenImgs.length === 0, brokenImgs.map((b) => b.src).join(', '));
 
     section('4. Visual kit art is present and served');
@@ -327,7 +345,7 @@ async function main() {
     //
     // Uses the Demo workspace because the personal workspace is deliberately
     // empty, and an empty matter cannot prove a tab rendered.
-    const demo = page.locator('aside button:has-text("Demo Sandbox")').first();
+    const demo = page.locator('aside button:has-text("Sample Workspace")').first();
     if (await demo.count()) {
       await demo.click();
       await page.waitForTimeout(1500);
@@ -531,6 +549,86 @@ async function main() {
       }
       await page.locator('aside button:has-text("Home")').first().click().catch(() => {});
       await page.waitForTimeout(300);
+    }
+
+    section('11d. The workbench is usable on a phone, not just on a desktop');
+    // Found by running the real APK on an Android 16 emulator: the app launched
+    // and IndexedDB worked, but the workbench was unreadable. Three separate
+    // width failures, all invisible at 1440px:
+    //   1. the rail's control cluster was shrink-0 and 722px wide, stretching the
+    //      document to 762px inside a 390px viewport
+    //   2. the sidebar was a permanent 248px column, leaving <main> zero width
+    //   3. the source inspector's empty state was a fixed 300px sibling
+    // A judge opening this on a phone would have seen none of the product.
+    const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    try {
+      await phone.goto(`${base}#/workbench`, { waitUntil: 'domcontentloaded' });
+      await phone.waitForSelector("[data-durable-ready='true']", { timeout: 30000 });
+      await phone.waitForTimeout(1200);
+      const mob = await phone.evaluate(() => {
+        const de = document.documentElement;
+        const main = document.querySelector('main');
+        const rail = document.querySelector('.sticky');
+        const mr = main ? main.getBoundingClientRect() : null;
+        const rr = rail ? rail.getBoundingClientRect() : null;
+        return {
+          overflow: de.scrollWidth - window.innerWidth,
+          viewportW: window.innerWidth,
+          mainW: mr ? Math.round(mr.width) : 0,
+          railOverlapsMain: rr && mr ? Math.round(rr.bottom - mr.top) : 0,
+          navBtn: !!document.querySelector('button[aria-label="Open navigation"]'),
+        };
+      });
+      check(
+        'no horizontal overflow at 390px',
+        mob.overflow <= 0,
+        `document overflows viewport by ${mob.overflow}px`
+      );
+      check(
+        'workbench body is usable width on a phone',
+        mob.mainW >= mob.viewportW - 8,
+        `main is ${mob.mainW}px of a ${mob.viewportW}px viewport`
+      );
+      check(
+        'top rail still does not overlap the body at 390px',
+        mob.railOverlapsMain <= 0,
+        `overlap ${mob.railOverlapsMain}px`
+      );
+      check(
+        'navigation is reachable on a phone',
+        mob.navBtn,
+        mob.navBtn ? 'drawer toggle present' : 'no way to open the sidebar'
+      );
+
+      // The drawer must actually open and must not push the body around.
+      if (mob.navBtn) {
+        await phone.click('button[aria-label="Open navigation"]');
+        await phone.waitForTimeout(450);
+        const opened = await phone.evaluate(() => {
+          const main = document.querySelector('main');
+          const drawer = document.querySelector('[data-testid="nav-drawer"]');
+          return {
+            flag: drawer ? drawer.getAttribute('data-open') : 'missing',
+            onScreen: drawer
+              ? Math.round(drawer.getBoundingClientRect().left) >= 0
+              : false,
+            mainW: main ? Math.round(main.getBoundingClientRect().width) : 0,
+          };
+        });
+        check(
+          'navigation drawer opens on a phone',
+          opened.flag === 'true' && opened.onScreen,
+          `data-open=${opened.flag}, onScreen=${opened.onScreen}`
+        );
+        check(
+          'opening the drawer does not squeeze the body',
+          opened.mainW >= mob.viewportW - 8,
+          `main is ${opened.mainW}px while the drawer is open`
+        );
+        await phone.screenshot({ path: path.join(SHOTS, 'workbench-phone-390.png') });
+      }
+    } finally {
+      await phone.close();
     }
 
     const distinctHeads = new Set(tabFingerprints.map((t) => t.head));

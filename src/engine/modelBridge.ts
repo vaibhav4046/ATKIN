@@ -10,9 +10,9 @@ export async function checkOllamaConnection(endpoint = OLLAMA_DEFAULT_URL): Prom
     return {
       state: 'offline',
       endpoint,
-      modelTag: 'None (Hosted Demo)',
+      modelTag: 'None (Browser Security Policy)',
       detectedTags: [],
-      errorMessage: 'Hosted Web Demo: Browser sandbox prevents direct connection to visitor loopback Ollama. Operating in Deterministic Offline Mode.',
+      errorMessage: 'This build runs in a browser sandbox that cannot reach your loopback model endpoint. ATKIN is operating in Deterministic Offline Mode with SHA-256 verifiable citations.',
       lastChecked: new Date().toISOString()
     };
   }

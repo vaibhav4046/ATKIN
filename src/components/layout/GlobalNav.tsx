@@ -110,7 +110,7 @@ export const GlobalNav: React.FC<GlobalNavProps> = ({
                 onClick={onLoadSample}
                 className="text-[12px] font-medium text-atkin-muted hover:text-atkin-ink px-3 py-1.5 rounded-[4px] border border-atkin-border hover:bg-atkin-surface transition-colors hidden sm:inline-flex items-center gap-1.5 cursor-pointer"
               >
-                <span>Demo Matter</span>
+                <span>Sample Matter</span>
               </button>
               <button
                 onClick={onOpenWorkbench}

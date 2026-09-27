@@ -20,8 +20,11 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
   const [copied, setCopied] = useState(false);
 
   if (!span || !document) {
+    // Hidden below lg. This empty state is a fixed 300px flex sibling, so on a
+    // 390px viewport it left <main> with 90px. With nothing selected there is
+    // nothing to inspect, so on a phone the space belongs to the document.
     return (
-      <aside className="w-[300px] bg-gallery-paper border-l border-border-hairline p-5 text-center flex flex-col items-center justify-center text-ink-steel shrink-0 select-none">
+      <aside className="hidden lg:flex w-[300px] bg-gallery-paper border-l border-border-hairline p-5 text-center flex-col items-center justify-center text-ink-steel shrink-0 select-none">
         <FileText className="w-8 h-8 text-ink-steel/40 mb-2" />
         <div className="text-[13px] font-medium text-ink">Source Inspector</div>
         <div className="text-[11px] text-ink-slate mt-1 max-w-[200px]">
@@ -44,7 +47,19 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
     // TopRail (58px). This panel used to say 108px, a leftover from when the rail
     // was 56px, so once the window scrolled and this panel pinned, its top edge
     // sat 2px underneath the rail and the panel's own header border was hidden.
-    <aside className="w-[320px] bg-gallery-paper border-l border-border-hairline flex flex-col justify-between shrink-0 h-[calc(100vh-110px)] sticky top-[110px] overflow-y-auto">
+    //
+    // Below lg it is an overlay instead of a column, because as a 320px flex
+    // sibling it left <main> only 90px on a 390px screen. As a fixed overlay it
+    // covers the reader only while a span is actually selected, and it can be
+    // dismissed with the existing close button.
+    // Sits in normal flow below the reader on mobile and pins as a right-hand
+    // column from lg up. It deliberately avoids position:fixed on mobile: a
+    // transformed framer-motion ancestor becomes the containing block for fixed
+    // descendants, which placed this panel in the wrong spot and made it overlap
+    // the document. As a 320px side overlay on a 390px screen it was also
+    // unreadable, and the demo workspace seeds a selected span, so it was present
+    // the moment the app opened.
+    <aside className="w-full shrink-0 border-t border-border-hairline bg-gallery-paper flex flex-col justify-between overflow-y-auto lg:sticky lg:top-[110px] lg:w-[320px] lg:border-t-0 lg:border-l lg:h-[calc(100vh-110px)]">
       <div>
         {/* Header */}
         <div className="p-4 border-b border-border-hairline flex items-start justify-between bg-gallery-white">

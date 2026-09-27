@@ -349,7 +349,9 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
   });
 
   return (
-    <div className="flex flex-col h-[calc(100vh-100px)] bg-[#f8fafc] text-slate-800 antialiased font-sans">
+    // 110px = APP_CHROME_H (52 GlobalNav + 58 TopRail). This said 100px, which is
+    // not the chrome height at all.
+      <div className="flex flex-col h-[calc(100vh-110px)] bg-[#f8fafc] text-slate-800 antialiased font-sans">
       {/* Top Header Rail */}
       <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0 shadow-xs">
         <div className="flex items-center space-x-3">

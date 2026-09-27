@@ -76,7 +76,7 @@ export const PRODUCT_PROOF = {
   sourceRef: 'test-contract-independent.txt',
   clauseRef: 'Clause 3.2',
   status: 'Citation verified',
-  tag: 'Demo matter',
+  tag: 'Sample matter',
   contractFixture: {
     matter: 'Alder Peak Systems Ltd v Highfield Logistics Group Ltd',
     sourceDocument: 'test-contract-independent.txt',

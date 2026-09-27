@@ -210,6 +210,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   const [newClient, setNewClient] = useState('');
   const [isOfflineBannerDismissed, setIsOfflineBannerDismissed] = useState(false);
   const [isPairingOpen, setIsPairingOpen] = useState(false);
+const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (isNewMatterModalRequested) {
@@ -712,14 +713,15 @@ export const AppShell: React.FC<AppShellProps> = ({
         onExportCalendar={handleExportCalendar}
         onOpenSettings={() => setCurrentTab('settings')}
         onOpenPairing={() => setIsPairingOpen(true)}
+        onOpenNav={() => setIsSidebarOpen(true)}
       />
 
       {/* Honest Sovereign Mode / Local LLM Status Banner */}
       {modelStatus.state !== 'connected' && !isOfflineBannerDismissed && (
-        <div className="bg-[#FAF8F5] border-b border-border-hairline px-4 py-2 flex items-center justify-between text-[12px] text-ink-slate shadow-xs shrink-0">
-          <div className="flex items-center gap-2.5">
+        <div className="bg-[#FAF8F5] border-b border-border-hairline px-4 py-2 flex items-center justify-between flex-wrap gap-x-3 gap-y-1 text-[12px] text-ink-slate shadow-xs shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
             <span className="w-2 h-2 rounded-full bg-amber-500 inline-block shrink-0 animate-pulse" />
-            <span>
+            <span className="min-w-0">
               <strong className="text-ink font-semibold">Sovereign Deterministic IRAC Core Active</strong>: Local Ollama endpoint offline. ATKIN is operating in deterministic evidential mode with SHA-256 verifiable citations.
             </span>
           </div>
@@ -743,19 +745,48 @@ export const AppShell: React.FC<AppShellProps> = ({
 
       {/* Workbench Body */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left 248px Navigation Sidebar */}
-        <Sidebar
-          currentTab={currentTab}
-          onSelectTab={setCurrentTab}
-          counts={counts}
-          onLoadSample={handleLoadSampleMatter}
-          onNewMatter={() => setIsNewMatterOpen(true)}
-          matters={matters}
-          activeMatterId={activeMatterId}
-          onSelectMatter={handleSelectMatter}
-          activeWorkspace={workspace}
-          onSelectWorkspace={handleSelectWorkspace}
-        />
+        {/* Below lg the sidebar is an off-canvas drawer. As a permanent 248px
+            column it consumed 64% of a 390px viewport and left <main> with zero
+            width, so the workbench was unusable on a phone. */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+        <div
+          data-testid="nav-drawer"
+          data-open={isSidebarOpen ? 'true' : 'false'}
+          className={`fixed top-[52px] bottom-0 left-0 z-50 transition-transform duration-200 ease-out overflow-y-auto lg:static lg:translate-x-0 lg:z-auto lg:overflow-visible ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <Sidebar
+            currentTab={currentTab}
+            onSelectTab={(tab) => {
+              setCurrentTab(tab);
+              setIsSidebarOpen(false);
+            }}
+            counts={counts}
+            onLoadSample={() => {
+              handleLoadSampleMatter();
+              setIsSidebarOpen(false);
+            }}
+            onNewMatter={() => setIsNewMatterOpen(true)}
+            matters={matters}
+            activeMatterId={activeMatterId}
+            onSelectMatter={(id) => {
+              handleSelectMatter(id);
+              setIsSidebarOpen(false);
+            }}
+            activeWorkspace={workspace}
+            onSelectWorkspace={(id) => {
+              handleSelectWorkspace(id);
+              setIsSidebarOpen(false);
+            }}
+          />
+        </div>
 
         {/* Central Work Area */}
         <main className="flex-1 overflow-y-auto bg-gallery-paper">
@@ -786,7 +817,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                     onClick={() => handleSelectWorkspace('demo')}
                     className="w-full py-2 px-3 bg-stone-50 hover:bg-stone-100 text-stone-700 text-xs font-medium rounded-md border border-stone-200 transition-colors cursor-pointer"
                   >
-                    Explore Demo Sandbox (Alder Peak & Bates)
+                    Explore Sample Workspace (Alder Peak & Bates)
                   </button>
                 </div>
               </div>
