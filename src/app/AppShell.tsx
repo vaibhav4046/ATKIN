@@ -718,7 +718,7 @@ const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
       {/* Honest Sovereign Mode / Local LLM Status Banner */}
       {modelStatus.state !== 'connected' && !isOfflineBannerDismissed && (
-        <div className="bg-[#FAF8F5] border-b border-border-hairline px-4 py-2 flex items-center justify-between flex-wrap gap-x-3 gap-y-1 text-[12px] text-ink-slate shadow-xs shrink-0">
+        <div className="bg-atkin-surface border-b border-border-hairline px-4 py-2 flex items-center justify-between flex-wrap gap-x-3 gap-y-1 text-[12px] text-ink-slate shadow-xs shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
             <span className="w-2 h-2 rounded-full bg-amber-500 inline-block shrink-0 animate-pulse" />
             <span className="min-w-0">

@@ -114,8 +114,8 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
           <div className="grid grid-cols-2 gap-5 items-center p-5 bg-stone-50 border border-stone-200 rounded-[6px]">
             <div className="flex flex-col items-center justify-center p-4 bg-white border border-stone-200 rounded-[6px] shadow-xs text-center space-y-2">
               {/* Scalable SVG QR Code Representation with Atkin Logo Emblem */}
-              <div className="relative w-36 h-36 bg-stone-900 rounded p-2 flex items-center justify-center text-white">
-                <QrCode className="w-28 h-28 text-white" />
+              <div className="relative w-36 h-36 bg-atkin-inverse-bg rounded p-2 flex items-center justify-center text-atkin-inverse-ink">
+                <QrCode className="w-28 h-28 text-atkin-inverse-ink" />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="p-1 bg-white rounded-full shadow-sm border border-stone-300">
                     <AtkinLogo className="w-6 h-6 rounded-full" variant="badge" />

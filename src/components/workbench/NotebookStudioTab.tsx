@@ -351,7 +351,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
   return (
     // 110px = APP_CHROME_H (52 GlobalNav + 58 TopRail). This said 100px, which is
     // not the chrome height at all.
-      <div className="flex flex-col h-[calc(100vh-110px)] bg-[#f8fafc] text-slate-800 antialiased font-sans">
+      <div className="flex flex-col h-[calc(100vh-110px)] bg-atkin-bg-subtle text-slate-800 antialiased font-sans">
       {/* Top Header Rail */}
       <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0 shadow-xs">
         <div className="flex items-center space-x-3">
@@ -705,7 +705,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
 
                     <button
                       onClick={handleSaveAskAsNote}
-                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-md text-xs font-medium transition-colors shadow-2xs"
+                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-atkin-inverse-bg hover:bg-atkin-inverse-muted/30 text-atkin-inverse-ink rounded-md text-xs font-medium transition-colors shadow-2xs"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Save as Studio Note</span>
@@ -1022,13 +1022,13 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
               </div>
 
               {/* Interactive Audio Player Toolbar */}
-              <div className="p-3 bg-slate-900 text-white flex flex-col space-y-2.5">
+              <div className="p-3 bg-atkin-inverse-bg text-atkin-inverse-ink flex flex-col space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => setCurrentTurnIndex(prev => Math.max(0, prev - 1))}
                       disabled={currentTurnIndex === 0}
-                      className="p-1.5 hover:bg-slate-800 rounded-sm text-slate-300 hover:text-white disabled:opacity-30"
+                      className="p-1.5 hover:bg-atkin-inverse-muted/30 rounded-sm text-atkin-inverse-muted hover:text-atkin-inverse-ink disabled:opacity-30"
                       title="Previous Turn"
                     >
                       <SkipBack className="w-4 h-4" />
@@ -1045,7 +1045,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
                     <button
                       onClick={() => setCurrentTurnIndex(prev => Math.min(activePodcast.turns.length - 1, prev + 1))}
                       disabled={currentTurnIndex === activePodcast.turns.length - 1}
-                      className="p-1.5 hover:bg-slate-800 rounded-sm text-slate-300 hover:text-white disabled:opacity-30"
+                      className="p-1.5 hover:bg-atkin-inverse-muted/30 rounded-sm text-atkin-inverse-muted hover:text-atkin-inverse-ink disabled:opacity-30"
                       title="Next Turn"
                     >
                       <SkipForward className="w-4 h-4" />
@@ -1072,7 +1072,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
                         key={spd}
                         onClick={() => setPlaybackSpeed(spd)}
                         className={`px-1.5 py-0.5 rounded-xs ${
-                          playbackSpeed === spd ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                          playbackSpeed === spd ? 'bg-indigo-600 text-white' : 'text-atkin-inverse-muted hover:text-atkin-inverse-ink'
                         }`}
                       >
                         {spd}x

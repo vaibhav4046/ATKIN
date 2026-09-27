@@ -103,7 +103,7 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
 
           {isExcluded && (
             <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-900 text-[11px] flex items-center gap-1.5">
-              <span className="font-semibold font-mono uppercase text-[10px] bg-amber-200/60 px-1 rounded">Excluded</span>
+              <span className="font-semibold font-mono uppercase text-[10px] bg-amber-200/60 text-atkin-ink px-1 rounded">Excluded</span>
               <span>This document is excluded from active query context.</span>
             </div>
           )}
@@ -122,7 +122,7 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
             </div>
 
             <div className="p-3 bg-atkin-surface rounded border border-atkin-border text-[13px] text-atkin-ink font-sans leading-relaxed">
-              <mark className="bg-amber-100 text-black p-0.5 rounded">
+              <mark className="bg-amber-100 text-atkin-ink p-0.5 rounded">
                 "{span.exactText}"
               </mark>
             </div>

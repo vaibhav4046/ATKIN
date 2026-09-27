@@ -631,6 +631,125 @@ async function main() {
       await phone.close();
     }
 
+    section('11e. Text contrast passes AA in BOTH themes, on real content');
+    // The earlier dark-mode check sampled a handful of selectors on the landing
+    // page only, so 20 unreadable elements across the workbench sailed through it.
+    // Two root causes were behind them and neither is visible to a sampling check:
+    // `darkMode` was never set, so Tailwind keyed its `dark:` variants off the OS
+    // while the product's own toggle set a class; and roughly 400 class usages
+    // named stock Tailwind colours that never flip.
+    //
+    // This walks every leaf text element on real content and resolves the
+    // effective background through the ancestor chain, in both themes.
+    const contrastAudit = () => {
+      const parse = (s) => {
+        const m = String(s).match(/[\d.]+/g);
+        if (!m) return null;
+        return { r: +m[0], g: +m[1], b: +m[2], a: m[3] === undefined ? 1 : +m[3] };
+      };
+      const over = (f, g) => ({
+        r: f.r * f.a + g.r * (1 - f.a),
+        g: f.g * f.a + g.g * (1 - f.a),
+        b: f.b * f.a + g.b * (1 - f.a),
+        a: 1,
+      });
+      const lum = (c) => {
+        const f = (v) => {
+          const s = v / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        };
+        return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+      };
+      const effBg = (el) => {
+        let n = el;
+        let acc = null;
+        while (n && n !== document.documentElement) {
+          const c = parse(getComputedStyle(n).backgroundColor);
+          if (c && c.a > 0) {
+            acc = acc ? over(acc, c) : c;
+            if (acc.a >= 0.999) return acc;
+          }
+          n = n.parentElement;
+        }
+        const r = parse(getComputedStyle(document.body).backgroundColor);
+        const fb = r && r.a > 0 ? r : { r: 10, g: 10, b: 10, a: 1 };
+        return acc ? over(acc, fb) : fb;
+      };
+      const out = [];
+      const sel = 'p,span,h1,h2,h3,h4,li,td,th,a,button,label,div,mark';
+      for (const el of document.querySelectorAll(sel)) {
+        const t = (el.textContent || '').trim();
+        if (!t || t.length < 2) continue;
+        if ([...el.children].some((c) => (c.textContent || '').trim().length > 1)) continue;
+        const cs = getComputedStyle(el);
+        if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity === 0) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width < 2 || r.height < 2) continue;
+        const fg = parse(cs.color);
+        if (!fg) continue;
+        const bg = effBg(el);
+        const l1 = lum(over(fg, bg));
+        const l2 = lum(bg);
+        const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+        const size = parseFloat(cs.fontSize);
+        const need =
+          size >= 24 || (size >= 18.66 && +cs.fontWeight >= 700) ? 3 : 4.5;
+        if (ratio < need) {
+          out.push({ t: t.slice(0, 28), ratio: Math.round(ratio * 100) / 100, need, color: cs.color });
+        }
+      }
+      const seen = new Set();
+      return out.filter((x) => {
+        const k = x.t + x.color;
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+    };
+
+    for (const theme of ['dark', 'light']) {
+      const cp = await context.newPage();
+      try {
+        await cp.goto(`${base}#/workbench`, { waitUntil: 'domcontentloaded' });
+        await cp.waitForSelector("[data-durable-ready='true']", { timeout: 30000 });
+        await cp.waitForTimeout(700);
+        await cp.evaluate((m) => {
+          const r = document.documentElement;
+          r.setAttribute('data-theme', m);
+          r.classList.toggle('dark', m === 'dark');
+        }, theme);
+        // Real content, not the empty state.
+        await cp.click('button[aria-label="Open navigation"]').catch(() => {});
+        await cp.waitForTimeout(300);
+        await cp.getByRole('button', { name: /reload sample matter/i }).first().click().catch(() => {});
+        await cp.waitForTimeout(2200);
+
+        for (const [label, re] of [
+          ['Home', /^home$/i],
+          ['Sources', /sources/i],
+          ['Settings', /settings/i],
+        ]) {
+          await cp.click('button[aria-label="Open navigation"]').catch(() => {});
+          await cp.waitForTimeout(200);
+          await cp.getByRole('button', { name: re }).first().click().catch(() => {});
+          await cp.waitForTimeout(900);
+          const bad = await cp.evaluate(contrastAudit);
+          check(
+            `${theme} mode: every text on ${label} meets AA contrast`,
+            bad.length === 0,
+            bad.length
+              ? bad
+                  .slice(0, 4)
+                  .map((x) => `${x.ratio}:1 (need ${x.need}) "${x.t}" ${x.color}`)
+                  .join(' | ')
+              : 'all text >= 4.5:1'
+          );
+        }
+      } finally {
+        await cp.close();
+      }
+    }
+
     const distinctHeads = new Set(tabFingerprints.map((t) => t.head));
     check(
       'tabs render distinct surfaces, not one repeated panel',

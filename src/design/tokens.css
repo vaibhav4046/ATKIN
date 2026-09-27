@@ -12,14 +12,33 @@
   --atkin-paper: #F2F0EA;
   --atkin-ink: #0A0A0A;            /* Deep black typography */
   --atkin-ink-secondary: #2A2A2A;  /* Secondary heading ink */
-  --atkin-muted: #6F6D68;          /* Muted metadata / captions */
+  --atkin-muted: #5C5A55;          /* Muted metadata / captions. Was #6F6D68,
+                                       which measured 4.18:1 on the recessed
+                                       sidebar surface -- below the 4.5:1 AA
+                                       threshold for body text. */
   --atkin-border: rgba(10, 10, 10, 0.10);
   --atkin-border-strong: rgba(10, 10, 10, 0.20);
   --atkin-focus: #0A0A0A;
   --atkin-success: #1C6B38;
   --atkin-warning: #945300;
   --atkin-danger: #9E2A2B;
-  
+
+  /* Accent text, tuned for dark text on a pale surface. See the dark block for
+     why these needed a counterpart rather than being reused in both themes. */
+  --atkin-accent-text: #1D4ED8;        /* blue-700 */
+  --atkin-accent-text-strong: #1E40AF; /* blue-800 */
+  --atkin-positive-text: #046B4A;      /* emerald-700, darkened: #047857 measured
+                                           4.42:1 on the paper surface */
+  --atkin-caution-text: #9A4708;       /* amber-700, darkened: #B45309 measured
+                                           4.47:1 on the paper surface */
+  --atkin-tint: #EFF6FF;               /* blue-50 / emerald-50 / amber-50 */
+  --atkin-tint-border: #BFDBFE;        /* blue-200 / emerald-200 / amber-200 */
+
+  /* See the dark block: instrument surfaces that stay dark in both themes. */
+  --atkin-inverse-bg: #111318;
+  --atkin-inverse-ink: #F2F0EA;
+  --atkin-inverse-muted: #9AA0A6;
+
   --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 6px;
@@ -38,9 +57,32 @@
   --atkin-border: rgba(255, 255, 255, 0.10);
   --atkin-border-strong: rgba(255, 255, 255, 0.20);
   --atkin-focus: #F2F0EA;
-  --atkin-success: #2E8B57;
-  --atkin-warning: #D97706;
-  --atkin-danger: #DC2626;
+  --atkin-success: #4ADE80;
+  --atkin-warning: #FCD34D;
+  --atkin-danger: #F87171;
+
+  /* Accent text. The light values (blue-700, emerald-700, amber-700) are tuned
+     for dark text on a pale surface, so on a near-black page they fell to roughly
+     2.7:1 and were unreadable. These are the same hues carried up to the lightness
+     that reads on a dark surface. Aliased in tailwind.config.js so every existing
+     `text-blue-700` / `text-emerald-700` / `text-amber-700` corrects itself
+     instead of each call site needing its own dark: variant. */
+  --atkin-accent-text: #93C5FD;
+  --atkin-accent-text-strong: #BFDBFE;
+  --atkin-positive-text: #6EE7B7;
+  --atkin-caution-text: #FCD34D;
+  --atkin-tint: #1E2530;          /* was blue-50/emerald-50/amber-50 in light */
+  --atkin-tint-border: #2C3644;   /* was blue-200/emerald-200/amber-200 */
+
+  /* Deliberately dark panels that stay dark in both themes: the device-pairing
+     QR backdrop and the Notebook Studio transport bar. These used to be
+     `bg-slate-900` / `bg-stone-900`, which the stock-palette aliasing correctly
+     turned theme-aware -- and which therefore turned into near-white panels with
+     white text in dark mode. A panel that is meant to read as "instrument
+     surface" needs its own token, not the ink ramp. */
+  --atkin-inverse-bg: #111318;
+  --atkin-inverse-ink: #F2F0EA;
+  --atkin-inverse-muted: #9AA0A6;
 }
 
 /* Backward compatibility mappings for legacy components during transition */
