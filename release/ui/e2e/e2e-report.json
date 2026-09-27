@@ -51,7 +51,7 @@
     {
       "name": "download links are absolute https",
       "passed": true,
-      "detail": "https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64-setup.exe | https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64_en-US.msi | https://github.com/vaibhav4046/proofline/raw/main/release/android/Atkin-1.0.0-universal.apk | https://github.com/vaibhav4046/proofline"
+      "detail": "https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin_1.0.0_x64-setup.exe | https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin_1.0.0_x64_en-US.msi | https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin-1.0.0-universal.apk | https://github.com/vaibhav4046/ATKIN"
     },
     {
       "name": "no download link points at the releases index",

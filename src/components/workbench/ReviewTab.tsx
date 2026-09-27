@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   AlertCircle, 
-  CheckCircle2, 
+  CheckCircle2,
+  CircleSlash, 
   XCircle, 
   ShieldAlert, 
   ArrowRight, 
@@ -16,7 +17,7 @@ import type { WorkbenchTab } from '../layout/Sidebar.tsx';
 interface ReviewTabProps {
   reviewItems: ReviewItem[];
   onResolveItem: (id: string, note?: string) => void;
-  onDismissItem: (id: string) => void;
+  onDismissItem: (id: string, note?: string) => void;
   onNavigateTab: (tab: WorkbenchTab) => void;
 }
 
@@ -172,7 +173,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
 
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => onDismissItem(item.id)}
+                        onClick={() => onDismissItem(item.id, 'Dismissed from the review queue without verification.')}
                         className="text-[11px] text-ink-steel hover:text-ink px-2.5 py-1 rounded-[4px] hover:bg-gallery-mist"
                       >
                         Dismiss
@@ -215,14 +216,36 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                     <div className="text-ink-steel pl-5 mt-0.5 font-mono text-[11px]">
                       Note: {item.resolutionNote}
                     </div>
+                    )}
+                  </div>
+                  {/* A dismissal is not a verification. Both used to render as a
+                      green "Resolved" badge inside a panel headed "Resolution
+                      Audit Trail", which meant the trail asserted that the
+                      solicitor had checked a UCTA s.3 reasonableness test when
+                      all they had done was clear it from the queue. They are now
+                      distinct in wording, colour and icon, and the rationale is
+                      shown for both. */}
+                  {item.status === 'dismissed' ? (
+                    <Badge variant="slate" size="sm">
+                      <CircleSlash className="w-3 h-3 mr-1" aria-hidden="true" />
+                      Dismissed &mdash; not verified
+                    </Badge>
+                  ) : (
+                    <Badge variant="green" size="sm">
+                      <CheckCircle2 className="w-3 h-3 mr-1" aria-hidden="true" />
+                      Verified
+                    </Badge>
+                  )}
+                  {item.resolvedAt && (
+                    <div className="text-right font-mono text-[10.5px] text-ink-steel whitespace-nowrap">
+                      {new Date(item.resolvedAt).toLocaleString()}
+                    </div>
                   )}
                 </div>
-                <Badge variant="green" size="sm">Resolved</Badge>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
-};
+        )}
+      </div>
+    );
+  };

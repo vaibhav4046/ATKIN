@@ -224,7 +224,14 @@ export interface ReviewItem {
   claimId?: string;
   status: ReviewStatus;
   createdAt: string;
+  /**
+   * Why the solicitor closed this item. The UI collects it and ReviewTab passes
+   * it, so it must actually be persisted -- an audit trail that accepts a
+   * rationale and then discards it is worse than one that never asked.
+   */
   resolutionNote?: string;
+  /** When the item was closed, and by which decision. */
+  resolvedAt?: string;
 }
 
 // -------------------------------------------------------------

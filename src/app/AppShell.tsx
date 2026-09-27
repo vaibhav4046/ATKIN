@@ -654,27 +654,45 @@ const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     await saveDraftToDB(updatedDraft);
   };
 
-  const handleResolveReviewItem = async (id: string) => {
-    setReviewItems(prev => prev.map(item => {
-      if (item.id === id) {
-        const updated: ReviewItem = { ...item, status: 'resolved' };
-        saveReviewItemToDB(updated);
-        return updated;
-      }
-      return item;
-    }));
-  };
+    const handleResolveReviewItem = async (id: string, note?: string) => {
+      setReviewItems(prev => prev.map(item => {
+        if (item.id === id) {
+          // The signature used to be (id: string) only, so the rationale the UI
+          // collected was passed in by ReviewTab and then thrown away. The item
+          // was marked resolved with no record of why, on a screen that labels
+          // itself "Solicitor Audit". The rationale and the timestamp are the
+          // entire point of the audit trail, so both are persisted now.
+          const updated: ReviewItem = {
+            ...item,
+            status: 'resolved',
+            resolutionNote: note?.trim() || 'Resolved by solicitor audit.',
+            resolvedAt: new Date().toISOString(),
+          };
+          saveReviewItemToDB(updated);
+          return updated;
+        }
+        return item;
+      }));
+    };
 
-  const handleDismissReviewItem = async (id: string) => {
-    setReviewItems(prev => prev.map(item => {
-      if (item.id === id) {
-        const updated: ReviewItem = { ...item, status: 'dismissed' };
-        saveReviewItemToDB(updated);
-        return updated;
-      }
-      return item;
-    }));
-  };
+    const handleDismissReviewItem = async (id: string, note?: string) => {
+      setReviewItems(prev => prev.map(item => {
+        if (item.id === id) {
+          // Dismissal is a real decision and is recorded as one, with its own
+          // wording and its own reason. It is not a verification, and the audit
+          // trail no longer presents it as one.
+          const updated: ReviewItem = {
+            ...item,
+            status: 'dismissed',
+            resolutionNote: note?.trim() || 'Dismissed from the review queue without verification.',
+            resolvedAt: new Date().toISOString(),
+          };
+          saveReviewItemToDB(updated);
+          return updated;
+        }
+        return item;
+      }));
+    };
 
   const spansMap = new Map(spans.map(s => [s.id, s]));
   const { contradictions } = detectContradictions(claims, spansMap);
