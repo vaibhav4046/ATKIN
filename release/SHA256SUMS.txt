@@ -1,0 +1,3 @@
+b659768689b4c742da92b49f5beef007ee05cbad499cdb1fc2d4e64d009f0586  Atkin_1.0.0_x64-setup.exe
+c8a88ed96491b53ab13ac39d9c461fda1ece1262ca7aabc7dde9011fab6ee4d4  Atkin_1.0.0_x64_en-US.msi
+50eb140618639a05162eedc4c5d23b8b1d3d9b4e72e9ad455bc496793a63619d  Atkin-1.0.0-universal.apk

@@ -114,7 +114,7 @@ export const DOWNLOAD_OPTIONS = [
     title: 'ATKIN for Windows',
     filename: 'Atkin_1.0.0_x64-setup.exe',
     badge: 'Desktop App',
-    href: 'https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin_1.0.0_x64-setup.exe',
+    href: 'https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Atkin_1.0.0_x64-setup.exe',
     primary: true
   },
   {
@@ -123,7 +123,7 @@ export const DOWNLOAD_OPTIONS = [
     title: 'ATKIN for Windows (MSI)',
     filename: 'Atkin_1.0.0_x64_en-US.msi',
     badge: 'Enterprise Deploy',
-    href: 'https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin_1.0.0_x64_en-US.msi',
+    href: 'https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Atkin_1.0.0_x64_en-US.msi',
     primary: false
   },
   {
@@ -132,7 +132,7 @@ export const DOWNLOAD_OPTIONS = [
     title: 'ATKIN Mobile APK',
     filename: 'Atkin-1.0.0-universal.apk',
     badge: 'Mobile Companion',
-    href: 'https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin-1.0.0-universal.apk',
+    href: 'https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Atkin-1.0.0-universal.apk',
     primary: false
   },
   {
@@ -141,7 +141,7 @@ export const DOWNLOAD_OPTIONS = [
     title: 'Build from Source',
     filename: 'git clone + npm run tauri',
     badge: 'Open Source',
-    href: 'https://github.com/vaibhav4046/ATKIN',
+    href: 'https://github.com/vaibhav4046/proofline',
     primary: false
   }
 ] as const;

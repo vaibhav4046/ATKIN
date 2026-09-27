@@ -49,7 +49,7 @@ export const DownloadSection: React.FC = () => {
               </div>
 
               <div className="text-[11.5px] font-mono text-atkin-muted bg-atkin-bg p-2.5 rounded border border-atkin-border truncate">
-                {opt.filename || 'git clone github.com/vaibhav4046/ATKIN'}
+                {opt.filename || 'git clone github.com/vaibhav4046/proofline'}
               </div>
             </div>
 
