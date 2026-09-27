@@ -89,34 +89,51 @@ Schema history: v1 had the first eight stores; **v2 added `messages`**; **v3 add
 
 ---
 
-## 4. What is *not* in the schema, and therefore not durable
+## 4. Durability, after the v4 migration
 
-These have no store. Anything in the UI implying otherwise is a defect.
+**Corrected.** An earlier revision of this document recorded memory, tasks,
+research jobs and skills as memory-only. That was true when written and is no
+longer. Schema v4 gave all of them a real store, and
+`src/tests/auditTamper`-style verification plus a genuine process-restart
+harness now prove it.
 
-- **Memory records** — `engine/memory/memoryEngine.ts` holds `MemoryRecord[]` in
-  memory with `getAllMemories` / `getMemoriesForMatter` / `recallScopedMemories`.
-  No Dexie store, no `localStorage` key. **Memory does not survive a reload.**
-  It does travel in exported matter bundles (`bundleExchange` carries
-  `memories: MemoryRecord[]`), so it is durable only once exported.
-- **Tasks** — no store. Task planning exists
-  (`atkinTaskClassifierAndPlanner.test.ts` passes) but there is no task table.
-- **Research jobs** — in-memory job state under `runtime/jobs`; survives
-  navigation within a session, not a reload.
-- **Skills** — no store.
+| Entity | Store | Restart evidence |
+|---|---|---|
+| **Memory** | `memories` | `PROCESS RESTART VERIFIED` — written, browser killed, relaunched, record present with scope and provenance |
+| **Task** | `tasks` | `PROCESS RESTART VERIFIED` — status and priority intact |
+| **Work / research job** | `jobs` | `PROCESS RESTART VERIFIED` — restored as `paused` with checkpoint and an explicit interrupted step, never `completed` |
+| **Research session** | `researchSessions` | `PROCESS RESTART VERIFIED` — restored as `idle` with fetched sources and logs intact |
+| **Saved skill** | `skills` | `PROCESS RESTART VERIFIED` — version, triggers, workflow, permissions, provenance and success/failure counters intact |
+| **Chat history** | `messages` (v2) | `PROCESS RESTART VERIFIED` |
+| **Onboarding** | `userProfile.onboardingCompleted` (v3) | covered by unit tests; not separately exercised across a process kill |
+| **Profile, matters, sources, drafts, review items** | v1 stores | `PROCESS RESTART VERIFIED` |
 
-By contrast, these *are* durable and have tests:
+Still **not** durable, and nothing in the UI should imply otherwise:
 
-- **Chat history** — `messages` store with `saveChatMessageToDB`,
-  `loadChatMessagesFromDB`, `clearChatMessagesFromDB`.
-- **Onboarding completion** — `userProfile.onboardingCompleted`, covered by
-  `atkinWorkspaceProfile.test.ts` and `atkinAcceptanceJourneys.test.ts`.
-- **Demo / personal separation** — `workspaceType` and `isDemo` on matters, with
-  seeding and filtering asserted in `atkinWorkspaceProfile.test.ts`,
-  `persistence.test.ts` and `atkinAcceptanceJourneys.test.ts`.
+- Nothing else. Every entity the product surfaces is now in the schema.
+  `durableCounts()` in `src/db/repositories.ts` reports the live totals for all
+  five v4 stores plus the legacy ones, and is asserted by test.
 
-**Model health is deliberately not persisted.** It is recomputed by a live probe
-(`engine/modelBridge.checkOllamaConnection`, 2.5 s timeout against `/tags`).
-Never cached, never assumed — so "Ready" means a check actually ran.
+### Interruption semantics
+
+A job recorded as `running` at startup cannot still be running, because the
+process that was running it has exited. `reconcileOnStartup()` therefore
+downgrades it to `paused` with the original `progressPercent` preserved and the
+step set to "Interrupted when the application closed. Ready to resume."
+Research sessions left `executing` return as `idle` with their collected sources
+and logs. Neither is ever reported as complete.
+
+This is verified three times over: the unit test asserts the repair, the restart
+harness asserts it across a real process boundary, and a third process confirms
+the repair is stable rather than repeated on every boot.
+
+### What is deliberately not persisted
+
+- **Model health.** Recomputed by a live probe on every boot
+  (`engine/modelBridge.checkOllamaConnection`, 2.5 s timeout against `/tags`).
+  Caching it would let the UI claim a model is ready when it is not.
+- **Session UI state** such as which tab was open. The active *surface* is in
+  the URL hash; tab selection is intentionally not durable.
 
 ---
 

@@ -430,3 +430,75 @@ asset name rather than pretending it is something else.
 - Android APK built and committed but never published as a release asset.
 - Published Windows installers still carry the retired brand.
 - Nothing has been deployed. The three commits are local.
+
+---
+
+# Addendum 2 — release-completion pass
+
+Commits `30cb1c5`, `98c7c8c`, `72a6387`, `c983f63`. This closes most of the
+list above and supersedes the "still unverified" section above.
+
+## Closed
+
+| Item | Status | Evidence |
+|---|---|---|
+| Memory durability | `PROCESS RESTART VERIFIED` | `e2e-restart.mjs` |
+| Task durability | `PROCESS RESTART VERIFIED` | same |
+| Research-job durability | `PROCESS RESTART VERIFIED`, restored paused not complete | same |
+| Skill durability | `PROCESS RESTART VERIFIED` | same |
+| Genuine process restart | `VERIFIED` | browser killed, new process on same profile |
+| Audit tamper detection | `VERIFIED` | 22 tests, real SHA-256 vs NIST vectors |
+| Backup / restore round trip | `VERIFIED` | 17 tests incl. fail-closed on corruption |
+| Bundle splitting | `DONE` | entry 1,118 kB → 285 kB |
+| Demo workspace empty on fresh install | `FIXED` | seeder had no production caller |
+
+## New P0 found and fixed: cross-matter citation leak
+
+`CitationGate` checked only `binding.matterId` against the active matter. That
+field is supplied by the citation generator — the component the gate exists to
+constrain — and the gate never checked which matter the *fetched document*
+actually belonged to. A citation could therefore declare the active matter,
+name another matter's document, and verify as VALID, because the text genuinely
+was in that other document.
+
+The gate now asserts `doc.matterId === context.activeMatterId` after the
+document is fetched. That value comes from the store, not the binding.
+
+## New P1 found and fixed: hardcoded figures presented as measurements
+
+The settings panel was headed "Empirical 8-Task Legal Grounding Benchmark" with
+an "Empirical Evaluation" badge over hardcoded constants (62.5 / 87.5 / 100.0)
+from `evaluateTiers()`. A unit test asserted 87.5, which proves only that the
+constant was not edited. `release/benchmark/hardware-benchmark.json` contains
+no accuracy or throughput figures at all, and names a different model than the
+one installed.
+
+The panel is now "Grounding Benchmark Harness", badged "Reference values", and
+states that measured results come from a real run written to that JSON file and
+that nothing on screen is read from it. Two other unsupported claims were
+removed: "Tested 57.6 tps on laptop GPU" and the "Google Gemma 4" vendor
+attribution, replaced with the provider model id the health probe returns.
+
+## Methodological correction
+
+An E2E check added for the code-split was passing for the wrong reason: it
+asserted the main region had more than 40 characters, and with no matter loaded
+every tab rendered the same empty state, so all thirteen reported an identical
+227 characters. It now requires a matter first and asserts the tabs are
+distinct surfaces (13 distinct of 13). Recorded because a green suite that
+proves nothing is worse than a red one.
+
+## Still unverified
+
+- Cross-device of any kind. No `adb`, no emulator, no second device on this
+  machine. Pairing logic is `UNIT VERIFIED` only
+  (`atkinDevicePairing.test.ts`, `pairingRemoteInference.test.ts`).
+- Native artifacts were not rebuilt: no Rust toolchain (`cargo`/`rustc` absent).
+  The Tauri source is already correctly branded and the existing installers in
+  `release/` are ATKIN-named with checksums that verify against their bytes.
+- The published GitHub release `v1.0.0` still contains Proofline-named
+  installers. Re-publishing is an external action requiring approval.
+- Tail truncation of the audit chain is undetectable by hash chaining alone.
+  Recorded as a known limitation with the mitigation, not papered over.
+- Offline behaviour, model-failure-during-stream, and PDF/DOCX ingestion are
+  covered by unit tests only, not by a process-level or network-level exercise.
