@@ -308,3 +308,125 @@ Classification reflects what I could verify, not what documentation asserts.
 `CROSS-DEVICE VERIFIED` · `BLOCKED` · `UNVERIFIED`
 
 Nothing in this document is labelled with a level above what was actually executed.
+
+---
+
+# Addendum — remediation pass
+
+Three commits after the audit above: `6e2d094`, `1bb6b77`, `f94831b`.
+106 files changed, +2228 / −786.
+
+## Correction to P0-1 / P0-2
+
+The audit described the displayed digests as "invented" and "fabricated". That
+was imprecise, and the distinction matters.
+
+`60b0b7a6b53e2cd3d4499f2c54e8a1c94dc07d22c0acf064e24d293d9429af67` is the
+**genuine** SHA-256 of the demo judgment text in `db/fixtures/batesPostOfficeMatter.ts`.
+All four fixture digests were verified to match their own text.
+
+The defect was not invention — it was **one real digest copy-pasted into four
+places it did not describe**: the canonical mark, the demo contract, and an
+audio recording. Two of those were visible to users next to the word VERIFIED,
+so the user-facing defect stands exactly as written. Only the
+`localSpeechEngine` fallback was genuinely fabricated, and that is now fixed to
+fail closed.
+
+`assetDigestIntegrity.test.ts` now pins every fixture digest to its own bytes so
+the two can never drift apart again.
+
+## New P0 found and fixed: invented case law on the marketing page
+
+`LivingSpanAssembler.tsx` rendered an interactive explorer presenting material as
+verified legal record:
+
+- Quotations attributed to a named High Court judge in a real reported case
+  (`Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB)`), with paragraph
+  references that were never checked against the judgment.
+- A contested leaked internal memo presented as a court document.
+- `legalImplication: '... providing conclusive evidence of knowledge under CPR
+  Part 31'` and `cprNotice: 'Adverse Record Verified under CPR 31.6'`.
+- Fabricated `tensionScore: 94` / `tensionSeverity: 'critical'`.
+
+The underlying demo fixtures were left untouched — `regressionIntegrity.test.ts`
+already checks the judgment text against authentic paragraph extracts. The
+component was removed from the page and deleted; `HumanJudgment.tsx` replaces it
+with claims the product can actually defend.
+
+## New P0 found and fixed: routing did not survive a reload
+
+`AppRouter` held the active surface in a bare `useState`, so reloading inside the
+workbench returned the user to the marketing page. This is now covered by
+`#/workbench` hash routing and asserted by the E2E suite.
+
+## New P0 found and fixed: download cards pointed at nothing
+
+Both binary cards advertised filenames that existed nowhere
+(`Atkin-Setup.exe`, `Atkin-Companion.apk`), and `DownloadSection` silently
+rewrote every local href to the releases index — where no Android asset had ever
+been published. Live HTTP checks confirmed: the APK 404s as a release asset but
+resolves from the repository. Cards now deep-link to verified URLs and display
+real asset names.
+
+**Still open and requiring an outward-facing decision:** the published v1.0.0
+Windows installers are named `Proofline_1.0.0_x64-setup.exe` and
+`Proofline_1.0.0_x64_en-US.msi`. The only artifact a judge can download still
+carries the retired brand. Re-releasing under ATKIN names is a public release
+action and was deliberately not taken unilaterally. The UI now displays the real
+asset name rather than pretending it is something else.
+
+## Fixed: image budget
+
+| Item | Before | After |
+|---|---|---|
+| Header logo (renders 24px) | 593 KB PNG, eager | 2–55 KB via shared srcset |
+| Hero art | not present | 138 KB WebP (+194 KB JPEG fallback) |
+| Whole visual kit | not integrated | 4.5 MB, 29 files, all WebP/JPEG |
+
+## Verification added
+
+- `scripts/e2e-smoke.mjs` — 32 checks against the production build: displayed
+  digest provenance, image decode, kit art presence, banned claims in rendered
+  copy, download target shape, theme persistence across reload, dark-mode
+  contrast ratios, horizontal overflow at 10 breakpoints, workbench reload, and
+  console/network hygiene. **32/32 passing.**
+- `downloadIntegrity.test.ts` — 8 assertions.
+- `copyRegression.test.ts` — rewritten from 14 hand-picked files to a walk of the
+  whole production tree; 109 assertions.
+
+## Results at the end of this pass
+
+| Gate | Result |
+|---|---|
+| `tsc --noEmit` | 0 errors |
+| Vitest | 47 files, 374 tests, 374 passed |
+| Production build | succeeds, 7.8s |
+| E2E against `dist/` | 32/32 |
+| Dark-mode contrast | h1 17.4:1, body 5.9:1, button 17.4:1 (all above WCAG AA) |
+| Horizontal overflow | none at 320/375/390/430/768/1024/1280/1440/1728/1920 |
+| Console errors / uncaught exceptions / failed requests | 0 |
+
+## Confirmed genuinely real (checked because they looked suspicious)
+
+- **Local model readiness is not hardcoded.** `modelBridge.checkOllamaConnection`
+  performs a live `GET /tags` with a 2.5 s timeout and measures real latency.
+  Ollama is running on this machine with `gemma4:e2b-it-qat` genuinely installed
+  (4.3 GB gguf), so the "Local Model" label is backed by a check that passed.
+- **Demo judgment text is authentic** to the paragraphs asserted by
+  `regressionIntegrity.test.ts`.
+- **Bundle integrity is verified on import** — `verifyBundleIntegrity` recomputes
+  the payload digest and throws on mismatch.
+- **Matter isolation has unit coverage** (`memoryIsolation.test.ts`).
+
+## Still unverified after this pass
+
+- Memory, tasks, research jobs and skills have **no persistence store** — they do
+  not survive a reload. See `docs/state-authority-map.md` §4.
+- No process-restart test (only in-process round trips).
+- No audit-ledger tamper test.
+- No backup/restore round trip.
+- No cross-device or second-device evidence.
+- Bundle is a single 1,118 kB chunk (324 kB gzip); not code-split.
+- Android APK built and committed but never published as a release asset.
+- Published Windows installers still carry the retired brand.
+- Nothing has been deployed. The three commits are local.
