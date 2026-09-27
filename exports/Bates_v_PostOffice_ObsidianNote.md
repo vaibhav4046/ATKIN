@@ -4,7 +4,7 @@ title: "Bates & Others v Post Office Ltd [2019] EWHC 3408 (QB)"
 client: "Alan Bates (Lead Claimant for 550 Subpostmasters)"
 jurisdiction: "England and Wales"
 status: "active"
-exported_at: "2026-09-27T05:03:09.603Z"
+exported_at: "2026-09-27T05:09:53.686Z"
 generator: "ATKIN"
 tags:
   - legal/matter
