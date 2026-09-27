@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { LandingHero } from './LandingHero';
 import { ProductProof } from './ProductProof';
-import { LivingSpanAssembler } from './LivingSpanAssembler';
+import { HumanJudgment } from './HumanJudgment';
 import { ProductChapters } from './ProductChapters';
 import { SecurityMatrix } from './SecurityMatrix';
 import { DownloadSection } from './DownloadSection';
@@ -36,13 +36,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         onLoadSample={onLoadSample}
       />
 
-      {/* Interactive Span Grounding & Contradiction Explorer */}
-      <div className="py-16 px-4 sm:px-8 border-b border-atkin-border max-w-[1180px] mx-auto w-full">
-        <LivingSpanAssembler
-          onOpenWorkbench={onOpenWorkbench}
-          onLoadSample={onLoadSample}
-        />
-      </div>
+      {/* Human Judgment. Replaces an earlier explorer that presented invented
+          quotations and fabricated digests as verified case law. See the note
+          at the top of HumanJudgment.tsx. */}
+      <HumanJudgment onOpenWorkbench={onOpenWorkbench} />
 
       {/* Chapter 03: Sequential Numbered Chapters (#01 WORK to #06 MOVE) */}
       <ProductChapters />

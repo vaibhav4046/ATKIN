@@ -95,4 +95,42 @@ describe('Asset digest integrity (no fabricated verification)', () => {
     // It must still be a real, substantive statement rather than an empty placeholder.
     expect(notice.length).toBeGreaterThan(20);
   });
+
+  it('every demo fixture digest is the real digest of that fixture text', async () => {
+    // These digests were originally correct for the demo judgment, then
+    // copy-pasted into the hero and the landing ledger where they described a
+    // different artifact entirely. This pins each one to its own bytes.
+    const { BATES_DOCUMENTS } = await import('../db/fixtures/batesPostOfficeMatter');
+    expect(BATES_DOCUMENTS.length).toBeGreaterThan(0);
+
+    for (const doc of BATES_DOCUMENTS) {
+      const actual = createHash('sha256').update(doc.text, 'utf8').digest('hex');
+      expect(
+        doc.sha256,
+        `${doc.filename} digest does not describe its own text`
+      ).toBe(actual);
+    }
+  });
+
+  it('the audio digest is real, or explicitly absent, never a placeholder', async () => {
+    const { localSpeechEngine } = await import('../engine/media/localSpeechEngine');
+    const result = await localSpeechEngine.processOfflineAudio({
+      matterId: 'matter-digest-check',
+      audioBlob: new ArrayBuffer(2048),
+      clientConsentRecorded: true,
+    });
+
+    if (result.audioSha256 === null) {
+      // Fail-closed path is legitimate: we report that we could not hash.
+      expect(result.audioSha256).toBeNull();
+    } else {
+      const actual = createHash('sha256')
+        .update(Buffer.from(new ArrayBuffer(2048)))
+        .digest('hex');
+      expect(result.audioSha256).toBe(actual);
+      expect(result.audioSha256).not.toBe(
+        '60b0b7a6b53e2cd3d4499f2c54e8a1c94dc07d22c0acf064e24d293d9429af67'
+      );
+    }
+  });
 });

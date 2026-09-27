@@ -1,4 +1,5 @@
 import React from 'react';
+import { ATKIN_MARK_INTRINSIC, ATKIN_MARK_SRCSET } from '../../content/brandAssets';
 
 interface AtkinLogoProps {
   className?: string;
@@ -16,11 +17,15 @@ export const AtkinLogo: React.FC<AtkinLogoProps> = ({
 
   return (
     <img
-      src="/brand/atkin-mark.png"
+      src="/brand/atkin-mark-64.png"
+      srcSet={ATKIN_MARK_SRCSET}
+      sizes="(max-width: 640px) 24px, 32px"
+      width={ATKIN_MARK_INTRINSIC.width}
+      height={ATKIN_MARK_INTRINSIC.height}
       alt={alt}
       style={style}
       className={`object-contain select-none shrink-0 rounded-[4px] ${className}`}
-      loading="eager"
+      decoding="async"
     />
   );
 };

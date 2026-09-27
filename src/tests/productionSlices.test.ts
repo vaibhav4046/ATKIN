@@ -99,7 +99,13 @@ describe('Production Slices (Slices 1 to 7 Verification)', () => {
       });
 
       expect(result.clientConsentRecorded).toBe(true);
-      expect(result.audioSha256).toMatch(/^[a-f0-9]{64}$/);
+      // Real digest of the bytes we handed in, or an explicit null. Never a placeholder.
+      expect(result.audioSha256 === null || /^[a-f0-9]{64}$/.test(result.audioSha256)).toBe(true);
+      if (result.audioSha256 !== null) {
+        const { createHash } = await import('node:crypto');
+        const expected = createHash('sha256').update(Buffer.alloc(1024)).digest('hex');
+        expect(result.audioSha256).toBe(expected);
+      }
       expect(result.words.length).toBeGreaterThan(0);
 
       // Verify transcript editing

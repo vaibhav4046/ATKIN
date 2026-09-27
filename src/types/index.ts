@@ -627,7 +627,12 @@ export interface SpeechTranscriptWord {
 export interface SpeechTranscriptionResult {
   id: string;
   matterId: string;
-  audioSha256: string;
+  /**
+   * Real lowercase SHA-256 of the audio bytes, or `null` when the digest could
+   * not be computed. Never a placeholder: an audit field that does not describe
+   * the recording is worse than an absent one.
+   */
+  audioSha256: string | null;
   durationSeconds: number;
   fullText: string;
   words: SpeechTranscriptWord[];

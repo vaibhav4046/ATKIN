@@ -19,10 +19,10 @@ export const DownloadSection: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {DOWNLOAD_OPTIONS.map((opt) => (
           <div
-            key={opt.platform}
+            key={opt.href}
             className={`rounded-[8px] bg-atkin-surface border p-6 flex flex-col justify-between space-y-6 shadow-2xs ${
               opt.primary ? 'border-atkin-ink' : 'border-atkin-border'
             }`}
@@ -55,8 +55,8 @@ export const DownloadSection: React.FC = () => {
 
             <div className="pt-2">
               <a
-                href={opt.href.startsWith('http') ? opt.href : `https://github.com/vaibhav4046/proofline/releases`}
-                target={opt.href.startsWith('http') ? '_blank' : undefined}
+                href={opt.href}
+                target="_blank"
                 rel="noopener noreferrer"
                 className={`w-full py-2.5 rounded-[4px] font-medium text-[12.5px] font-sans flex items-center justify-center gap-2 cursor-pointer transition-colors ${
                   opt.primary
@@ -65,7 +65,7 @@ export const DownloadSection: React.FC = () => {
                 }`}
               >
                 <Download className="w-4 h-4" />
-                <span>{opt.primary ? 'Download for Windows' : `Get ${opt.platform}`}</span>
+                <span>{opt.primary ? 'Download for Windows' : `Get ${opt.title}`}</span>
               </a>
             </div>
           </div>

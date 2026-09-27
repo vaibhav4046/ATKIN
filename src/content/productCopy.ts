@@ -96,23 +96,43 @@ export const PRODUCT_PROOF = {
   }
 } as const;
 
+/**
+ * Download targets.
+ *
+ * Every href here was checked with a live HTTP request. Do not add a path that
+ * has not been verified, and do not advertise a filename the link does not
+ * serve: a download card that lies is worse than no download card.
+ *
+ * The Windows artifacts are published on the v1.0.0 GitHub release and still
+ * carry the retired product name inside the published asset filenames. The
+ * displayed name below is the real asset name, not the intended one.
+ */
 export const DOWNLOAD_OPTIONS = [
   {
     platform: 'Windows',
     requirement: 'Windows 10 / 11 (x64)',
     title: 'ATKIN for Windows',
-    filename: 'Atkin-Setup.exe',
+    filename: 'Proofline_1.0.0_x64-setup.exe',
     badge: 'Desktop App',
-    href: '/download#windows',
+    href: 'https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64-setup.exe',
     primary: true
+  },
+  {
+    platform: 'Windows',
+    requirement: 'Windows 10 / 11 (x64) · MSI for managed deployment',
+    title: 'ATKIN for Windows (MSI)',
+    filename: 'Proofline_1.0.0_x64_en-US.msi',
+    badge: 'Enterprise Deploy',
+    href: 'https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64_en-US.msi',
+    primary: false
   },
   {
     platform: 'Android',
     requirement: 'Android 12+ (Mobile Companion)',
     title: 'ATKIN Mobile APK',
-    filename: 'Atkin-Companion.apk',
+    filename: 'Atkin-1.0.0-universal.apk',
     badge: 'Mobile Companion',
-    href: '/download#android',
+    href: 'https://github.com/vaibhav4046/proofline/raw/main/release/android/Atkin-1.0.0-universal.apk',
     primary: false
   },
   {

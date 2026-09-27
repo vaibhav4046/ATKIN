@@ -146,15 +146,19 @@ export class LocalSpeechEngine {
     const durationSeconds = 184; // ~3.06 mins default representation
     const billingUnits = this.calculateBillingUnits(durationSeconds);
 
-    // Compute genuine SHA-256 digest for audit trail
-    let audioSha256 = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
+    // Compute the genuine SHA-256 digest of the audio for the audit trail.
+    //
+    // If the digest cannot be computed we report that it is unavailable. We never
+    // substitute a placeholder: a digest that does not describe these bytes is
+    // worse than no digest, because it looks like evidence.
+    let audioSha256: string | null = null;
     try {
       const buffer = params.audioBlob instanceof Blob ? await params.audioBlob.arrayBuffer() : params.audioBlob;
       const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       audioSha256 = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     } catch {
-      audioSha256 = '60b0b7a6b53e2cd3d4499f2c54e8a1c94dc07d22c0acf064e24d293d9429af67';
+      audioSha256 = null;
     }
 
     const fullText = params.overrideTranscript || 

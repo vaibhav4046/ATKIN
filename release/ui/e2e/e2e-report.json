@@ -1,0 +1,167 @@
+{
+  "total": 32,
+  "passed": 32,
+  "failures": 0,
+  "results": [
+    {
+      "name": "page title identifies ATKIN",
+      "passed": true,
+      "detail": "ATKIN — Sovereign Legal AI Ecosystem"
+    },
+    {
+      "name": "a digest is displayed on the landing page",
+      "passed": true,
+      "detail": "2 unique"
+    },
+    {
+      "name": "every displayed digest matches a real shipped file",
+      "passed": true,
+      "detail": "15cf2f46…=brand/atkin-mark.png, fc674290…=fixtures/test-contract-independent.txt"
+    },
+    {
+      "name": "no broken images",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "visual kit art layer is mounted",
+      "passed": true,
+      "detail": "2 kit source(s)"
+    },
+    {
+      "name": "hero art decoded at real dimensions",
+      "passed": true,
+      "detail": "1600x900 loading=eager"
+    },
+    {
+      "name": "no banned claim in rendered copy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no retired brand name in rendered copy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "download section exists",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "download links are absolute https",
+      "passed": true,
+      "detail": "https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64-setup.exe | https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64_en-US.msi | https://github.com/vaibhav4046/proofline/raw/main/release/android/Atkin-1.0.0-universal.apk | https://github.com/vaibhav4046/proofline"
+    },
+    {
+      "name": "no download link points at the releases index",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no placeholder hrefs on the page",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "theme class changes on toggle",
+      "passed": true,
+      "detail": " -> dark"
+    },
+    {
+      "name": "theme survives reload",
+      "passed": true,
+      "detail": "dark"
+    },
+    {
+      "name": "dark mode h1 contrast >= 3:1",
+      "passed": true,
+      "detail": "17.37:1"
+    },
+    {
+      "name": "dark mode p contrast >= 4.5:1",
+      "passed": true,
+      "detail": "5.88:1"
+    },
+    {
+      "name": "dark mode button contrast >= 4.5:1",
+      "passed": true,
+      "detail": "17.37:1"
+    },
+    {
+      "name": "no horizontal scroll at 320px",
+      "passed": true,
+      "detail": "scrollW=320 clientW=320"
+    },
+    {
+      "name": "no horizontal scroll at 375px",
+      "passed": true,
+      "detail": "scrollW=375 clientW=375"
+    },
+    {
+      "name": "no horizontal scroll at 390px",
+      "passed": true,
+      "detail": "scrollW=390 clientW=390"
+    },
+    {
+      "name": "no horizontal scroll at 430px",
+      "passed": true,
+      "detail": "scrollW=430 clientW=430"
+    },
+    {
+      "name": "no horizontal scroll at 768px",
+      "passed": true,
+      "detail": "scrollW=768 clientW=768"
+    },
+    {
+      "name": "no horizontal scroll at 1024px",
+      "passed": true,
+      "detail": "scrollW=1024 clientW=1024"
+    },
+    {
+      "name": "no horizontal scroll at 1280px",
+      "passed": true,
+      "detail": "scrollW=1280 clientW=1280"
+    },
+    {
+      "name": "no horizontal scroll at 1440px",
+      "passed": true,
+      "detail": "scrollW=1440 clientW=1440"
+    },
+    {
+      "name": "no horizontal scroll at 1728px",
+      "passed": true,
+      "detail": "scrollW=1728 clientW=1728"
+    },
+    {
+      "name": "no horizontal scroll at 1920px",
+      "passed": true,
+      "detail": "scrollW=1920 clientW=1920"
+    },
+    {
+      "name": "workbench shell renders",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "workbench still mounted after reload",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no uncaught page exceptions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no console errors",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "no failed or 4xx/5xx requests",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}
