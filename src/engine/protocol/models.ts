@@ -211,29 +211,97 @@ export class DeterministicOfflineLegalModel implements LegalModel {
         confidenceScore: 0.98
       };
     } else {
-      // General IRAC retrieval against spans
-      const matchingSpans = spans.filter(s => {
-        const words = queryLower.split(/\s+/).filter(w => w.length > 3);
-        const spanLower = s.exactText.toLowerCase();
-        return words.some(w => spanLower.includes(w));
-      });
+      // General retrieval against spans.
+      //
+      // Three defects lived here and all three inflated confidence:
+      //
+      // 1. Matching was `words.some(w => spanLower.includes(w))` over every query
+      //    word longer than three characters. That includes "what", "claim",
+      //    "does" and "when", so a question about a limitation date matched
+      //    almost any sentence in the bundle.
+      // 2. When nothing matched, the code fell back to `spans.slice(0, 3)` and
+      //    then reported those spans as relevant. A question the record cannot
+      //    answer was answered from three arbitrary sentences.
+      // 3. Because of that fallback `selectedSpans` was never empty, so
+      //    `isAbstention` was unreachable. The abstention safety mechanism was
+      //    dead code on this path, while the UI went on to stamp the result
+      //    "FULLY SUPPORTED".
+      //
+      // Retrieval now requires whole-word overlap on meaningful terms only,
+      // there is no fallback, and abstention is a real outcome. When the record
+      // is silent the engine says so and names what it searched for, which is
+      // the only honest answer available.
+      const STOPWORDS = new Set([
+        'the', 'and', 'for', 'are', 'but', 'not', 'you', 'all', 'any', 'can',
+        'her', 'was', 'our', 'its', 'has', 'had', 'were', 'been', 'that', 'this',
+        'with', 'from', 'they', 'them', 'their', 'there', 'what', 'which', 'who',
+        'whom', 'how', 'when', 'where', 'why', 'does', 'did', 'doing', 'done',
+        'about', 'into', 'over', 'under', 'again', 'then', 'than', 'some',
+        'such', 'only', 'other', 'more', 'most', 'also', 'been', 'being', 'will',
+        'would', 'could', 'should', 'shall', 'may', 'might', 'must', 'have',
+      ]);
 
-      const selectedSpans = matchingSpans.length > 0 ? matchingSpans : spans.slice(0, 3);
+      const significant = Array.from(
+        new Set(
+          queryLower
+            .split(/[^a-z0-9]+/)
+            .filter((w) => w.length >= 4 && !STOPWORDS.has(w))
+        )
+      );
 
-      irac = {
-        issue: `Legal inquiry: "${query}"`,
-        rule: `Governing law of ${request.context.jurisdiction || 'England and Wales'}.`,
-        application: selectedSpans.length > 0
-          ? `Analyzed against ${selectedSpans.length} evidentiary spans.`
-          : 'No relevant factual spans found in current matter.',
-        conclusion: selectedSpans.length > 0
-          ? `Analysis concluded with ${selectedSpans.length} verified citation references.`
-          : 'Evidential abstention applied: no matching factual spans in matter record.',
-        citations: selectedSpans.map(s => ({ spanId: s.id, exactText: s.exactText })),
-        isAbstention: selectedSpans.length === 0,
-        abstentionReason: selectedSpans.length === 0 ? 'No evidentiary spans found matching query.' : undefined,
-        confidenceScore: selectedSpans.length > 0 ? 0.9 : 0.0
+      const scoreSpan = (s: { exactText: string }): number => {
+        if (significant.length === 0) return 0;
+        const words = new Set(s.exactText.toLowerCase().split(/[^a-z0-9]+/));
+        return significant.reduce((n, term) => (words.has(term) ? n + 1 : n), 0);
       };
+
+      // Require more than a single incidental word before a span counts as
+      // evidence. One shared word is a coincidence, not a citation.
+      const MIN_TERM_OVERLAP = 2;
+      const scored = spans
+        .map((s) => ({ span: s, score: scoreSpan(s) }))
+        .filter((x) => x.score >= (significant.length >= MIN_TERM_OVERLAP ? MIN_TERM_OVERLAP : 1))
+        .sort((a, b) => b.score - a.score);
+
+      const selectedSpans = scored.slice(0, 5).map((x) => x.span);
+      const abstained = selectedSpans.length === 0;
+      const searched = significant.length ? significant.join(', ') : 'no distinctive terms';
+
+      if (abstained) {
+        irac = {
+          issue: `Legal inquiry: "${query}"`,
+          rule: `Governing law of ${request.context.jurisdiction || 'England and Wales'}.`,
+          application: `No span in this matter contains enough of the terms in your question to support an answer. Searched for: ${searched}.`,
+          conclusion:
+            `This matter record does not answer that question. Nothing in the ${spans.length} indexed span${spans.length === 1 ? '' : 's'} matched on ${searched}. ` +
+            `Upload the document that would answer it, or narrow the question to terms the bundle actually contains.`,
+          citations: [],
+          isAbstention: true,
+          abstentionReason: `No evidentiary span matched the query terms (${searched}).`,
+          // Abstention is a first-class answer, so it is not a low-confidence guess.
+          confidenceScore: 0,
+        };
+      } else {
+        const top = selectedSpans[0];
+        const quote = top.exactText.trim().replace(/\s+/g, ' ');
+        const quoteForDisplay = quote.length > 320 ? `${quote.slice(0, 317)}...` : quote;
+        irac = {
+          issue: `Legal inquiry: "${query}"`,
+          rule: `Governing law of ${request.context.jurisdiction || 'England and Wales'}.`,
+          application:
+            `${selectedSpans.length} span${selectedSpans.length === 1 ? '' : 's'} in this matter match the question. The strongest states: "${quoteForDisplay}"`,
+          conclusion:
+            `On the evidence in this matter: "${quoteForDisplay}"` +
+            (selectedSpans.length > 1
+              ? ` ${selectedSpans.length - 1} further span${selectedSpans.length === 2 ? '' : 's'} also bear on the question; open each citation to read it in context.`
+              : ''),
+          citations: selectedSpans.map((s) => ({ spanId: s.id, exactText: s.exactText })),
+          isAbstention: false,
+          // Confidence tracks how much evidence was actually found, rather than
+          // being a constant attached to whatever the retriever happened to return.
+          confidenceScore: Math.min(0.95, 0.55 + 0.1 * Math.min(selectedSpans.length, 4)),
+        };
+      }
     }
 
     const durationMs = Date.now() - startTime;

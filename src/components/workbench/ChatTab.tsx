@@ -399,25 +399,59 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                     : 'bg-white border border-border-hairline text-ink'
                 }`}
               >
-                {/* Assistant Title Bar */}
-                {msg.role === 'assistant' && (
-                  <div className="flex items-center justify-between pb-2 mb-2 border-b border-border-hairline">
-                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-atkin-ink font-mono">
-                      <Binary className="w-3.5 h-3.5" />
-                      <span>Evidential Synthesis &bull; Deterministic Provenance</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleCopyMessage(msg)}
-                        className="text-[11px] text-ink-steel hover:text-ink flex items-center gap-1"
-                        title="Copy Response"
+                {/* Assistant Title Bar.
+
+                    This used to hardcode "Evidential Synthesis • Deterministic
+                    Provenance" on every assistant message regardless of what
+                    actually ran, so a response written by a local model and one
+                    assembled from located spans were labelled identically. On a
+                    product whose entire claim is that you can check its work,
+                    that is the single most damaging thing the UI could do.
+
+                    The message already carries the facts needed to be truthful --
+                    claimSupportStatus, sourcesUsed, and the modelTag that ran --
+                    so the label is derived from them instead. */}
+                {msg.role === 'assistant' && (() => {
+                  const isAbstention =
+                    msg.claimSupportStatus === 'EVIDENTIALLY_ABSTAINED';
+                  const citationCount = msg.sourcesUsed?.length ?? 0;
+                  const isDeterministic =
+                    msg.generationDetails?.modelTag === 'atkin-sovereign-core';
+
+                  let label: string;
+                  let tone: string;
+                  if (isAbstention || citationCount === 0) {
+                    label = 'Evidential Synthesis • No supporting span in this matter';
+                    tone = 'text-atkin-warning';
+                  } else if (isDeterministic) {
+                    label = `Evidential Synthesis • Deterministic Provenance • ${citationCount} citation${citationCount === 1 ? '' : 's'}`;
+                    tone = 'text-atkin-ink';
+                  } else {
+                    label = `Local Model Synthesis • ${citationCount} span${citationCount === 1 ? '' : 's'} located, wording unverified`;
+                    tone = 'text-atkin-ink-secondary';
+                  }
+
+                  return (
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-border-hairline">
+                      <div
+                        className={`flex items-center gap-1.5 text-[11px] font-semibold font-mono ${tone}`}
                       >
-                        {copiedMsgId === msg.id ? <Check className="w-3 h-3 text-atkin-success" /> : <Copy className="w-3 h-3" />}
-                        <span>{copiedMsgId === msg.id ? 'Copied' : 'Copy'}</span>
-                      </button>
+                        <Binary className="w-3.5 h-3.5" />
+                        <span>{label}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleCopyMessage(msg)}
+                          className="text-[11px] text-ink-steel hover:text-ink flex items-center gap-1"
+                          title="Copy Response"
+                        >
+                          {copiedMsgId === msg.id ? <Check className="h-3 w-3 text-atkin-success" /> : <Copy className="h-3 w-3" />}
+                          <span>{copiedMsgId === msg.id ? 'Copied' : 'Copy'}</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {/* CitationGate Provenance & RFC 8785 Audit Hash Badges */}
                 {msg.role === 'assistant' && msg.claimSupportStatus && (
