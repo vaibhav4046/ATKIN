@@ -44,7 +44,7 @@ export const LandingFooter: React.FC<LandingFooterProps> = ({
             Terms &amp; Professional Responsibility
           </button>
           <a
-            href="https://github.com/vaibhav4046/proofline"
+            href="https://github.com/vaibhav4046/ATKIN"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-atkin-ink transition-colors flex items-center gap-1"

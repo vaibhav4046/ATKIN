@@ -35,9 +35,10 @@ const SCANNED_EXTENSIONS = new Set(['.ts', '.tsx', '.css']);
 /**
  * Patterns that must not appear in shipped code.
  *
- * `proofline` is the retired product name. The GitHub repository slug is still
- * legitimately `vaibhav4046/proofline`, so repository URLs are stripped before
- * matching (see sanitise).
+ * `proofline` is the retired product name. The repository was renamed to
+ * `vaibhav4046/ATKIN`, so no shipped URL carries the old slug any more. The
+ * sanitise step still strips a repository slug before matching, so a stray
+ * reference in a link cannot be mistaken for product copy.
  */
 const BANNED: { pattern: RegExp; why: string }[] = [
   { pattern: /\bproofline\b/i, why: 'retired product name "Proofline"' },
