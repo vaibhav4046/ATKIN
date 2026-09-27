@@ -55,30 +55,40 @@ export const TopRail: React.FC<TopRailProps> = ({
   const [isNetMenuOpen, setIsNetMenuOpen] = useState(false);
 
   return (
-    <div className="h-[58px] bg-atkin-surface border-b border-atkin-border px-6 flex items-center justify-between sticky top-[52px] z-40 select-none text-atkin-ink">
-      <div className="flex items-center gap-3">
-        <div className="hidden sm:flex items-center">
+    // min-h rather than a fixed h: a long matter title plus the client and
+    // "Active Matter" lines need ~64px, and a fixed 58px rail made that content
+    // spill out of a sticky z-40 container and collide with the page beneath it.
+    // min-h lets the rail grow with its content while keeping the intended
+    // resting height for short titles. min-w-0 on the identity block is what
+    // allows the title to wrap instead of forcing the rail wider than the
+    // viewport.
+    <div className="min-h-[58px] bg-atkin-surface border-b border-atkin-border px-6 py-2 flex items-center justify-between gap-4 sticky top-[52px] z-40 select-none text-atkin-ink">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="hidden sm:flex items-center shrink-0">
           <AtkinLogo className="w-8 h-8 rounded-[4px] border border-atkin-border shadow-xs" />
         </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-[15px] font-semibold text-atkin-ink tracking-tight font-serif">
+        <div className="min-w-0">
+          {/* min-w-0 so a long matter title can shrink and truncate. Without it
+              this row refuses to shrink, pushes the badges right, and forces the
+              rail taller than its own box. */}
+          <div className="flex items-center gap-2 min-w-0">
+            <h1 className="text-[15px] font-semibold text-atkin-ink tracking-tight font-serif truncate" title={matter.title}>
               {matter.title}
             </h1>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-muted">
+            <span className="shrink-0 text-[11px] font-mono px-2 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-muted">
               {matter.jurisdiction}
             </span>
             {matter.matterType && (
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-ink uppercase">
+              <span className="shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded bg-atkin-bg border border-atkin-border text-atkin-ink uppercase">
                 {matter.matterType}
               </span>
             )}
             {(matter.isDemo || matter.id.includes('bates') || matter.id.includes('contract') || matter.id.includes('tenancy')) ? (
-              <span className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
+              <span className="shrink-0 bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
                 Demo Matter
               </span>
             ) : (
-              <span className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
+              <span className="shrink-0 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[10.5px] font-mono font-medium">
                 Private Matter
               </span>
             )}
@@ -89,7 +99,7 @@ export const TopRail: React.FC<TopRailProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 shrink-0">
         {/* Network Broker Mode Button */}
         <div className="relative">
           <button
