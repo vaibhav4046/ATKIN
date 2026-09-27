@@ -31,6 +31,24 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         <div className="w-full h-full bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#fff_1px,transparent_1px)]" />
       </div>
 
+      {/* Reading scrim.
+          The hero copy sits directly on a photograph, which means its contrast
+          depends on whatever the image happens to be doing underneath it. The
+          muted line measured 2.9:1 against the mid-tone of the courtroom plate,
+          which is below AA for body text. This gradient lays a controlled wash of
+          the page colour under the copy column, strongest on the left where the
+          text is and fading out to the right so the photograph still reads. It is
+          the standard fix for text over imagery and it also gives the contrast
+          audit a predictable backdrop to measure against. */}
+      <div
+        className="absolute inset-0 pointer-events-none bg-gradient-to-r from-atkin-bg via-atkin-bg/85 to-transparent"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 h-40 pointer-events-none bg-gradient-to-t from-atkin-bg to-transparent"
+        aria-hidden="true"
+      />
+
       {/* Top Banner Tag */}
       <div className="relative z-10 max-w-[1180px] mx-auto w-full pt-4">
       </div>

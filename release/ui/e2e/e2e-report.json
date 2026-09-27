@@ -1,6 +1,6 @@
 {
-  "total": 62,
-  "passed": 62,
+  "total": 63,
+  "passed": 63,
   "failures": 0,
   "results": [
     {
@@ -72,21 +72,6 @@
       "name": "theme survives reload",
       "passed": true,
       "detail": "dark"
-    },
-    {
-      "name": "dark mode h1 contrast >= 3:1",
-      "passed": true,
-      "detail": "17.37:1"
-    },
-    {
-      "name": "dark mode p contrast >= 4.5:1",
-      "passed": true,
-      "detail": "5.88:1"
-    },
-    {
-      "name": "dark mode button contrast >= 4.5:1",
-      "passed": true,
-      "detail": "15.27:1"
     },
     {
       "name": "no horizontal scroll at 320px",
@@ -264,6 +249,11 @@
       "detail": "main is 390px while the drawer is open"
     },
     {
+      "name": "dark mode: every text on the landing page meets AA contrast",
+      "passed": true,
+      "detail": "all text >= 4.5:1 (0 over imagery, covered by the scrim)"
+    },
+    {
       "name": "dark mode: every text on Home meets AA contrast",
       "passed": true,
       "detail": "all text >= 4.5:1"
@@ -279,6 +269,11 @@
       "detail": "all text >= 4.5:1"
     },
     {
+      "name": "light mode: every text on the landing page meets AA contrast",
+      "passed": true,
+      "detail": "all text >= 4.5:1 (0 over imagery, covered by the scrim)"
+    },
+    {
       "name": "light mode: every text on Home meets AA contrast",
       "passed": true,
       "detail": "all text >= 4.5:1"
@@ -292,6 +287,16 @@
       "name": "light mode: every text on Settings meets AA contrast",
       "passed": true,
       "detail": "all text >= 4.5:1"
+    },
+    {
+      "name": "landing page actually uses scroll reveals",
+      "passed": true,
+      "detail": "18 reveal target(s)"
+    },
+    {
+      "name": "no section is left invisible after scrolling the landing page",
+      "passed": true,
+      "detail": "all reveals completed"
     },
     {
       "name": "tabs render distinct surfaces, not one repeated panel",

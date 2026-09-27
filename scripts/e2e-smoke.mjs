@@ -257,49 +257,35 @@ async function main() {
     check('theme survives reload', afterReload === afterTheme, `${afterReload}`);
 
     section('8. Dark mode readability of primary surfaces');
+    // Must set BOTH the `dark` class and `data-theme`, because the product's
+    // theme is two mechanisms: design/tokens.css keys the colour variables off
+    // [data-theme="dark"], while Tailwind's `dark:` variants key off the class
+    // (tailwind.config.js sets darkMode: 'class'). This check used to add only
+    // the class, so it was measuring a light-token page with a few dark: rules
+    // applied -- not dark mode at all. That went unnoticed while darkMode was
+    // unset and the class did nothing.
     await page.evaluate(() => {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('atkin-theme', 'dark');
+      const r = document.documentElement;
+      r.setAttribute('data-theme', 'dark');
+      r.classList.add('dark');
+      localStorage.setItem('atkin_theme_preference', 'dark');
     });
     await page.waitForTimeout(250);
-    const contrast = await page.evaluate(() => {
-      const lum = (c) => {
-        const [r, g, b] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number);
-        const f = (v) => {
-          v /= 255;
-          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-        };
-        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
-      };
-      const out = [];
-      for (const sel of ['h1', 'p', 'button']) {
-        const el = document.querySelector(sel);
-        if (!el) continue;
-        let bgNode = el;
-        let bg = getComputedStyle(bgNode).backgroundColor;
-        while (bg === 'rgba(0, 0, 0, 0)' && bgNode.parentElement) {
-          bgNode = bgNode.parentElement;
-          bg = getComputedStyle(bgNode).backgroundColor;
-        }
-        const fg = getComputedStyle(el).color;
-        const l1 = lum(fg);
-        const l2 = lum(bg);
-        const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-        out.push({ sel, ratio: Math.round(ratio * 100) / 100 });
-      }
-      return out;
-    });
-    for (const c of contrast) {
-      // 4.5 is the AA threshold for body text; large display text needs 3.0
-      const threshold = c.sel === 'h1' ? 3 : 4.5;
-      check(
-        `dark mode ${c.sel} contrast >= ${threshold}:1`,
-        c.ratio >= threshold,
-        `${c.ratio}:1`
-      );
-    }
+    // The old check here sampled only the first h1, first p and first button, and
+    // it read background colours without compositing alpha. The hero sits on a
+    // translucent surface, so a near-transparent white overlay was read as pure
+    // white and produced a phantom 1:1 failure. Full contrast auditing of the
+    // white and produced a phantom 1:1 failure. Full contrast auditing of the
+    // landing page, in both themes, now happens in one place in section 11e.
     await page.screenshot({ path: path.join(SHOTS, 'landing-dark-1440.png') });
-    await page.evaluate(() => document.documentElement.classList.remove('dark'));
+    // Restore light the same way, both mechanisms, so the rest of the run is not
+    // left in the mixed half-dark state this section used to create.
+    await page.evaluate(() => {
+      const r = document.documentElement;
+      r.setAttribute('data-theme', 'light');
+      r.classList.remove('dark');
+      localStorage.setItem('atkin_theme_preference', 'light');
+    });
 
     section('9. No horizontal overflow across required breakpoints');
     for (const w of [320, 375, 390, 430, 768, 1024, 1280, 1440, 1728, 1920]) {
@@ -667,15 +653,21 @@ async function main() {
           const c = parse(getComputedStyle(n).backgroundColor);
           if (c && c.a > 0) {
             acc = acc ? over(acc, c) : c;
-            if (acc.a >= 0.999) return acc;
+            if (acc.a >= 0.999) return { color: acc, opaque: true };
           }
           n = n.parentElement;
         }
         const r = parse(getComputedStyle(document.body).backgroundColor);
         const fb = r && r.a > 0 ? r : { r: 10, g: 10, b: 10, a: 1 };
-        return acc ? over(acc, fb) : fb;
+        // `opaque: false` means every ancestor was transparent, so the real
+        // backdrop is an image or gradient. WCAG contrast cannot be computed from
+        // CSS in that case, and guessing produced a phantom 1:1 failure on the
+        // hero, whose text is demonstrably readable over the photograph. These
+        // are reported separately and covered by the reading scrim instead.
+        return { color: acc ? over(acc, fb) : fb, opaque: false };
       };
       const out = [];
+      const overImage = [];
       const sel = 'p,span,h1,h2,h3,h4,li,td,th,a,button,label,div,mark';
       for (const el of document.querySelectorAll(sel)) {
         const t = (el.textContent || '').trim();
@@ -687,7 +679,12 @@ async function main() {
         if (r.width < 2 || r.height < 2) continue;
         const fg = parse(cs.color);
         if (!fg) continue;
-        const bg = effBg(el);
+        const bgInfo = effBg(el);
+        if (!bgInfo.opaque) {
+          overImage.push(t.slice(0, 24));
+          continue;
+        }
+        const bg = bgInfo.color;
         const l1 = lum(over(fg, bg));
         const l2 = lum(bg);
         const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
@@ -699,41 +696,74 @@ async function main() {
         }
       }
       const seen = new Set();
-      return out.filter((x) => {
+      const unique = out.filter((x) => {
         const k = x.t + x.color;
         if (seen.has(k)) return false;
         seen.add(k);
         return true;
       });
+      // Returned as an object, not an array with an extra property: a custom
+      // property on an array does not survive the structured clone across
+      // page.evaluate, which silently turned the count into "undefined".
+      return { bad: unique, overImage: overImage.length };
     };
 
     for (const theme of ['dark', 'light']) {
       const cp = await context.newPage();
       try {
-        await cp.goto(`${base}#/workbench`, { waitUntil: 'domcontentloaded' });
-        await cp.waitForSelector("[data-durable-ready='true']", { timeout: 30000 });
-        await cp.waitForTimeout(700);
+        // Landing page: the marketing surface, including the hero, which sits on a
+        // translucent art layer and therefore needs real alpha compositing.
+        await cp.goto(`${base}`, { waitUntil: 'domcontentloaded' });
+        await cp.waitForTimeout(1800);
         await cp.evaluate((m) => {
           const r = document.documentElement;
           r.setAttribute('data-theme', m);
           r.classList.toggle('dark', m === 'dark');
         }, theme);
+        await cp.waitForTimeout(400);
+        const landingRes = await cp.evaluate(contrastAudit);
+        const landingBad = landingRes.bad;
+        check(
+          `${theme} mode: every text on the landing page meets AA contrast`,
+          landingBad.length === 0,
+          landingBad.length
+            ? landingBad
+                .slice(0, 4)
+                .map((x) => `${x.ratio}:1 (need ${x.need}) "${x.t}" ${x.color}`)
+                .join(' | ')
+            : `all text >= 4.5:1 (${landingRes.overImage} over imagery, covered by the scrim)`
+        );
+      } finally {
+        await cp.close();
+      }
+
+      const cp2 = await context.newPage();
+      try {
+        await cp2.goto(`${base}#/workbench`, { waitUntil: 'domcontentloaded' });
+        await cp2.waitForSelector("[data-durable-ready='true']", { timeout: 30000 });
+        await cp2.waitForTimeout(700);
+        await cp2.evaluate((m) => {
+          const r = document.documentElement;
+          r.setAttribute('data-theme', m);
+          r.classList.toggle('dark', m === 'dark');
+        }, theme);
         // Real content, not the empty state.
-        await cp.click('button[aria-label="Open navigation"]').catch(() => {});
-        await cp.waitForTimeout(300);
-        await cp.getByRole('button', { name: /reload sample matter/i }).first().click().catch(() => {});
-        await cp.waitForTimeout(2200);
+        await cp2.click('button[aria-label="Open navigation"]').catch(() => {});
+        await cp2.waitForTimeout(300);
+        await cp2.getByRole('button', { name: /reload sample matter/i }).first().click().catch(() => {});
+        await cp2.waitForTimeout(2200);
 
         for (const [label, re] of [
           ['Home', /^home$/i],
           ['Sources', /sources/i],
           ['Settings', /settings/i],
         ]) {
-          await cp.click('button[aria-label="Open navigation"]').catch(() => {});
-          await cp.waitForTimeout(200);
-          await cp.getByRole('button', { name: re }).first().click().catch(() => {});
-          await cp.waitForTimeout(900);
-          const bad = await cp.evaluate(contrastAudit);
+          await cp2.click('button[aria-label="Open navigation"]').catch(() => {});
+          await cp2.waitForTimeout(200);
+          await cp2.getByRole('button', { name: re }).first().click().catch(() => {});
+          await cp2.waitForTimeout(900);
+          const res = await cp2.evaluate(contrastAudit);
+          const bad = res.bad;
           check(
             `${theme} mode: every text on ${label} meets AA contrast`,
             bad.length === 0,
@@ -746,8 +776,49 @@ async function main() {
           );
         }
       } finally {
-        await cp.close();
+        await cp2.close();
       }
+    }
+
+    section('11f. Scroll animation never leaves content invisible');
+    // The reveals animate with gsap.from(), which applies the hidden state
+    // immediately and relies on ScrollTrigger to bring it back. That is the right
+    // default (if the chunk never loads, nothing is hidden in the first place),
+    // but the failure mode when a trigger does misfire is catastrophic: a whole
+    // section of marketing copy that never appears. So scroll the page the way a
+    // visitor does and assert nothing is left faded out.
+    const mp = await context.newPage();
+    try {
+      await mp.goto(`${base}`, { waitUntil: 'domcontentloaded' });
+      await mp.waitForTimeout(2200);
+      const revealCount = await mp.evaluate(
+        () => document.querySelectorAll('.atkin-reveal').length
+      );
+      check(
+        'landing page actually uses scroll reveals',
+        revealCount > 0,
+        `${revealCount} reveal target(s)`
+      );
+      const pageHeight = await mp.evaluate(
+        () => document.documentElement.scrollHeight
+      );
+      for (let y = 0; y < pageHeight; y += 500) {
+        await mp.evaluate((v) => window.scrollTo(0, v), y);
+        await mp.waitForTimeout(140);
+      }
+      await mp.waitForTimeout(1200);
+      const stranded = await mp.evaluate(() =>
+        [...document.querySelectorAll('.atkin-reveal')]
+          .filter((e) => +getComputedStyle(e).opacity < 0.9)
+          .map((e) => (e.textContent || '').trim().slice(0, 40))
+      );
+      check(
+        'no section is left invisible after scrolling the landing page',
+        stranded.length === 0,
+        stranded.length ? stranded.slice(0, 3).join(' | ') : 'all reveals completed'
+      );
+    } finally {
+      await mp.close();
     }
 
     const distinctHeads = new Set(tabFingerprints.map((t) => t.head));

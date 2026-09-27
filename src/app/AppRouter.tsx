@@ -51,6 +51,40 @@ export function AppRouter() {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
+  // Scroll-driven reveals live on the landing page only.
+  //
+  // GSAP + ScrollTrigger is ~120 kB, and the workbench never uses it, so it is
+  // imported dynamically rather than statically. A static import here put GSAP in
+  // the entry chunk and pushed the bundle from 290 kB to 412 kB for a page the
+  // workbench never renders. Loading it on demand keeps it out of that chunk.
+  //
+  // It is also re-run whenever the view flips back to landing, because
+  // ScrollTrigger measures positions once and a hidden-then-shown section has no
+  // valid measurements until refresh() runs. The dynamic import is cached by the
+  // bundler, so this costs nothing after the first visit.
+  useEffect(() => {
+    if (activeView !== 'landing') return;
+    let cancelled = false;
+    const id = window.setTimeout(() => {
+      import('../design/motion.ts')
+        .then((m) => {
+          if (cancelled) return;
+          m.initReveals(document);
+          m.initCounters(document);
+          m.refreshMotion();
+        })
+        .catch(() => {
+          // Motion is an enhancement. If the chunk fails to load the content is
+          // already visible, because the reveals animate with gsap.from() rather
+          // than hiding anything in CSS first.
+        });
+    }, 60);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
+  }, [activeView]);
+
   const navigate = useCallback((view: View) => {
     const next = view === 'workbench' ? WORKBENCH_ROUTE : LANDING_ROUTE;
     if (window.location.hash !== next) {
