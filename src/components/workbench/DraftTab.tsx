@@ -213,7 +213,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
               className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-atkin-ink hover:bg-atkin-surface text-white transition-colors flex items-center gap-1 shadow-sm disabled:opacity-50"
             >
               <Cpu className="w-3.5 h-3.5" />
-              <span>{isGenerating ? 'Synthesizing...' : 'Local Gemma 4 Draft'}</span>
+              <span>{isGenerating ? 'Synthesizing...' : 'Local model draft'}</span>
             </button>
           )}
 

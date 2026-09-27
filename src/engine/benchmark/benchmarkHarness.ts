@@ -74,10 +74,21 @@ export class BenchmarkHarness {
   }
 
   /**
-   * Run benchmark across the 3 evaluation tiers:
-   * 1. Base Model Alone (Unprompted vanilla baseline: 62.5%)
-   * 2. Local Gemma 4 on RTX 3050 GPU (Empirical Gemma 4 QAT: 87.5%, avg 57.6 tps)
-   * 3. Sovereign Core (Deterministic rule engine + exact span bounds: 100%)
+   * Reference shape for a three-tier grounding evaluation.
+   *
+   * IMPORTANT: the numbers below are NOT measurements. They are hardcoded expected
+   * outputs that describe the shape of the report, which is why the UI labels this
+   * panel "Reference values" and tells the reader to run the harness for real
+   * figures. A test asserts 87.5 here, which only proves the constant was not
+   * edited — it proves nothing about model quality.
+   *
+   * Real results for a specific machine are written by an actual run to
+   * release/benchmark/hardware-benchmark.json. That file is the only place a
+   * measured number should come from.
+   *
+   *   1. Base model alone, ungrounded vanilla baseline
+   *   2. Local quantized model on a laptop GPU
+   *   3. Sovereign core: deterministic rule engine with exact span bounds
    */
   public evaluateTiers(): BenchmarkRunScore[] {
     return [

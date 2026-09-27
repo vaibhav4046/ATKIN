@@ -620,7 +620,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
                 <div className="mt-1.5 flex items-center justify-between text-2xs text-slate-400">
                   <span>Chat is grounded exclusively on checked sources ({tokenStats.totalTokens.toLocaleString()} tokens in context).</span>
                   {modelStatus?.state === 'connected' ? (
-                    <span className="text-emerald-600 font-medium">✓ Local Gemma 4 Sovereign Bridge ({modelStatus.modelTag})</span>
+                    <span className="text-emerald-600 font-medium">✓ Local model bridge ({modelStatus.modelTag})</span>
                   ) : (
                     <span className="text-slate-500 font-medium font-mono">Deterministic IRAC Core (Local Model Offline)</span>
                   )}

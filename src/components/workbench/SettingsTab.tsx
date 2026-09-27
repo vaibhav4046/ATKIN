@@ -218,7 +218,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             <div className="flex items-center gap-2 mb-1">
               <Badge variant="blue" size="sm">Atkin Legal OS</Badge>
               <Badge variant={modelStatus.state === 'connected' ? 'green' : 'slate'} size="sm">
-                {modelStatus.state === 'connected' ? 'Local Gemma 4 Connected' : 'Deterministic Offline Core'}
+                {modelStatus.state === 'connected' ? 'Local model connected' : 'Deterministic Offline Core'}
               </Badge>
             </div>
             <h2 className="text-[17px] font-semibold text-ink">
@@ -326,7 +326,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   <Badge variant="green" size="sm">Recommended</Badge>
                 </div>
                 <div className="text-[11px] text-ink-slate leading-snug">
-                  Gemma 4 (2B QAT). ~2.1 GB VRAM. Tested 57.6 tps on laptop GPU. Safe local inference.
+                  Local 2B quantized model. Roughly 2.1 GB VRAM. Runs entirely on this device.
                 </div>
               </div>
 
@@ -343,7 +343,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   <Badge variant="blue" size="sm">Higher Capacity</Badge>
                 </div>
                 <div className="text-[11px] text-ink-slate leading-snug">
-                  Google Gemma 4 (4B params). ~3.8 GB VRAM. Requires 6GB+ dedicated VRAM.
+                  Local 4B model. Roughly 3.8 GB VRAM. Needs 6GB+ of dedicated VRAM.
                 </div>
               </div>
 
@@ -923,12 +923,21 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-[15px] font-semibold text-ink">
-                    Empirical 8-Task Legal Grounding Benchmark
+                    Grounding Benchmark Harness
                   </h3>
-                  <Badge variant="blue" size="sm">Empirical Evaluation</Badge>
+                  <Badge variant="ochre" size="sm">Reference values</Badge>
                 </div>
                 <p className="text-[12px] text-ink-slate mt-0.5">
-                  Controlled benchmark evaluating 3 distinct tiers: Vanilla Base Model (Gemma 4 unprompted), Local Quantized Gemma 4 (gemma4:e2b-it-qat on laptop GPU), and the ATKIN Deterministic IRAC Core.
+                  The table below shows the shape of a three-tier grounding evaluation: a
+                  vanilla base model with no grounding, a local quantized model, and the
+                  ATKIN Deterministic IRAC Core. These are the harness&apos;s expected
+                  outputs, not a measurement taken on your machine.
+                </p>
+                <p className="text-[11.5px] text-ink-steel mt-1.5">
+                  Measured results for a specific machine are written to
+                  release/benchmark/hardware-benchmark.json by an actual run. Nothing on
+                  this screen is read from that file, so treat these rows as illustrative
+                  until you run the harness yourself.
                 </p>
               </div>
 
@@ -955,8 +964,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   {benchmarkScores.map(tier => (
                     <tr key={tier.evaluatedTier} className={tier.evaluatedTier === 'sovereign_core' ? 'bg-blue-50/30 font-medium' : ''}>
                       <td className="p-3 font-semibold text-ink">
-                        {tier.evaluatedTier === 'base_model' ? 'Vanilla Gemma 4 (Unprompted Baseline)' :
-                         tier.evaluatedTier === 'local_gemma4' ? 'Local Gemma 4 QAT (gemma4:e2b-it-qat on GPU)' :
+                        {tier.evaluatedTier === 'base_model' ? 'Vanilla Base Model (Ungrounded Baseline)' :
+                         tier.evaluatedTier === 'local_gemma4' ? 'Local Quantized Model (on GPU)' :
                          'ATKIN Deterministic IRAC Core'}
                       </td>
                       <td className="p-3 font-mono text-ink">{tier.passedTasks} / {tier.totalTasks}</td>

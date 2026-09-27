@@ -54,6 +54,20 @@ const BANNED: { pattern: RegExp; why: string }[] = [
   { pattern: /\bair-?gapped\b/i, why: 'unverifiable architecture claim' },
   { pattern: /\bfully admissible\b/i, why: 'legal conclusion asserted by the product' },
   { pattern: /\bverified admissible\b/i, why: 'legal conclusion asserted by the product' },
+  { pattern: /\b100%\s+accurate\b/i, why: 'unverifiable accuracy claim' },
+  { pattern: /\bhallucination-?free\b/i, why: 'unverifiable absolute claim' },
+  { pattern: /\bGDPR[- ]compliant\b/i, why: 'unsupported compliance claim' },
+  { pattern: /\bzero[- ]leakage\b/i, why: 'unverifiable absolute claim' },
+  {
+    pattern: /\b(?:Google|Meta|OpenAI|Anthropic)\s+Gemma\s*\d/i,
+    why:
+      'vendor attribution of a model name that cannot be independently verified. Present the provider model id from the live probe instead.',
+  },
+  {
+    pattern: /\bEmpirical\s+\d*-?[Tt]ask\b|\bEmpirical Evaluation\b/i,
+    why:
+      'hardcoded reference figures must not be presented as measurements. Label them as reference values and point at the real artifact.',
+  },
 ];
 
 /**

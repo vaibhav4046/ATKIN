@@ -792,7 +792,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
             <div className="grid grid-cols-3 gap-4 pt-1">
               <div className="p-3 bg-stone-50 border border-stone-200 rounded space-y-1">
                 <span className="font-medium text-ink">Cross-Matter Isolation</span>
-                <p className="text-ink-slate text-[11.5px]">Strict cryptographic partition. Zero leakage between client matters.</p>
+                <p className="text-ink-slate text-[11.5px]">Strict per-matter scoping. Recall in one matter does not return another matter's records.</p>
               </div>
               <div className="p-3 bg-stone-50 border border-stone-200 rounded space-y-1">
                 <span className="font-medium text-ink">Episodic TTL</span>

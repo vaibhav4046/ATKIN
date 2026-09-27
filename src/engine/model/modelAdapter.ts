@@ -149,7 +149,7 @@ export class DeterministicOfflineAdapter implements IModelAdapter {
  */
 export class LocalGemmaAdapter implements IModelAdapter {
   public id = 'local-gemma-4';
-  public name = 'Google Gemma 4 (Local Neural Inference)';
+  public name = 'Local Neural Inference (Ollama)';
   public endpoint = '/api/local-model';
   private fallbackAdapter = new DeterministicOfflineAdapter();
   private abortController: AbortController | null = null;
