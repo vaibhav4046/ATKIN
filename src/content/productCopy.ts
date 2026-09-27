@@ -112,18 +112,18 @@ export const DOWNLOAD_OPTIONS = [
     platform: 'Windows',
     requirement: 'Windows 10 / 11 (x64)',
     title: 'ATKIN for Windows',
-    filename: 'Proofline_1.0.0_x64-setup.exe',
+    filename: 'Atkin_1.0.0_x64-setup.exe',
     badge: 'Desktop App',
-    href: 'https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64-setup.exe',
+    href: 'https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin_1.0.0_x64-setup.exe',
     primary: true
   },
   {
     platform: 'Windows',
     requirement: 'Windows 10 / 11 (x64) · MSI for managed deployment',
     title: 'ATKIN for Windows (MSI)',
-    filename: 'Proofline_1.0.0_x64_en-US.msi',
+    filename: 'Atkin_1.0.0_x64_en-US.msi',
     badge: 'Enterprise Deploy',
-    href: 'https://github.com/vaibhav4046/proofline/releases/download/v1.0.0/Proofline_1.0.0_x64_en-US.msi',
+    href: 'https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin_1.0.0_x64_en-US.msi',
     primary: false
   },
   {
@@ -132,7 +132,7 @@ export const DOWNLOAD_OPTIONS = [
     title: 'ATKIN Mobile APK',
     filename: 'Atkin-1.0.0-universal.apk',
     badge: 'Mobile Companion',
-    href: 'https://github.com/vaibhav4046/proofline/raw/main/release/android/Atkin-1.0.0-universal.apk',
+    href: 'https://github.com/vaibhav4046/ATKIN/releases/download/v1.0.0/Atkin-1.0.0-universal.apk',
     primary: false
   },
   {
@@ -141,7 +141,7 @@ export const DOWNLOAD_OPTIONS = [
     title: 'Build from Source',
     filename: 'git clone + npm run tauri',
     badge: 'Open Source',
-    href: 'https://github.com/vaibhav4046/proofline',
+    href: 'https://github.com/vaibhav4046/ATKIN',
     primary: false
   }
 ] as const;

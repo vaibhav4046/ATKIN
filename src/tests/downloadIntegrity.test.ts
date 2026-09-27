@@ -93,6 +93,6 @@ describe('Download surface honesty', () => {
 
   it('the source card points at the repository', () => {
     const source = DOWNLOAD_OPTIONS.find((o) => o.platform === 'Terminal / Source');
-    expect(source?.href).toContain('github.com/vaibhav4046/proofline');
+    expect(source?.href).toContain('github.com/vaibhav4046/ATKIN');
   });
 });
