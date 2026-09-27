@@ -40,7 +40,11 @@ export const SourceInspector: React.FC<SourceInspectorProps> = ({
   const isInjection = checkPromptInjectionRisk(span.exactText);
 
   return (
-    <aside className="w-[320px] bg-gallery-paper border-l border-border-hairline flex flex-col justify-between shrink-0 h-[calc(100vh-108px)] sticky top-[108px] overflow-y-auto">
+    // 110px is the real application chrome: the fixed GlobalNav (52px) plus the
+    // TopRail (58px). This panel used to say 108px, a leftover from when the rail
+    // was 56px, so once the window scrolled and this panel pinned, its top edge
+    // sat 2px underneath the rail and the panel's own header border was hidden.
+    <aside className="w-[320px] bg-gallery-paper border-l border-border-hairline flex flex-col justify-between shrink-0 h-[calc(100vh-110px)] sticky top-[110px] overflow-y-auto">
       <div>
         {/* Header */}
         <div className="p-4 border-b border-border-hairline flex items-start justify-between bg-gallery-white">

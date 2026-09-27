@@ -440,6 +440,99 @@ async function main() {
       check(`tab "${name}" loaded and rendered content`, text.length > 40, `${text.length} chars`);
     }
 
+    section('11c. Application chrome geometry is measured, not assumed');
+    // GlobalNav is `fixed` and the TopRail is `sticky top-[52px]`. A sticky box
+    // whose static position is above its own threshold is painted lower without
+    // reserving layout space, so the rail silently covered the top 52px of the
+    // workbench body: the Overview greeting was invisible and the first line of
+    // the "Active Matter" block was clipped. No text-length or visibility check
+    // can catch that, because the content is present in the DOM, so the geometry
+    // itself has to be asserted.
+    //
+    // Measure only at scrollY 0. A sticky rail stays pinned while the body scrolls
+    // beneath it, so comparing the two in viewport coordinates at any other scroll
+    // position reports the scroll offset as if it were an overlap.
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(400);
+    const chrome = await page.evaluate(() => {
+      const rail = document.querySelector('.sticky');
+      const main = document.querySelector('main');
+      if (!rail || !main) return { error: 'rail or main not found' };
+      const rr = rail.getBoundingClientRect();
+      const mr = main.getBoundingClientRect();
+      const greeting = [...document.querySelectorAll('h2')].find((e) =>
+        /Practitioner/.test(e.textContent || '')
+      );
+      let greetingPainted = 'no greeting element found';
+      if (greeting) {
+        const gb = greeting.getBoundingClientRect();
+        const hit = document.elementFromPoint(
+          Math.round(gb.left + 20),
+          Math.round(gb.top + gb.height / 2)
+        );
+        greetingPainted =
+          hit && (hit === greeting || greeting.contains(hit))
+            ? 'painted'
+            : `covered by ${hit ? hit.tagName : 'nothing'}`;
+      }
+      return {
+        railTop: Math.round(rr.top),
+        railBottom: Math.round(rr.bottom),
+        mainTop: Math.round(mr.top),
+        overlapPx: Math.round(rr.bottom - mr.top),
+        scrollY: Math.round(window.scrollY),
+        greetingPainted,
+      };
+    });
+    check(
+      'top rail does not overlap the workbench body',
+      !chrome.error && chrome.scrollY === 0 && chrome.overlapPx <= 0,
+      chrome.error ||
+        `at scrollY ${chrome.scrollY}: rail ends at ${chrome.railBottom}, body starts at ${chrome.mainTop} (overlap ${chrome.overlapPx}px)`
+    );
+    check(
+      'overview greeting is actually painted, not covered by the rail',
+      chrome.greetingPainted === 'painted',
+      chrome.greetingPainted
+    );
+
+    // The provenance panel pins itself below the chrome with a hardcoded offset
+    // that drifted to 108px while the real chrome is 110px, hiding its top edge
+    // on scroll. Only asserted when the panel is actually mounted.
+    const sourcesControl = page.locator('aside button:has-text("Sources")').first();
+    if (await sourcesControl.count()) {
+      await sourcesControl.click();
+      await page
+        .waitForSelector('[data-testid="tab-loading"]', { state: 'detached', timeout: 20000 })
+        .catch(() => {});
+      await page.waitForTimeout(400);
+      await page.evaluate(() => window.scrollTo(0, 400));
+      await page.waitForTimeout(400);
+      const panel = await page.evaluate(() => {
+        const rail = document.querySelector('.sticky');
+        const aside = [...document.querySelectorAll('aside')].find((a) =>
+          (a.className || '').toString().includes('320px')
+        );
+        if (!rail || !aside) return { notMounted: true };
+        const rr = rail.getBoundingClientRect();
+        const pr = aside.getBoundingClientRect();
+        return {
+          railBottom: Math.round(rr.bottom),
+          panelTop: Math.round(pr.top),
+          hiddenPx: Math.round(rr.bottom - pr.top),
+        };
+      });
+      if (!panel.notMounted) {
+        check(
+          'source provenance panel is not tucked under the top rail',
+          panel.hiddenPx <= 0,
+          `rail ends at ${panel.railBottom}, panel starts at ${panel.panelTop} (hidden ${panel.hiddenPx}px)`
+        );
+      }
+      await page.locator('aside button:has-text("Home")').first().click().catch(() => {});
+      await page.waitForTimeout(300);
+    }
+
     const distinctHeads = new Set(tabFingerprints.map((t) => t.head));
     check(
       'tabs render distinct surfaces, not one repeated panel',

@@ -55,14 +55,24 @@ export const TopRail: React.FC<TopRailProps> = ({
   const [isNetMenuOpen, setIsNetMenuOpen] = useState(false);
 
   return (
-    // min-h rather than a fixed h: a long matter title plus the client and
-    // "Active Matter" lines need ~64px, and a fixed 58px rail made that content
-    // spill out of a sticky z-40 container and collide with the page beneath it.
-    // min-h lets the rail grow with its content while keeping the intended
-    // resting height for short titles. min-w-0 on the identity block is what
-    // allows the title to wrap instead of forcing the rail wider than the
-    // viewport.
-    <div className="min-h-[58px] bg-atkin-surface border-b border-atkin-border px-6 py-2 flex items-center justify-between gap-4 sticky top-[52px] z-40 select-none text-atkin-ink">
+    // min-h rather than a fixed h: a long matter title plus the client line
+    // need more than 58px, and a fixed height made that content spill out of a
+    // sticky z-40 container and collide with the page beneath it. min-h lets the
+    // rail grow with its content while keeping the intended resting height for
+    // short titles. min-w-0 on the identity block is what allows the title to
+    // truncate instead of forcing the rail wider than the viewport.
+    //
+    // mt-[52px] is load-bearing, and it pairs with the sticky top-[52px] below.
+    // GlobalNav is `fixed`, so it takes no space in flow and this rail's static
+    // position is y=0. A sticky element with top:[52px] whose static position is
+    // above that threshold is painted 52px lower without any layout space being
+    // reserved for it, so <main> began at y=58 and the rail covered it up to
+    // y=110. That hid the Overview greeting outright and clipped the first line
+    // of the "Active Matter" block. Reserving the header height in flow puts the
+    // rail's static position at y=52, which is exactly the sticky threshold, so
+    // the rail no longer shifts and <main> starts below it. LandingPage already
+    // reserves the same 52px with pt-[52px].
+    <div className="mt-[52px] min-h-[58px] bg-atkin-surface border-b border-atkin-border px-6 py-2 flex items-center justify-between gap-4 sticky top-[52px] z-40 select-none text-atkin-ink">
       <div className="flex items-center gap-3 min-w-0">
         <div className="hidden sm:flex items-center shrink-0">
           <AtkinLogo className="w-8 h-8 rounded-[4px] border border-atkin-border shadow-xs" />

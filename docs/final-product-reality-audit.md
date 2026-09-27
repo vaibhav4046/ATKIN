@@ -488,6 +488,97 @@ every tab rendered the same empty state, so all thirteen reported an identical
 distinct surfaces (13 distinct of 13). Recorded because a green suite that
 proves nothing is worse than a red one.
 
+## Addendum 3 - application chrome pass
+
+### New P0 found and fixed: the top rail covered the top of the workbench
+
+`GlobalNav` is `position: fixed`, so it occupies no space in the flow and the
+workbench shell's static position is `y=0`. The rail was `sticky top-[52px]`. A
+sticky box whose static position sits above its own threshold is *painted* lower
+without any layout space being reserved for it, so the rail was drawn at
+`y=52..110` while `<main>` began at `y=58`. The rail covered the first 52px of
+the workbench body.
+
+The visible consequence was not a subtle misalignment. On the Home tab the
+Overview greeting (`h2`, "Good morning, Practitioner") was **entirely hidden**,
+and the two-line "Active Matter" block had its first line clipped. The content
+was present in the DOM, so every text-length, visibility, and screenshot-shaped
+check passed while the product was visibly broken.
+
+Measured, not eyeballed:
+
+| | before | after |
+|---|---|---|
+| rail painted | 52..110 | 52..110 |
+| `<main>` top | 58 | 110 |
+| rail over body | **52px** | **0px** |
+| greeting | covered | painted |
+| "Active Matter" first line | clipped | visible |
+
+Fixed by reserving the fixed header's height in the rail's own flow
+(`mt-[52px]`), which puts the rail's static position at `y=52` — exactly its
+sticky threshold, so it no longer shifts at all. `LandingPage` already reserved
+the same 52px with `pt-[52px]`, so this makes the two shells consistent.
+
+### Second defect from the same cause: hardcoded chrome offsets had drifted
+
+`SourceInspector` pinned itself with `sticky top-[108px]` and sized itself with
+`h-[calc(100vh-108px)]`. 108 was a leftover from when the rail was 56px tall.
+The real chrome is 52 + 58 = **110px**, so once the window scrolled and the panel
+pinned, its top edge sat 2px underneath the rail and the panel's own header
+border was hidden. Both values corrected to 110px and verified pinned at
+exactly 110 with 0px hidden.
+
+The wider finding is that this vertical stack height is hardcoded in seven
+places and had already drifted. `Sidebar` uses `calc(100vh-106px)`,
+`NotebookStudioTab` uses `calc(100vh-100px)`, and `ChatTab`/`SourcesTab` subtract
+their own additional inner chrome. I did **not** blanket-change these:
+`Sidebar`'s value was measured to be inert (its height is content-driven, so
+`min-h` never binds), and the other two legitimately subtract panel chrome
+beyond the app chrome. Rewriting all seven to a single constant is the correct
+long-term fix and is recorded as unverified work rather than done blind.
+
+### Verification added, and proven to actually fail
+
+Added to `scripts/e2e-smoke.mjs` as section 11c: three geometry assertions that
+measure the rendered rectangles, because the bug class is invisible to text and
+visibility assertions.
+
+The guard was validated in both directions, which is the only way to know a test
+is worth anything:
+
+- fix present: **50/50**, `rail ends at 110, body starts at 147 (overlap -37px)`
+- fix reverted, rebuilt: **49/50**, `[FAIL] rail ends at 110, body starts at 95 (overlap 15px)`
+
+One correction worth recording: the first version of that assertion compared
+viewport coordinates at whatever scroll position the tab journey happened to
+leave behind, and reported 4px of "overlap" on correct code, because a sticky
+rail stays pinned while content scrolls beneath it. It now scrolls to 0 first
+and asserts `scrollY === 0` as part of the detail, so the measurement is
+deterministic instead of accidentally scroll-sensitive.
+
+Honest limit of the new checks: of the three, only the body-overlap assertion
+actually discriminates between correct and broken code. The greeting-painted
+assertion passed even with the bug reintroduced, because in that state the
+offline banner pushed the greeting below the rail's edge. It is a true invariant
+worth keeping, but it is not evidence against this specific regression.
+
+### Also corrected: the previous commit's own claim
+
+Commit `a039625` recorded a residual "roughly two pixels" cosmetic clipping on
+the "Active Matter" line and deferred it. Measuring instead of trusting that
+note found the real figure was a **52px overlap that hid the greeting
+outright**, and it was not cosmetic at all. Recorded because a wrong residual
+estimate is how a real defect gets deferred indefinitely.
+
+### Results after this pass
+
+- TypeScript: 0 errors
+- Vitest: 52 files, 473 tests, all passing
+- E2E: **50/50** (was 47; +3 chrome geometry assertions)
+- Restart: 28/28
+- Bundle: 288.49 kB / 79.83 kB gzip (unchanged by this pass, as expected)
+
 ## Still unverified
 
 - Cross-device of any kind. No `adb`, no emulator, no second device on this
@@ -502,3 +593,8 @@ proves nothing is worse than a red one.
   Recorded as a known limitation with the mitigation, not papered over.
 - Offline behaviour, model-failure-during-stream, and PDF/DOCX ingestion are
   covered by unit tests only, not by a process-level or network-level exercise.
+- The application chrome height (52px fixed nav + 58px rail) is still hardcoded
+  in seven places rather than derived from one constant, which is the root cause
+  of the drift found in this pass. Two of the seven were corrected because they
+  were measured to be wrong; the rest were left alone deliberately rather than
+  changed blind. Consolidating them is outstanding work.

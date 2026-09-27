@@ -1,6 +1,6 @@
 {
-  "total": 47,
-  "passed": 47,
+  "total": 50,
+  "passed": 50,
   "failures": 0,
   "results": [
     {
@@ -217,6 +217,21 @@
       "name": "tab \"Home\" loaded and rendered content",
       "passed": true,
       "detail": "3754 chars"
+    },
+    {
+      "name": "top rail does not overlap the workbench body",
+      "passed": true,
+      "detail": "at scrollY 0: rail ends at 110, body starts at 147 (overlap -37px)"
+    },
+    {
+      "name": "overview greeting is actually painted, not covered by the rail",
+      "passed": true,
+      "detail": "painted"
+    },
+    {
+      "name": "source provenance panel is not tucked under the top rail",
+      "passed": true,
+      "detail": "rail ends at 110, panel starts at 110 (hidden 0px)"
     },
     {
       "name": "tabs render distinct surfaces, not one repeated panel",
