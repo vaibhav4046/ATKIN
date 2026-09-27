@@ -126,9 +126,9 @@ export class NotebookStudioEngine {
         const matchCount = words.filter(w => sentence.toLowerCase().includes(w)).length;
 
         if (matchCount >= 1 && matchedCitations.length < 4) {
-          const startOffset = Math.max(0, text.indexOf(sentence));
+          const startOffset = text.indexOf(sentence);
           const endOffset = startOffset + sentence.length;
-          
+
           matchedCitations.push({
             documentId: doc.id,
             documentTitle: doc.filename,
@@ -136,7 +136,7 @@ export class NotebookStudioEngine {
             startOffset,
             endOffset,
             checksum: doc.sha256 ? doc.sha256.substring(0, 16) : undefined,
-            verifiedAdmissible: doc.extractionStatus === 'success',
+            quoteLocatedInSource: startOffset >= 0,
             temporalDate: doc.sourceDate || undefined
           });
         }
@@ -352,7 +352,7 @@ export class NotebookStudioEngine {
         startOffset: 0,
         endOffset: snippet.length,
         checksum: doc.sha256 ? doc.sha256.substring(0, 16) : undefined,
-        verifiedAdmissible: doc.extractionStatus === 'success',
+        quoteLocatedInSource: true,
         temporalDate: doc.sourceDate || undefined
       });
     }
@@ -385,7 +385,7 @@ export class NotebookStudioEngine {
       activeDocs.forEach((d, i) => {
         const eventDate = d.sourceDate || `2026-0${Math.min(9, i + 1)}-15`;
         const sourceDate = d.sourceDate || eventDate;
-        content += `| ${eventDate} | ${sourceDate} | \`${d.filename}\` | Transaction documented in contemporary business records. | Verified Admissible |\n`;
+        content += `| ${eventDate} | ${sourceDate} | \`${d.filename}\` | Transaction documented in contemporary business records. | Source located |\n`;
       });
 
       content += `\n\n### Temporal Integrity Audit\n` +
@@ -530,7 +530,7 @@ export class NotebookStudioEngine {
         speakerId: 'spk-claimant',
         speakerName: 'Mr. Sterling KC',
         speakerRole: 'claimant_kc',
-        dialogue: `My Lady, we submit that the contemporaneous records in ${doc1} constitute prima facie evidence of continuous system failure. The SHA-256 integrity hash is unbroken, and the document is fully admissible under ${auth1}.`,
+        dialogue: `My Lady, we submit that the contemporaneous records in ${doc1} make out a prima facie case of continuous system failure. The integrity hash recorded at intake is unbroken. Whether those records are admissible is a question for the Court, and we have set out our ${auth1} analysis in the bundle.`,
         stageDirection: '[rising, presenting tabbed trial bundle]',
         citedDocumentId: activeDocs[0]?.id,
         citedDocumentTitle: doc1,
@@ -658,7 +658,7 @@ notebook_id: "${notebook.id}"
 matter_id: "${notebook.matterId}"
 title: "${notebook.title}"
 exported_at: "${new Date().toISOString()}"
-generator: "Proofline Sovereign Notebook Studio"
+generator: "ATKIN Notebook Studio"
 tags:
   - legal/notebook
   - open-notebook-compatible

@@ -24,7 +24,12 @@ export interface MatterBundle {
 }
 
 export interface EncryptedMatterPackage {
-  format: 'proofline-encrypted-bundle-v1';
+  /**
+   * Written as `atkin-encrypted-bundle-v1`. The legacy `proofline-encrypted-bundle-v1`
+   * value is still accepted on import so bundles exported by earlier builds keep
+   * opening; nothing is validated against this field, it is descriptive only.
+   */
+  format: 'atkin-encrypted-bundle-v1' | 'proofline-encrypted-bundle-v1';
   saltBase64: string;
   ivBase64: string;
   cipherTextBase64: string;
@@ -89,7 +94,7 @@ export class BundleExchange {
     const encrypted = await CryptoService.encrypt(jsonStr, key);
 
     return {
-      format: 'proofline-encrypted-bundle-v1',
+      format: 'atkin-encrypted-bundle-v1',
       saltBase64,
       ivBase64: encrypted.ivBase64,
       cipherTextBase64: encrypted.cipherTextBase64,

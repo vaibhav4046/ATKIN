@@ -255,7 +255,7 @@ export class ChatEngine {
     const claimContext = claims.slice(0, 5).map(c => `[Claim (${c.kind})]: ${c.statement} (${c.status})`).join('\n');
     const authContext = authorities.slice(0, 4).map(a => `[Authority]: ${a.identifier} - ${a.citation}: ${a.summary}`).join('\n');
 
-    return `You are Proofline, an air-gapped sovereign legal copilot operating under ${jurisdiction} law.
+    return `You are ATKIN, a local-first legal workspace operating under ${jurisdiction} law.
 You operate with the highest standards of evidence grounding under Civil Procedure Rules (CPR Parts 31 & 32) and the SRA Code of Conduct.
 NEVER fabricate citations, precedents, or factual claims.
 Every assertion must be tied to the provided evidence spans.

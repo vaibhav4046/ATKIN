@@ -215,7 +215,7 @@ export class SourceCatalog {
       return {
         decision: 'unknown',
         isPermitted: false,
-        rationale: `Source ID "${sourceId}" is not registered in Proofline catalog.`
+        rationale: `Source ID "${sourceId}" is not registered in the ATKIN catalog.`
       };
     }
 

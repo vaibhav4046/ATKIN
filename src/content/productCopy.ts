@@ -59,9 +59,13 @@ export const PRODUCT_CHAPTERS: ProductChapter[] = [
     title: 'Your workspace, across your devices.',
     subtitle: 'Desktop power. Phone continuity.',
     description: 'Use the desktop as the primary private compute node and continue approved workflows from mobile.',
-    highlights: ['Ed25519 pairing', 'Subnet peer inference', 'Android mobile companion', 'Zero cloud relay']
+    highlights: ['Ed25519 pairing', 'Subnet peer inference', 'Android mobile companion', 'No cloud relay']
   }
 ];
+
+import { ASSET_DIGESTS } from './assetDigests.generated';
+
+const DEMO_CONTRACT = ASSET_DIGESTS.demoContractFixture;
 
 export const PRODUCT_PROOF = {
   matterTitle: 'Alder Peak Systems Ltd',
@@ -84,11 +88,11 @@ export const PRODUCT_PROOF = {
       start: 948,
       end: 1072,
     },
-    sha256Digest: '60b0b7a6b53e2cd3d4499f2c54e8a1c94dc07d22c0acf064e24d293d9429af67',
-    verificationStatus: 'Verified grounded (exact byte match)',
-    confidenceScore: 100,
+    sha256Digest: DEMO_CONTRACT.sha256,
+    verificationStatus: 'Citation verified (exact byte match against the source span)',
     modelTag: 'atkin-sovereign-core',
-    admissibilityNotice: 'Admissible under CPR Part 32 — Strict selective abstention active',
+    admissibilityNotice:
+      'Quote verified byte-for-byte against the imported source. Admissibility is for the court to determine.',
   }
 } as const;
 

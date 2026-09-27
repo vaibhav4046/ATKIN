@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Shield, Download, FileText, CheckCircle2 } from 'lucide-react';
 import { BRAND } from '../../content/brand';
+import { ASSET_DIGESTS } from '../../content/assetDigests.generated';
 import { motion } from 'framer-motion';
 
 interface LandingHeroProps {
@@ -131,10 +132,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             <div className="space-y-1.5 pt-1 text-[11px] font-mono">
               <div className="flex items-center justify-between text-atkin-muted">
                 <span>CANONICAL MARK</span>
-                <span className="text-atkin-ink font-semibold">VERIFIED</span>
+                <span className="text-atkin-ink font-semibold">DIGEST VERIFIED</span>
               </div>
               <div className="p-2 rounded bg-atkin-bg text-[10px] text-atkin-muted break-all border border-atkin-border">
-                SHA-256: 60b0b7a6b53e2cd3d4499f2c54e8a1c94dc07d22c0acf064e24d293d9429af67
+                SHA-256: {ASSET_DIGESTS.canonicalMark.sha256}
+              </div>
+              <div className="flex items-center justify-between text-atkin-muted text-[10px]">
+                <span>{(ASSET_DIGESTS.canonicalMark.bytes / 1024).toFixed(0)} KB PNG</span>
+                <span>Recomputable from the shipped file</span>
               </div>
             </div>
           </div>

@@ -130,14 +130,14 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="blue" size="sm">Legal Research &amp; Primary Law</Badge>
             <Badge variant={networkMode === 'offline' ? 'green' : 'ochre'} size="sm">
-              {networkMode === 'offline' ? 'Airgapped Sovereign Index' : 'Live Public Legislation API'}
+              {networkMode === 'offline' ? 'Local index' : 'Live Public Legislation API'}
             </Badge>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-ink">
             Statutory Authorities &amp; Precedents
           </h2>
           <p className="text-[13px] text-ink-slate mt-0.5">
-            Verified primary legal texts with official legislative citations, Open Justice Licences, and zero hallucinations.
+            Primary legal texts with official legislative citations and Open Justice Licences. Where the sources do not establish an answer, ATKIN says so instead of guessing.
           </p>
         </div>
 
@@ -161,7 +161,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 : 'text-ink-slate hover:text-ink'
             }`}
           >
-            <Layers className="w-3 h-3 text-proofline-blue" />
+            <Layers className="w-3 h-3 text-atkin-ink" />
             <span>Deep Research (10-Stage)</span>
           </button>
           <button
@@ -201,7 +201,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                   <Badge variant="blue" size="sm">Autonomous Pipeline</Badge>
                 </div>
                 <p className="text-[12px] text-ink-slate mt-0.5">
-                  Durable legal state machine enforcing arXiv:2411.06037 sufficiency evaluation, rights gate validation, and airgapped source extraction.
+                  Durable legal state machine enforcing arXiv:2411.06037 sufficiency evaluation, rights gate validation, and local source extraction.
                 </p>
               </div>
 
@@ -222,12 +222,12 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                     value={deepQuery}
                     onChange={(e) => setDeepQuery(e.target.value)}
                     placeholder="Enter legal research proposition..."
-                    className="flex-1 px-3.5 py-2 border border-border-hairline rounded-[4px] text-xs text-ink bg-white focus:outline-none focus:ring-1 focus:ring-proofline-blue font-sans"
+                    className="flex-1 px-3.5 py-2 border border-border-hairline rounded-[4px] text-xs text-ink bg-white focus:outline-none focus:ring-1 focus:ring-atkin-ink font-sans"
                   />
                   <button
                     disabled={isExecutingDeep}
                     onClick={handleRunFullDeepResearch}
-                    className="px-4 py-2 bg-proofline-blue hover:bg-blue-700 text-white text-xs font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50 shrink-0"
+                    className="px-4 py-2 bg-atkin-ink hover:bg-blue-700 text-white text-xs font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50 shrink-0"
                   >
                     <RotateCw className={`w-3.5 h-3.5 ${isExecutingDeep ? 'animate-spin' : ''}`} />
                     <span>{isExecutingDeep ? 'Executing Pipeline...' : 'Launch Deep Research'}</span>
@@ -344,7 +344,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                       {deepSession.fetchedSources.map((src, idx) => (
                         <div key={idx} className="p-2 bg-white border border-border-hairline rounded-[3px] flex items-center justify-between text-xs">
                           <span className="font-medium text-ink truncate">{src.title}</span>
-                          <span className="text-[10px] text-proofline-green font-mono">OGL v3.0 Verified</span>
+                          <span className="text-[10px] text-atkin-success font-mono">OGL v3.0 Verified</span>
                         </div>
                       ))}
                     </div>
@@ -367,12 +367,12 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 placeholder="Filter authorities..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] pl-9 pr-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none shadow-sm"
+                className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] pl-9 pr-3 py-1.5 text-ink focus:border-atkin-ink focus:outline-none shadow-sm"
               />
             </div>
             <button
               onClick={() => setActiveSubTab('query')}
-              className="text-[12px] font-medium text-proofline-blue hover:underline flex items-center gap-1"
+              className="text-[12px] font-medium text-atkin-ink hover:underline flex items-center gap-1"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Search &amp; Add New Authority</span>
@@ -383,7 +383,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
             {filteredAuthorities.map((auth) => (
               <div 
                 key={auth.id}
-                className="bg-gallery-white border border-border-hairline rounded-[6px] p-4 shadow-sm space-y-2 hover:border-proofline-blue/40 transition-colors"
+                className="bg-gallery-white border border-border-hairline rounded-[6px] p-4 shadow-sm space-y-2 hover:border-atkin-ink/40 transition-colors"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -401,7 +401,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                     href={auth.officialUrl} 
                     target="_blank" 
                     rel="noreferrer"
-                    className="text-[11px] text-proofline-blue hover:text-proofline-navy flex items-center gap-1 font-medium bg-proofline-blue/5 px-2.5 py-1 rounded-[4px] shrink-0"
+                    className="text-[11px] text-atkin-ink hover:text-atkin-surface flex items-center gap-1 font-medium bg-atkin-ink/5 px-2.5 py-1 rounded-[4px] shrink-0"
                   >
                     <span>View Gazette</span>
                     <ExternalLink className="w-3 h-3" />
@@ -430,7 +430,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
               Search Primary Legal Repositories
             </h3>
             <p className="text-[12px] text-ink-slate mt-0.5">
-              Searches live legislation.gov.uk API in Public Research mode, or searches verified local primary law index in Airgapped Offline mode.
+              Searches live legislation.gov.uk API in Public Research mode, or searches verified local primary law index in Local-only offline mode.
             </p>
           </div>
 
@@ -438,12 +438,12 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
             <div className="flex items-center gap-2">
               {networkMode === 'offline' ? (
                 <>
-                  <Lock className="w-4 h-4 text-proofline-green shrink-0" />
+                  <Lock className="w-4 h-4 text-atkin-success shrink-0" />
                   <span className="text-ink font-medium">Airgap Offline Mode: Searching 50+ Verified Local Statutes &amp; Rules of Court</span>
                 </>
               ) : (
                 <>
-                  <Globe className="w-4 h-4 text-proofline-ochre shrink-0" />
+                  <Globe className="w-4 h-4 text-atkin-warning shrink-0" />
                   <span className="text-ink font-medium">Public Research Mode: Connected to Live legislation.gov.uk Atom Feed</span>
                 </>
               )}
@@ -460,7 +460,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 <select
                   value={selectedProvider}
                   onChange={(e) => setSelectedProvider(e.target.value)}
-                  className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-atkin-ink focus:outline-none"
                 >
                   <option value="src-uk-legislation">legislation.gov.uk (Official UK Acts)</option>
                   <option value="src-uk-cpr">Civil Procedure Rules (CPR)</option>
@@ -479,7 +479,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                     value={queryInput}
                     onChange={(e) => setQueryInput(e.target.value)}
                     placeholder="e.g. Consumer Rights Act 2015 section 20 reject or UCTA 1977 reasonableness"
-                    className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                    className="w-full text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-atkin-ink focus:outline-none"
                   />
                   <button
                     onClick={() => {
@@ -489,7 +489,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                         setShowApprovalModal(true);
                       }
                     }}
-                    className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-navy shrink-0 shadow-sm flex items-center gap-1.5 transition-colors"
+                    className="px-4 py-2 bg-atkin-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-atkin-surface shrink-0 shadow-sm flex items-center gap-1.5 transition-colors"
                   >
                     <Search className="w-3.5 h-3.5" />
                     <span>Search</span>
@@ -534,13 +534,13 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
 
           {/* Outgoing Query Approval Modal (Public Research Mode) */}
           {showApprovalModal && (
-            <div className="p-4 bg-gallery-paper border border-proofline-blue/30 rounded-[4px] space-y-3">
-              <div className="flex items-center gap-2 text-proofline-blue font-semibold text-[13px]">
+            <div className="p-4 bg-gallery-paper border border-atkin-ink/30 rounded-[4px] space-y-3">
+              <div className="flex items-center gap-2 text-atkin-ink font-semibold text-[13px]">
                 <Globe className="w-4 h-4" />
                 <span>Outgoing Legal Query Approval Required</span>
               </div>
               <p className="text-[12px] text-ink-slate leading-relaxed">
-                Proofline requires explicit solicitor approval before transmitting any query outside your computer. Verify that the query contains zero private client identifiers.
+                ATKIN requires explicit solicitor approval before transmitting any query outside your computer. Verify that the query contains zero private client identifiers.
               </p>
               <div className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline font-mono text-[11px] text-ink">
                 GET https://www.legislation.gov.uk/all/data.feed?title={encodeURIComponent(queryInput)}
@@ -554,7 +554,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 </button>
                 <button
                   onClick={handleExecuteApprovedQuery}
-                  className="px-3.5 py-1.5 bg-proofline-green text-white text-[12px] font-medium rounded-[4px] hover:bg-proofline-green/90 transition-colors"
+                  className="px-3.5 py-1.5 bg-atkin-success text-white text-[12px] font-medium rounded-[4px] hover:bg-atkin-success/90 transition-colors"
                 >
                   Approve &amp; Query Live API
                 </button>
@@ -565,7 +565,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
           {/* Loading Indicator */}
           {isQuerying && (
             <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline flex items-center justify-center gap-2 text-[12px] text-ink-slate">
-              <RotateCw className="w-4 h-4 text-proofline-blue animate-spin" />
+              <RotateCw className="w-4 h-4 text-atkin-ink animate-spin" />
               <span>Querying primary legislative records...</span>
             </div>
           )}
@@ -582,7 +582,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                     {querySource === 'live_api' ? 'Live legislation.gov.uk Feed' : 'Local Statutory Index'}
                   </Badge>
                 </div>
-                <span className="text-[11px] text-proofline-green font-medium flex items-center gap-1">
+                <span className="text-[11px] text-atkin-success font-medium flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Verified Legal Source</span>
                 </span>
@@ -601,14 +601,14 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                       
                       <div className="flex items-center gap-2 shrink-0">
                         {isAttached ? (
-                          <span className="text-[11px] font-medium text-proofline-green flex items-center gap-1 bg-proofline-green/10 px-2.5 py-1 rounded-[4px]">
+                          <span className="text-[11px] font-medium text-atkin-success flex items-center gap-1 bg-atkin-success/10 px-2.5 py-1 rounded-[4px]">
                             <Check className="w-3 h-3" />
                             <span>Attached to Matter</span>
                           </span>
                         ) : (
                           <button
                             onClick={() => handleAttachAuthority(res)}
-                            className="px-3 py-1 bg-proofline-blue text-white rounded-[4px] text-[11px] font-medium hover:bg-proofline-navy transition-colors flex items-center gap-1 shadow-sm"
+                            className="px-3 py-1 bg-atkin-ink text-white rounded-[4px] text-[11px] font-medium hover:bg-atkin-surface transition-colors flex items-center gap-1 shadow-sm"
                           >
                             <Plus className="w-3 h-3" />
                             <span>Attach to Matter</span>
@@ -690,7 +690,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between pt-1 text-[11px]">
-                  <span className="text-proofline-green font-medium flex items-center gap-1">
+                  <span className="text-atkin-success font-medium flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     <span>OGL / Open Access Verified</span>
                   </span>
@@ -698,7 +698,7 @@ export const ResearchTab: React.FC<ResearchTabProps> = ({
                     href={pack.officialUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-proofline-blue hover:underline flex items-center gap-0.5"
+                    className="text-atkin-ink hover:underline flex items-center gap-0.5"
                   >
                     <span>Portal</span>
                     <ExternalLink className="w-2.5 h-2.5" />

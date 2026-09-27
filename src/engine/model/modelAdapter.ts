@@ -41,7 +41,7 @@ export class DeterministicOfflineAdapter implements IModelAdapter {
 
   public getCapabilityProfile(): CapabilityProfile {
     return {
-      modelTag: 'proofline-deterministic-v1',
+      modelTag: 'atkin-deterministic-v1',
       vendor: 'custom',
       maxTestedContextTokens: 32768,
       structuredJsonReliability: 'certified',
@@ -297,7 +297,7 @@ export class LocalGemmaAdapter implements IModelAdapter {
       `[Span ID: ${s.id}] "${s.exactText}" (Doc: ${s.documentId})`
     ).join('\n');
 
-    return `You are Proofline Sovereign Legal Copilot.
+    return `You are ATKIN, a local-first legal workspace.
 TASK: ${packet.prompt}
 MATTER: ${packet.matterId}
 EVIDENCE SPANS:

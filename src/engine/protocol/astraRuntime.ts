@@ -8,7 +8,7 @@
  * 4. Relevant Five-Layer Memory Retrieval (Preferences, Facts, Episodes)
  * 5. Retrieval & Tool Execution (Clause extraction, CPR deadlines, Diffs)
  * 6. Context Planner (Evidence-first token budget allocation)
- * 7. LegalModel Invocation (Airgapped deterministic or local Ollama)
+ * 7. LegalModel Invocation (local deterministic or local Ollama)
  * 8. CitationGate Verification (Exact byte-span provenance check)
  * 9. Claim-Support Status Evaluation
  * 10. Approval Service & Gating (Autonomous, Solicitor, Partner)

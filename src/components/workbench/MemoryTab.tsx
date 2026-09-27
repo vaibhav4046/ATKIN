@@ -301,13 +301,13 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
       <div className="flex items-start justify-between pb-6 border-b border-border-hairline">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10.5px] font-mono uppercase tracking-widest text-proofline-blue font-semibold bg-proofline-blue/10 px-2 py-0.5 rounded">
+            <span className="text-[10.5px] font-mono uppercase tracking-widest text-atkin-ink font-semibold bg-atkin-ink/10 px-2 py-0.5 rounded">
               ATKIN Sovereign Core
             </span>
             <span className="text-xs text-ink-slate font-mono">Matter: {matterId}</span>
           </div>
           <h2 className="text-[24px] font-semibold text-ink tracking-tight flex items-center gap-2.5 mt-1.5 font-serif">
-            <BrainCircuit className="w-5 h-5 text-proofline-blue" />
+            <BrainCircuit className="w-5 h-5 text-atkin-ink" />
             5-Layer Sovereign Memory Architecture
           </h2>
           <p className="text-[13px] text-ink-slate mt-1 max-w-[760px] leading-relaxed">
@@ -593,7 +593,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                   </div>
 
                   {ep.userFeedback?.comment && (
-                    <div className="p-2.5 bg-stone-50 border-l-2 border-proofline-blue rounded-r text-[12px] text-ink-slate italic">
+                    <div className="p-2.5 bg-stone-50 border-l-2 border-atkin-ink rounded-r text-[12px] text-ink-slate italic">
                       Practitioner Note: "{ep.userFeedback.comment}"
                     </div>
                   )}
@@ -632,7 +632,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                 </div>
                 <div className="p-2 bg-stone-50 rounded text-xs text-ink-slate border border-stone-200">
                   <div className="text-[10.5px] font-semibold text-ink-slate uppercase tracking-wider mb-0.5 flex items-center gap-1">
-                    <FileText className="w-3 h-3 text-proofline-blue" />
+                    <FileText className="w-3 h-3 text-atkin-ink" />
                     Document Provenance: {ent.provenance.documentId}
                   </div>
                   <p className="font-serif italic text-[11.5px] text-ink">"{ent.provenance.sourceTextSnippet}"</p>
@@ -845,8 +845,8 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
               onClick={() => setActiveScopeTab('suggested')}
               className={`px-3 py-1.5 rounded-[4px] text-[13px] font-medium transition-colors flex items-center gap-1.5 ${
                 activeScopeTab === 'suggested'
-                  ? 'bg-proofline-ochre text-white'
-                  : 'text-proofline-ochre hover:bg-proofline-ochre/10'
+                  ? 'bg-atkin-warning text-white'
+                  : 'text-atkin-warning hover:bg-atkin-warning/10'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -861,7 +861,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                 value={newText}
                 onChange={(e) => setNewText(e.target.value)}
                 placeholder={`Add explicit memory record to ${activeScopeTab.replace(/_/g, ' ')}...`}
-                className="flex-1 px-3 py-2 text-[13px] border border-border-hairline rounded-[4px] focus:outline-none focus:ring-1 focus:ring-proofline-blue bg-gallery-mist/30"
+                className="flex-1 px-3 py-2 text-[13px] border border-border-hairline rounded-[4px] focus:outline-none focus:ring-1 focus:ring-atkin-ink bg-gallery-mist/30"
               />
               <button
                 type="submit"
@@ -895,7 +895,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                       {mem.matterId ? (
                         <span className="text-ink-steel">· Scoped to Matter {mem.matterId}</span>
                       ) : (
-                        <span className="text-proofline-blue font-medium">· Global Scope (Cross-Matter Safe)</span>
+                        <span className="text-atkin-ink font-medium">· Global Scope (Cross-Matter Safe)</span>
                       )}
                       {mem.status === 'invalidated' && (
                         <Badge variant="red" size="sm">Invalidated (Source Drift)</Badge>
@@ -908,7 +908,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
 
                     {mem.sourceDocumentVersions.length > 0 && (
                       <div className="text-[11px] text-ink-steel flex items-center gap-1 pt-1">
-                        <FileText className="w-3 h-3 text-proofline-blue" />
+                        <FileText className="w-3 h-3 text-atkin-ink" />
                         <span>Dependency: {mem.sourceDocumentVersions.join(', ')}</span>
                       </div>
                     )}
@@ -919,14 +919,14 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                       <>
                         <button
                           onClick={() => handleApprove(mem.id)}
-                          className="p-1.5 rounded-[4px] bg-proofline-green/10 text-proofline-green hover:bg-proofline-green hover:text-white transition-colors"
+                          className="p-1.5 rounded-[4px] bg-atkin-success/10 text-atkin-success hover:bg-atkin-success hover:text-white transition-colors"
                           title="Approve Memory"
                         >
                           <Check className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleReject(mem.id)}
-                          className="p-1.5 rounded-[4px] bg-proofline-crimson/10 text-proofline-crimson hover:bg-proofline-crimson hover:text-white transition-colors"
+                          className="p-1.5 rounded-[4px] bg-atkin-danger/10 text-atkin-danger hover:bg-atkin-danger hover:text-white transition-colors"
                           title="Reject Memory"
                         >
                           <X className="w-4 h-4" />
@@ -935,7 +935,7 @@ export const MemoryTab: React.FC<MemoryTabProps> = ({
                     ) : (
                       <button
                         onClick={() => handleReject(mem.id)}
-                        className="p-1.5 rounded-[4px] text-ink-steel hover:text-proofline-crimson hover:bg-gallery-mist transition-colors"
+                        className="p-1.5 rounded-[4px] text-ink-steel hover:text-atkin-danger hover:bg-gallery-mist transition-colors"
                         title="Delete Memory"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

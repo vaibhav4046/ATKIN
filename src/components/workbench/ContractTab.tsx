@@ -87,7 +87,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `proofline-playbook-${activePlaybook.id || 'export'}.json`;
+    a.download = `atkin-playbook-${activePlaybook.id || 'export'}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -151,7 +151,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
       <div className="flex items-center justify-between pb-6 border-b border-border-hairline">
         <div>
           <h2 className="text-[22px] font-semibold text-ink tracking-tight flex items-center gap-2.5">
-            <FileCheck2 className="w-5 h-5 text-proofline-blue" />
+            <FileCheck2 className="w-5 h-5 text-atkin-ink" />
             Contract Review &amp; Playbook Audit
           </h2>
           <p className="text-[13px] text-ink-slate mt-1">
@@ -194,7 +194,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
       {/* Playbook Configuration & Sovereign Compliance Bar */}
       <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-4 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-[4px] bg-proofline-blue/10 text-proofline-blue">
+          <div className="p-2 rounded-[4px] bg-atkin-ink/10 text-atkin-ink">
             <Sliders className="w-4 h-4" />
           </div>
           <div>
@@ -214,7 +214,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
             onClick={() => setIsPlaybookModalOpen(true)}
             className="px-2.5 py-1.5 rounded-[4px] text-[11.5px] font-medium bg-gallery-mist hover:bg-gallery-paper border border-border-hairline text-ink flex items-center gap-1.5 transition-colors"
           >
-            <BookOpen className="w-3.5 h-3.5 text-proofline-blue" />
+            <BookOpen className="w-3.5 h-3.5 text-atkin-ink" />
             Inspect Rules ({activePlaybook.rules.length})
           </button>
 
@@ -236,7 +236,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="px-2.5 py-1.5 rounded-[4px] text-[11.5px] font-medium bg-proofline-blue hover:bg-proofline-navy text-white flex items-center gap-1.5 transition-colors shadow-sm"
+            className="px-2.5 py-1.5 rounded-[4px] text-[11.5px] font-medium bg-atkin-ink hover:bg-atkin-surface text-white flex items-center gap-1.5 transition-colors shadow-sm"
             title="Import custom firm playbook JSON"
           >
             <Upload className="w-3.5 h-3.5" />
@@ -259,8 +259,8 @@ export const ContractTab: React.FC<ContractTabProps> = ({
       {importFeedback && (
         <div className={`p-3 rounded-[4px] border flex items-center justify-between text-[12px] ${
           importFeedback.type === 'success' 
-            ? 'bg-proofline-green/10 border-proofline-green/30 text-proofline-green' 
-            : 'bg-proofline-crimson/10 border-proofline-crimson/30 text-proofline-crimson'
+            ? 'bg-atkin-success/10 border-atkin-success/30 text-atkin-success' 
+            : 'bg-atkin-danger/10 border-atkin-danger/30 text-atkin-danger'
         }`}>
           <div className="flex items-center gap-2">
             {importFeedback.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
@@ -276,7 +276,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-[16px] font-semibold text-ink flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-proofline-crimson" />
+            <AlertTriangle className="w-4 h-4 text-atkin-danger" />
             Playbook Deviations &amp; Risk Findings ({reviewResult.risks.length})
           </h3>
           <span className="text-[12px] text-ink-steel">Evaluated against {activePlaybook.name}</span>
@@ -288,8 +288,8 @@ export const ContractTab: React.FC<ContractTabProps> = ({
               key={risk.id}
               className={`p-5 rounded-[6px] border shadow-sm space-y-3 ${
                 risk.severity === 'high' 
-                  ? 'bg-proofline-crimson/5 border-proofline-crimson/30' 
-                  : 'bg-proofline-ochre/5 border-proofline-ochre/30'
+                  ? 'bg-atkin-danger/5 border-atkin-danger/30' 
+                  : 'bg-atkin-warning/5 border-atkin-warning/30'
               }`}
             >
               <div className="flex items-start justify-between gap-4">
@@ -312,7 +312,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
 
               <div className="bg-gallery-white/80 p-3 rounded-[4px] border border-border-hairline space-y-1.5">
                 <span className="text-[11px] font-medium text-ink-steel flex items-center gap-1">
-                  <BookOpen className="w-3 h-3 text-proofline-blue" />
+                  <BookOpen className="w-3 h-3 text-atkin-ink" />
                   Institutional Rule Reference:
                 </span>
                 <p className="text-[12px] text-ink font-sans">
@@ -323,7 +323,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
               {risk.suggestedRevision && (
                 <div className="p-3 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-proofline-blue flex items-center gap-1">
+                    <span className="text-[11px] font-semibold text-atkin-ink flex items-center gap-1">
                       <ArrowRight className="w-3 h-3" />
                       Recommended Redline Revision:
                     </span>
@@ -331,7 +331,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                       onClick={() => handleCopyRedline(risk)}
                       className="px-2 py-0.5 rounded-[3px] text-[11px] bg-gallery-white border border-border-hairline hover:bg-gallery-mist flex items-center gap-1 text-ink transition-colors"
                     >
-                      {copiedRiskId === risk.id ? <Check className="w-3 h-3 text-proofline-green" /> : <Copy className="w-3 h-3 text-ink-steel" />}
+                      {copiedRiskId === risk.id ? <Check className="w-3 h-3 text-atkin-success" /> : <Copy className="w-3 h-3 text-ink-steel" />}
                       <span>{copiedRiskId === risk.id ? 'Copied' : 'Copy Markup'}</span>
                     </button>
                   </div>
@@ -349,7 +349,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
       <div className="space-y-4 pt-4 border-t border-border-hairline">
         <div className="flex items-center justify-between">
           <h3 className="text-[16px] font-semibold text-ink flex items-center gap-2">
-            <Scale className="w-4 h-4 text-proofline-blue" />
+            <Scale className="w-4 h-4 text-atkin-ink" />
             Clause Matrix &amp; Obligation Audit
           </h3>
 
@@ -390,7 +390,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                 </span>
               </div>
 
-              <blockquote className="text-[12.5px] text-ink-slate italic border-l-2 border-proofline-blue/40 pl-3 my-2 leading-relaxed font-legal-serif">
+              <blockquote className="text-[12.5px] text-ink-slate italic border-l-2 border-atkin-ink/40 pl-3 my-2 leading-relaxed font-legal-serif">
                 "{clause.exactText}"
               </blockquote>
 
@@ -398,7 +398,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
               {reviewResult.obligations.filter(o => o.clauseId === clause.id).map(ob => (
                 <div key={ob.id} className="pt-2 border-t border-border-hairline/60 flex items-center justify-between text-[11.5px] text-ink-steel">
                   <span><strong>Obligor:</strong> {ob.obligorParty} &bull; {ob.action}</span>
-                  {ob.amountOrCap && <span className="font-semibold text-proofline-crimson">{ob.amountOrCap}</span>}
+                  {ob.amountOrCap && <span className="font-semibold text-atkin-danger">{ob.amountOrCap}</span>}
                   {ob.deadlineOrPeriod && <span>Deadline: {ob.deadlineOrPeriod}</span>}
                 </div>
               ))}
@@ -413,7 +413,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
           <div className="bg-gallery-white border border-border-hairline rounded-[6px] shadow-lg max-w-2xl w-full max-h-[85vh] flex flex-col">
             <div className="p-5 border-b border-border-hairline flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <BookOpen className="w-5 h-5 text-proofline-blue" />
+                <BookOpen className="w-5 h-5 text-atkin-ink" />
                 <div>
                   <h3 className="text-[16px] font-semibold text-ink">{activePlaybook.name}</h3>
                   <span className="text-[11.5px] text-ink-slate font-mono">v{activePlaybook.version} &bull; Jurisdiction: {activePlaybook.jurisdiction}</span>
@@ -462,8 +462,8 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                       )}
                       {rule.escalationTriggers?.length > 0 && (
                         <div>
-                          <strong className="text-proofline-crimson font-medium">Escalation Triggers: </strong>
-                          <ul className="list-disc pl-4 mt-0.5 space-y-0.5 text-proofline-crimson/90">
+                          <strong className="text-atkin-danger font-medium">Escalation Triggers: </strong>
+                          <ul className="list-disc pl-4 mt-0.5 space-y-0.5 text-atkin-danger/90">
                             {rule.escalationTriggers.map((trig, i) => (
                               <li key={i}>{trig}</li>
                             ))}
@@ -472,7 +472,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
                       )}
                       {rule.requiredRedline && (
                         <div className="pt-1.5">
-                          <strong className="text-proofline-blue font-medium">Standard Redline: </strong>
+                          <strong className="text-atkin-ink font-medium">Standard Redline: </strong>
                           <pre className="mt-1 p-2 bg-gallery-white border border-border-hairline rounded-[3px] text-[11px] font-mono text-ink overflow-x-auto whitespace-pre-wrap">
                             {rule.requiredRedline}
                           </pre>
@@ -486,7 +486,7 @@ export const ContractTab: React.FC<ContractTabProps> = ({
 
             <div className="p-4 border-t border-border-hairline flex items-center justify-between bg-gallery-mist/40">
               <span className="text-[11px] text-ink-steel font-mono">
-                Proofline Sovereign Playbook Engine &bull; Zero External Network Calls
+                ATKIN Playbook Engine &bull; Runs on this device
               </span>
               <button
                 onClick={() => setIsPlaybookModalOpen(false)}

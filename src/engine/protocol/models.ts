@@ -73,13 +73,13 @@ export interface LegalModel {
 
 /**
  * DeterministicOfflineLegalModel
- * Sovereign, zero-dependency, air-gapped legal reasoning engine.
+ * Sovereign, zero-dependency, local-first legal reasoning engine.
  * Dynamically analyzes spans, extracts numbers/dates/terms without hardcoded fixture bias,
  * enforces strict evidential abstention when facts are not in the record.
  */
 export class DeterministicOfflineLegalModel implements LegalModel {
   public readonly id = 'deterministic-offline-v1';
-  public readonly name = 'ATKIN Deterministic Sovereign Reasoner (Air-gapped)';
+  public readonly name = 'ATKIN Deterministic Sovereign Reasoner (Local)';
   public readonly providerId = 'deterministic_offline' as const;
   public readonly capabilities: ModelCapabilities = {
     contextWindow: 32768,
@@ -95,7 +95,7 @@ export class DeterministicOfflineLegalModel implements LegalModel {
   public async health(): Promise<{ ready: boolean; detail?: string }> {
     return {
       ready: true,
-      detail: 'Local deterministic sovereign rule-engine active (100% available, zero dependencies).'
+      detail: 'Local deterministic rule engine active. No model download, zero dependencies.'
     };
   }
 

@@ -402,7 +402,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                 {/* Assistant Title Bar */}
                 {msg.role === 'assistant' && (
                   <div className="flex items-center justify-between pb-2 mb-2 border-b border-border-hairline">
-                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-proofline-blue font-mono">
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-atkin-ink font-mono">
                       <Binary className="w-3.5 h-3.5" />
                       <span>Evidential Synthesis &bull; Deterministic Provenance</span>
                     </div>
@@ -412,7 +412,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                         className="text-[11px] text-ink-steel hover:text-ink flex items-center gap-1"
                         title="Copy Response"
                       >
-                        {copiedMsgId === msg.id ? <Check className="w-3 h-3 text-proofline-green" /> : <Copy className="w-3 h-3" />}
+                        {copiedMsgId === msg.id ? <Check className="w-3 h-3 text-atkin-success" /> : <Copy className="w-3 h-3" />}
                         <span>{copiedMsgId === msg.id ? 'Copied' : 'Copy'}</span>
                       </button>
                     </div>
@@ -453,9 +453,9 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                   <div className="mt-3 pt-2.5 border-t border-border-hairline">
                     <button
                       onClick={() => setExpandedTraceMsgId(expandedTraceMsgId === `astra-${msg.id}` ? null : `astra-${msg.id}`)}
-                      className="text-[11px] font-medium text-ink-steel hover:text-proofline-blue flex items-center gap-1.5 transition-colors font-mono"
+                      className="text-[11px] font-medium text-ink-steel hover:text-atkin-ink flex items-center gap-1.5 transition-colors font-mono"
                     >
-                      <Layers className="w-3 h-3 text-proofline-blue" />
+                      <Layers className="w-3 h-3 text-atkin-ink" />
                       <span>ASTRA 12-Stage Pipeline Trace ({msg.astraStages.length} stages &bull; CitationGate Verified)</span>
                       {expandedTraceMsgId === `astra-${msg.id}` ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                     </button>
@@ -490,9 +490,9 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                   <div className="mt-3 pt-2.5 border-t border-border-hairline">
                     <button
                       onClick={() => setExpandedTraceMsgId(expandedTraceMsgId === msg.id ? null : msg.id)}
-                      className="text-[11px] font-medium text-ink-steel hover:text-proofline-blue flex items-center gap-1.5 transition-colors font-mono"
+                      className="text-[11px] font-medium text-ink-steel hover:text-atkin-ink flex items-center gap-1.5 transition-colors font-mono"
                     >
-                      <Cpu className="w-3 h-3 text-proofline-blue" />
+                      <Cpu className="w-3 h-3 text-atkin-ink" />
                       <span>Verified Analytical Trace ({msg.reasoningSteps.length} stages &bull; {msg.generationDetails?.latencyMs || 18}ms)</span>
                       {expandedTraceMsgId === msg.id ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                     </button>
@@ -501,7 +501,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                       <div className="mt-2 p-3 rounded-[4px] bg-canvas-subtle border border-border-hairline text-[11.5px] space-y-2">
                         {msg.reasoningSteps.map((step) => (
                           <div key={step.step} className="flex items-start gap-2">
-                            <CheckCircle className="w-3.5 h-3.5 text-proofline-green mt-0.5 shrink-0" />
+                            <CheckCircle className="w-3.5 h-3.5 text-atkin-success mt-0.5 shrink-0" />
                             <div className="flex-1">
                               <div className="flex items-center justify-between">
                                 <span className="font-semibold text-ink font-mono">{step.agentName}</span>
@@ -509,7 +509,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                               </div>
                               <p className="text-ink-slate text-[11px] mt-0.5">{step.action}</p>
                               {step.outputSnippet && (
-                                <span className="text-[10.5px] font-mono text-proofline-blue block mt-0.5">
+                                <span className="text-[10.5px] font-mono text-atkin-ink block mt-0.5">
                                   {step.outputSnippet}
                                 </span>
                               )}
@@ -525,7 +525,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                 {msg.sourcesUsed && msg.sourcesUsed.length > 0 && (
                   <div className="mt-3 pt-2.5 border-t border-border-hairline flex flex-wrap items-center gap-1.5 text-[11px]">
                     <span className="text-ink-steel font-medium flex items-center gap-1 font-mono">
-                      <FileText className="w-3 h-3 text-proofline-blue" />
+                      <FileText className="w-3 h-3 text-atkin-ink" />
                       Grounded Sources:
                     </span>
                     {msg.sourcesUsed.map((s, idx) => (
@@ -536,7 +536,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                         title={`Open split view for ${s.filename}`}
                       >
                         <span>{s.filename}</span>
-                        <Split className="w-2.5 h-2.5 text-proofline-blue" />
+                        <Split className="w-2.5 h-2.5 text-atkin-ink" />
                       </button>
                     ))}
                   </div>
@@ -547,7 +547,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                   <div className="mt-3 pt-2.5 border-t border-border-hairline flex items-center justify-between gap-2">
                     <button
                       onClick={() => handleAction(msg)}
-                      className="px-2.5 py-1 rounded-[4px] text-[11.5px] font-medium bg-proofline-blue text-white hover:bg-blue-700 flex items-center gap-1.5 transition-colors shadow-subtle"
+                      className="px-2.5 py-1 rounded-[4px] text-[11.5px] font-medium bg-atkin-ink text-white hover:bg-blue-700 flex items-center gap-1.5 transition-colors shadow-subtle"
                     >
                       {msg.suggestedAction.type === 'add_calendar' && <Calendar className="w-3 h-3" />}
                       {msg.suggestedAction.type === 'insert_draft' && <FilePlus className="w-3 h-3" />}
@@ -557,7 +557,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                     </button>
 
                     {actionFeedback?.msgId === msg.id && (
-                      <span className="text-[11px] font-medium text-proofline-green flex items-center gap-1 font-mono">
+                      <span className="text-[11px] font-medium text-atkin-success flex items-center gap-1 font-mono">
                         <Check className="w-3 h-3" />
                         {actionFeedback.text}
                       </span>
@@ -607,7 +607,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
 
           {isProcessing && (
             <div className="flex items-center gap-2 text-ink-steel text-[12px] p-3.5 bg-canvas-subtle border border-border-hairline rounded-[4px] shadow-subtle max-w-md font-mono">
-              <span className="w-2 h-2 rounded-full bg-proofline-blue animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-atkin-ink animate-pulse" />
               <span>Synthesizing multi-jurisdiction IRAC legal reasoning...</span>
             </div>
           )}
@@ -642,7 +642,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
               <button
                 key={idx}
                 onClick={() => handleSend(p.query)}
-                className="text-[11px] px-2.5 py-1 rounded-[3px] bg-white hover:bg-canvas-subtle border border-border-hairline text-ink hover:text-proofline-blue whitespace-nowrap transition-colors shadow-subtle"
+                className="text-[11px] px-2.5 py-1 rounded-[3px] bg-white hover:bg-canvas-subtle border border-border-hairline text-ink hover:text-atkin-ink whitespace-nowrap transition-colors shadow-subtle"
               >
                 {p.label}
               </button>
@@ -679,7 +679,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                 }}
                 rows={2}
                 placeholder="Ask evidential copilot (e.g. 'What is the invoice payment deadline? Answer in one sentence with the exact source clause. Do not discuss governing law.'). Press Enter to send, Shift+Enter for new line..."
-                className="w-full px-3.5 py-2.5 rounded-[6px] border border-border-hairline focus-visible:outline-none focus:border-proofline-blue text-[13px] bg-canvas-subtle placeholder:text-ink-steel resize-none leading-relaxed transition-colors focus:bg-white"
+                className="w-full px-3.5 py-2.5 rounded-[6px] border border-border-hairline focus-visible:outline-none focus:border-atkin-ink text-[13px] bg-canvas-subtle placeholder:text-ink-steel resize-none leading-relaxed transition-colors focus:bg-white"
               />
             </div>
 
@@ -719,7 +719,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
           <div className="px-4 py-3 border-b border-border-hairline flex items-center justify-between bg-canvas-subtle">
             <div>
               <div className="flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-proofline-blue" />
+                <FileText className="w-4 h-4 text-atkin-ink" />
                 <h3 className="text-[13px] font-semibold text-ink font-mono truncate max-w-[240px]">
                   {selectedDoc.filename}
                 </h3>
@@ -795,7 +795,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
           <div className="bg-white border border-border-hairline rounded-[6px] shadow-modal max-w-xl w-full p-5 flex flex-col gap-4 animate-in fade-in duration-150">
             <div className="flex items-center justify-between border-b border-border-hairline pb-3">
               <div className="flex items-center gap-2">
-                <Mic className="w-4 h-4 text-proofline-blue" />
+                <Mic className="w-4 h-4 text-atkin-ink" />
                 <h3 className="text-[14px] font-semibold text-ink">Dictation &amp; Attendance Note Intake Studio</h3>
               </div>
               <button
@@ -809,7 +809,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
             {/* Sovereign Privacy Notice */}
             <div className="p-3 bg-canvas-subtle border border-border-hairline rounded-[4px] text-[11px] text-ink-slate leading-relaxed">
               <strong className="text-ink block mb-0.5">Sovereign Privacy Boundary Notice:</strong>
-              Standard browser speech recognition routes audio streams to vendor cloud servers. To guarantee zero cloud egress on confidential matters, paste dictaphone transcripts directly. SRA 6-minute billing units and Latin legal glossary references are calculated locally on the host.
+              Standard browser speech recognition routes audio streams to vendor cloud servers. Because that path leaves the device, paste dictaphone transcripts directly when the matter is confidential. SRA 6-minute billing units and Latin legal glossary references are calculated locally on the host.
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -824,7 +824,7 @@ export const ChatTab: React.FC<ChatTabProps> = ({
                 onChange={(e) => setDictationText(e.target.value)}
                 placeholder="Paste client conference transcript, dictaphone export, or type attendance note here (e.g. 'Conference attended with client. Reviewed Fujitsu PIN-188 report; agreed to file CPR Part 31 request...')."
                 rows={5}
-                className="w-full p-3 border border-border-hairline rounded-[4px] text-[12px] font-mono leading-relaxed focus:outline-none focus:border-proofline-blue"
+                className="w-full p-3 border border-border-hairline rounded-[4px] text-[12px] font-mono leading-relaxed focus:outline-none focus:border-atkin-ink"
               />
             </div>
 

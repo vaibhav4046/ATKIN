@@ -256,7 +256,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
         quote: c.chunkText.substring(0, 150),
         startOffset: c.startOffset,
         endOffset: c.endOffset,
-        verifiedAdmissible: true
+        quoteLocatedInSource: typeof c.startOffset === 'number' && c.startOffset >= 0
       })),
       evidentialCoverageRatio: askResult.evidentialCoverageRatio,
       temporalConflictsDetected: askResult.temporalContradictions.length,
@@ -360,7 +360,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
             <div className="flex items-center space-x-2">
               <h1 className="text-base font-semibold text-slate-900 tracking-tight">{notebook.title}</h1>
               <Badge variant="blue" className="text-xs">Open-Notebook Architecture</Badge>
-              <Badge variant="green" className="text-xs">Sovereign / 100% Local</Badge>
+              <Badge variant="green" className="text-xs">Sovereign / Local</Badge>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">{notebook.description}</p>
           </div>
@@ -482,7 +482,7 @@ export const NotebookStudioTab: React.FC<NotebookStudioTabProps> = ({
 
           <div className="p-3 bg-slate-50 border-t border-slate-200 text-2xs text-slate-500 flex items-center justify-between">
             <span className="flex items-center space-x-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-proofline-blue" />
+              <ShieldCheck className="w-3.5 h-3.5 text-atkin-ink" />
               <span>IndexedDB Technical Schedule</span>
             </span>
             <span className="font-mono text-slate-400">CPR 32.14 Review Required</span>

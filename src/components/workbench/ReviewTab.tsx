@@ -66,7 +66,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
           <select
             value={filterSeverity}
             onChange={(e) => setFilterSeverity(e.target.value)}
-            className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none"
+            className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus:border-atkin-ink focus:outline-none"
           >
             <option value="all">All Severities</option>
             <option value="high">High Severity Only</option>
@@ -79,13 +79,13 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
       {/* Pending Items */}
       <div className="space-y-3.5">
         <h3 className="text-[14px] font-semibold text-ink flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-proofline-ochre" />
+          <AlertCircle className="w-4 h-4 text-atkin-warning" />
           <span>Pending Action Items ({filteredPending.length})</span>
         </h3>
 
         {filteredPending.length === 0 ? (
           <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-8 text-center space-y-2">
-            <CheckCircle2 className="w-8 h-8 text-proofline-green mx-auto" />
+            <CheckCircle2 className="w-8 h-8 text-atkin-success mx-auto" />
             <h4 className="text-[15px] font-semibold text-ink">All Action Items Resolved</h4>
             <p className="text-[13px] text-ink-slate max-w-[360px] mx-auto">
               No outstanding evidential conflicts, unsupported assertions, or unverified authorities remain in this matter.
@@ -100,7 +100,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
               <div
                 key={item.id}
                 className={`bg-gallery-white border rounded-[6px] p-5 shadow-xs space-y-3 transition-all ${
-                  isHigh ? 'border-proofline-ochre/40 ring-1 ring-proofline-ochre/20' : 'border-border-hairline'
+                  isHigh ? 'border-atkin-warning/40 ring-1 ring-atkin-warning/20' : 'border-border-hairline'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -138,7 +138,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                       placeholder="e.g. Client confirmed 8 April was initial intermittent freeze, 12 April was complete failure."
                       value={resolutionText}
                       onChange={(e) => setResolutionText(e.target.value)}
-                      className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus:border-proofline-blue focus:outline-none"
+                      className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus:border-atkin-ink focus:outline-none"
                     />
                     <div className="flex justify-end gap-2 pt-1">
                       <button
@@ -149,7 +149,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                       </button>
                       <button
                         onClick={() => handleConfirmResolve(item.id)}
-                        className="text-[12px] px-3.5 py-1 bg-proofline-green text-white rounded-[4px] hover:bg-proofline-green/90 font-medium"
+                        className="text-[12px] px-3.5 py-1 bg-atkin-success text-white rounded-[4px] hover:bg-atkin-success/90 font-medium"
                       >
                         Confirm Resolution
                       </button>
@@ -164,7 +164,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
                         else if (item.targetType === 'draft_block') onNavigateTab('draft');
                         else onNavigateTab('sources');
                       }}
-                      className="text-[12px] text-proofline-blue hover:underline font-medium flex items-center gap-1"
+                      className="text-[12px] text-atkin-ink hover:underline font-medium flex items-center gap-1"
                     >
                       <span>Jump to Evidential Context</span>
                       <ArrowRight className="w-3 h-3" />
@@ -208,7 +208,7 @@ export const ReviewTab: React.FC<ReviewTabProps> = ({
               >
                 <div>
                   <div className="flex items-center gap-2 font-medium text-ink">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-proofline-green shrink-0" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-atkin-success shrink-0" />
                     <span>{item.title}</span>
                   </div>
                   {item.resolutionNote && (

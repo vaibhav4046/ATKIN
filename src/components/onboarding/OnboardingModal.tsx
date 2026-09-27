@@ -130,12 +130,12 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               </div>
               <p className="text-stone-300 leading-relaxed">
                 Atkin is engineered for legal practitioners who cannot compromise client confidentiality. 
-                Zero cloud telemetry, strict matter isolation, and every assertion verifiable against SHA-256 document spans.
+                Local-first model execution, strict matter isolation, and every assertion checkable against SHA-256 document spans.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                 <div className="p-4 rounded-lg bg-stone-850 border border-stone-800 space-y-1">
-                  <div className="text-emerald-400 font-medium">100% Air-Gapped</div>
+                  <div className="text-emerald-400 font-medium">Local-first by default</div>
                   <div className="text-xs text-stone-400 leading-normal">
                     All document parsing, reasoning, and drafting executes locally. No data leaves your machine.
                   </div>
@@ -147,7 +147,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   </div>
                 </div>
                 <div className="p-4 rounded-lg bg-stone-850 border border-stone-800 space-y-1">
-                  <div className="text-emerald-400 font-medium">Zero Hallucination</div>
+                  <div className="text-emerald-400 font-medium">Every answer cites a source</div>
                   <div className="text-xs text-stone-400 leading-normal">
                     Strict abstention engine refuses to invent unrecorded dates, bank details, or parties.
                   </div>
@@ -289,8 +289,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   {
                     mode: 'local_only' as const,
                     title: 'Strict Local Only (Recommended)',
-                    badge: 'AIR-GAPPED',
-                    desc: '100% of document indexing, entity extraction, and IRAC analysis runs on your CPU/GPU. Complete isolation from external networks.'
+                    badge: 'LOCAL-FIRST',
+                    desc: 'Document indexing, entity extraction, and IRAC analysis run on your CPU/GPU when a local model is selected. Complete isolation from external networks.'
                   },
                   {
                     mode: 'local_research' as const,

@@ -1,5 +1,5 @@
 /**
- * Native Bridge for Proofline
+ * Native Bridge for ATKIN
  * Dispatches to native Tauri 2 IPC commands when running in installed desktop mode,
  * or falls back to sovereign in-browser WebCrypto / Dexie / loopback engines when running in browser mode.
  */

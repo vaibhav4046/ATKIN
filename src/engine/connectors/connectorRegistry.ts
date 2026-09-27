@@ -10,7 +10,7 @@ export class ConnectorRegistry {
       writeSupported: true,
       requiredScopes: ['file_system:read', 'file_system:write'],
       offlineFallback: 'Native OS file picker / HTML5 drag-and-drop buffer ingestion',
-      notes: '100% sovereign and offline. Directly reads and encrypts PDF, EML, TXT, DOCX files into local vault.'
+      notes: 'Runs locally and offline. Directly reads and encrypts PDF, EML, TXT, DOCX files into local vault.'
     },
     {
       providerId: 'conn-google-gmail',

@@ -92,7 +92,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
               viewMode === 'impact' ? 'bg-gallery-white text-ink shadow-sm' : 'text-ink-slate hover:text-ink'
             }`}
           >
-            <GitBranch className="w-3.5 h-3.5 text-proofline-ochre" />
+            <GitBranch className="w-3.5 h-3.5 text-atkin-warning" />
             <span>Change Impact</span>
           </button>
         </div>
@@ -127,7 +127,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                             : 'bg-gallery-white border-border-hairline text-ink hover:border-ink/40'
                         }`}
                       >
-                        <FileText className="w-3 h-3 text-proofline-blue" />
+                        <FileText className="w-3 h-3 text-atkin-ink" />
                         <span className="truncate max-w-[150px]">{doc.filename}</span>
                       </button>
                     ))}
@@ -148,10 +148,10 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                           onClick={() => setSelectedNodeId(claim.id)}
                           className={`px-3 py-1.5 rounded-[4px] border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
                             selectedNodeId === claim.id
-                              ? 'bg-proofline-blue text-white border-proofline-blue shadow-sm'
+                              ? 'bg-atkin-ink text-white border-atkin-ink shadow-sm'
                               : isContested
-                              ? 'bg-proofline-ochre/10 border-proofline-ochre/40 text-proofline-ochre'
-                              : 'bg-gallery-white border-border-hairline text-ink hover:border-proofline-blue/40'
+                              ? 'bg-atkin-warning/10 border-atkin-warning/40 text-atkin-warning'
+                              : 'bg-gallery-white border-border-hairline text-ink hover:border-atkin-ink/40'
                           }`}
                         >
                           <CheckSquare className="w-3 h-3" />
@@ -174,11 +174,11 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                         onClick={() => setSelectedNodeId(auth.id)}
                         className={`px-3 py-1.5 rounded-[4px] border text-[11px] font-medium flex items-center gap-1.5 transition-all ${
                           selectedNodeId === auth.id
-                            ? 'bg-proofline-green text-white border-proofline-green shadow-sm'
-                            : 'bg-gallery-white border-border-hairline text-ink hover:border-proofline-green/40'
+                            ? 'bg-atkin-success text-white border-atkin-success shadow-sm'
+                            : 'bg-gallery-white border-border-hairline text-ink hover:border-atkin-success/40'
                         }`}
                       >
-                        <BookOpen className="w-3 h-3 text-proofline-green" />
+                        <BookOpen className="w-3 h-3 text-atkin-success" />
                         <span>{auth.identifier}</span>
                       </button>
                     ))}
@@ -190,15 +190,15 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             <div className="pt-3 border-t border-border-hairline flex items-center justify-between text-[11px] text-ink-steel">
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-[2px] bg-proofline-blue/20 border border-proofline-blue" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-atkin-ink/20 border border-atkin-ink" />
                   <span>Claim</span>
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-[2px] bg-proofline-ochre/20 border border-proofline-ochre" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-atkin-warning/20 border border-atkin-warning" />
                   <span>Contested</span>
                 </span>
                 <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-[2px] bg-proofline-green/20 border border-proofline-green" />
+                  <span className="w-2.5 h-2.5 rounded-[2px] bg-atkin-success/20 border border-atkin-success" />
                   <span>Statute</span>
                 </span>
               </div>
@@ -238,7 +238,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
                           <button
                             key={e.id}
                             onClick={() => s && onSelectSpan(s)}
-                            className="block w-full text-left text-[12px] text-proofline-blue hover:underline font-mono truncate"
+                            className="block w-full text-left text-[12px] text-atkin-ink hover:underline font-mono truncate"
                           >
                             → Inspect span: {e.spanId}
                           </button>
@@ -334,7 +334,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             <select
               value={simulatedDocId}
               onChange={(e) => setSimulatedDocId(e.target.value)}
-              className="w-full text-[13px] bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-2 text-ink font-medium focus:border-proofline-blue focus:outline-none"
+              className="w-full text-[13px] bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-2 text-ink font-medium focus:border-atkin-ink focus:outline-none"
             >
               {documents.map(d => (
                 <option key={d.id} value={d.id}>
@@ -347,7 +347,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
           {/* Change Impact Report */}
           <div className="border border-border-hairline rounded-[4px] p-5 space-y-4 bg-gallery-mist/30">
             <div className="flex items-center justify-between border-b border-border-hairline/60 pb-3">
-              <div className="flex items-center gap-2 text-proofline-ochre font-semibold text-[13px]">
+              <div className="flex items-center gap-2 text-atkin-warning font-semibold text-[13px]">
                 <AlertTriangle className="w-4 h-4" />
                 <span>Impact Assessment for {simulatedDoc?.filename}</span>
               </div>
@@ -362,12 +362,12 @@ export const GraphTab: React.FC<GraphTabProps> = ({
 
               <div className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline">
                 <span className="text-ink-steel block text-[11px]">Dependent Assertions</span>
-                <span className="font-mono font-semibold text-proofline-ochre text-[14px] mt-0.5">{affectedClaims.length} claims</span>
+                <span className="font-mono font-semibold text-atkin-warning text-[14px] mt-0.5">{affectedClaims.length} claims</span>
               </div>
 
               <div className="p-3 bg-gallery-white rounded-[4px] border border-border-hairline">
                 <span className="text-ink-steel block text-[11px]">Downstream Invalidation</span>
-                <span className="font-mono font-semibold text-proofline-crimson text-[14px] mt-0.5">Draft Brief Re-check</span>
+                <span className="font-mono font-semibold text-atkin-danger text-[14px] mt-0.5">Draft Brief Re-check</span>
               </div>
             </div>
 
@@ -385,7 +385,7 @@ export const GraphTab: React.FC<GraphTabProps> = ({
             </div>
 
             <div className="p-3 bg-gallery-paper rounded-[4px] border border-border-hairline text-[11px] text-ink-slate flex items-start gap-2">
-              <ShieldCheck className="w-4 h-4 text-proofline-green shrink-0 mt-0.5" />
+              <ShieldCheck className="w-4 h-4 text-atkin-success shrink-0 mt-0.5" />
               <div>
                 <strong>Sovereign Graph Invariant:</strong> Modifying or deleting this source document triggers cascading invalidation across all dependent scoped memories and draft blocks, preventing stale evidence from appearing in court work product.
               </div>

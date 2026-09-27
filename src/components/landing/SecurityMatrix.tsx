@@ -40,7 +40,7 @@ export const SecurityMatrix: React.FC = () => {
           </div>
           <div className="pt-2 border-t border-atkin-border/60 text-[11px] font-mono text-atkin-muted space-y-1">
             <div>· WebCrypto AES-GCM vault encryption</div>
-            <div>· Zero cloud database synchronization</div>
+            <div>· No cloud database synchronization</div>
             <div>· Complete data export and purge controls</div>
           </div>
         </div>
@@ -65,7 +65,7 @@ export const SecurityMatrix: React.FC = () => {
             </p>
           </div>
           <div className="pt-2 border-t border-atkin-border/60 text-[11px] font-mono text-atkin-muted space-y-1">
-            <div>· Air-gapped capable mode</div>
+            <div>· Local-only mode</div>
             <div>· No external model provider training</div>
             <div>· Deterministic offline fallback engine</div>
           </div>

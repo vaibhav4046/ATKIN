@@ -19,7 +19,7 @@ export class IcsHandler {
     const lines: string[] = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
-      'PRODID:-//Proofline Sovereign Legal Copilot//Court Calendar v1.0//EN',
+      'PRODID:-//ATKIN//Court Calendar v1.0//EN',
       'CALSCALE:GREGORIAN',
       'METHOD:PUBLISH'
     ];
@@ -30,7 +30,7 @@ export class IcsHandler {
       const now = this.formatIcsDate(new Date().toISOString());
 
       lines.push('BEGIN:VEVENT');
-      lines.push(`UID:${evt.id}@proofline.local`);
+      lines.push(`UID:${evt.id}@atkin.local`);
       lines.push(`DTSTAMP:${now}`);
       lines.push(`DTSTART:${dtStart}`);
       lines.push(`DTEND:${dtEnd}`);
@@ -80,7 +80,7 @@ export class IcsHandler {
 
       if (summary) {
         events.push({
-          id: uid.replace(/@proofline\.local$/, ''),
+          id: uid.replace(/@(?:proofline|atkin)\.local$/, ''),
           matterId,
           title: this.unescapeIcsText(summary),
           description: this.unescapeIcsText(description),

@@ -296,7 +296,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className={`w-3 h-3 rounded-full ${modelStatus.state === 'connected' ? 'bg-proofline-green animate-pulse' : 'bg-ink-steel'}`} />
+                <div className={`w-3 h-3 rounded-full ${modelStatus.state === 'connected' ? 'bg-atkin-success animate-pulse' : 'bg-ink-steel'}`} />
                 <h3 className="text-[15px] font-semibold text-ink">
                   {modelStatus.state === 'connected' ? 'Local Ollama Runtime: Active' : 'Local Ollama Runtime: Offline / Standby'}
                 </h3>
@@ -317,7 +317,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 onClick={() => setSelectedModel('gemma4:e2b')}
                 className={`p-3.5 rounded-[4px] border cursor-pointer transition-all ${
                   selectedModel === 'gemma4:e2b' 
-                    ? 'border-proofline-blue bg-proofline-blue/5 shadow-xs' 
+                    ? 'border-atkin-ink bg-atkin-ink/5 shadow-xs' 
                     : 'border-border-hairline bg-gallery-paper hover:bg-gallery-mist/50'
                 }`}
               >
@@ -334,7 +334,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 onClick={() => setSelectedModel('gemma4:e4b')}
                 className={`p-3.5 rounded-[4px] border cursor-pointer transition-all ${
                   selectedModel === 'gemma4:e4b' 
-                    ? 'border-proofline-blue bg-proofline-blue/5 shadow-xs' 
+                    ? 'border-atkin-ink bg-atkin-ink/5 shadow-xs' 
                     : 'border-border-hairline bg-gallery-paper hover:bg-gallery-mist/50'
                 }`}
               >
@@ -351,7 +351,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 onClick={() => setSelectedModel('llama3.2:3b')}
                 className={`p-3.5 rounded-[4px] border cursor-pointer transition-all ${
                   selectedModel === 'llama3.2:3b' 
-                    ? 'border-proofline-blue bg-proofline-blue/5 shadow-xs' 
+                    ? 'border-atkin-ink bg-atkin-ink/5 shadow-xs' 
                     : 'border-border-hairline bg-gallery-paper hover:bg-gallery-mist/50'
                 }`}
               >
@@ -380,7 +380,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 <button
                   disabled={isPulling}
                   onClick={handlePullModel}
-                  className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-blue/90 transition-colors shadow-xs flex items-center gap-1.5 disabled:opacity-50"
+                  className="px-4 py-2 bg-atkin-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-atkin-ink/90 transition-colors shadow-xs flex items-center gap-1.5 disabled:opacity-50"
                 >
                   <Download className={`w-3.5 h-3.5 ${isPulling ? 'animate-bounce' : ''}`} />
                   <span>{isPulling ? 'Pulling Layer...' : `Pull ${selectedModel}`}</span>
@@ -395,7 +395,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   </div>
                   <div className="w-full bg-border-hairline h-2 rounded-[2px] overflow-hidden">
                     <div 
-                      className="bg-proofline-blue h-full transition-all duration-300 rounded-[2px]"
+                      className="bg-atkin-ink h-full transition-all duration-300 rounded-[2px]"
                       style={{ width: `${pullProgress}%` }}
                     />
                   </div>
@@ -406,11 +406,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             {/* OLLAMA_NO_CLOUD verification */}
             <div className={`flex items-center justify-between p-3.5 ${
               modelStatus.state === 'connected'
-                ? 'bg-proofline-green/10 border border-proofline-green/20'
+                ? 'bg-atkin-success/10 border border-atkin-success/20'
                 : 'bg-canvas-subtle border border-border-hairline'
             } rounded-[4px] text-[12px]`}>
               <div className={`flex items-center gap-2 font-semibold ${
-                modelStatus.state === 'connected' ? 'text-proofline-green' : 'text-ink-steel'
+                modelStatus.state === 'connected' ? 'text-atkin-success' : 'text-ink-steel'
               }`}>
                 <ShieldCheck className="w-4 h-4" />
                 <span>
@@ -442,7 +442,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 type="checkbox"
                 checked={useOpenAiCompat}
                 onChange={(e) => setUseOpenAiCompat(e.target.checked)}
-                className="w-4 h-4 text-proofline-blue rounded-[2px]"
+                className="w-4 h-4 text-atkin-ink rounded-[2px]"
               />
             </div>
 
@@ -455,7 +455,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   type="text"
                   value={openAiEndpoint}
                   onChange={(e) => setOpenAiEndpoint(e.target.value)}
-                  className="w-full text-[12px] font-mono bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-proofline-blue focus:outline-none"
+                  className="w-full text-[12px] font-mono bg-gallery-white border border-border-hairline rounded-[4px] px-3 py-2 text-ink focus:border-atkin-ink focus:outline-none"
                 />
                 <div className="text-[11px] text-ink-steel">
                   Notice: Only <code>127.0.0.1</code> and <code>localhost</code> ports are permitted by sovereign broker. Remote URLs are rejected.
@@ -487,12 +487,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             {/* Stacked Progress Bar */}
             <div className="w-full bg-border-hairline h-4 rounded-[2px] overflow-hidden flex">
               <div 
-                className="bg-proofline-blue h-full" 
+                className="bg-atkin-ink h-full" 
                 style={{ width: `${(baseModelVram / maxVram) * 100}%` }} 
                 title={`Model Weights: ${baseModelVram} MB`}
               />
               <div 
-                className="bg-proofline-ochre h-full" 
+                className="bg-atkin-warning h-full" 
                 style={{ width: `${(kvCacheVram / maxVram) * 100}%` }} 
                 title={`KV Cache: ${kvCacheVram} MB`}
               />
@@ -506,11 +506,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             <div className="grid grid-cols-4 gap-2 pt-2 text-[11px]">
               <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">Model Weights</span>
-                <span className="font-semibold text-proofline-blue">{baseModelVram} MB</span>
+                <span className="font-semibold text-atkin-ink">{baseModelVram} MB</span>
               </div>
               <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">KV Context Cache</span>
-                <span className="font-semibold text-proofline-ochre">{kvCacheVram} MB</span>
+                <span className="font-semibold text-atkin-warning">{kvCacheVram} MB</span>
               </div>
               <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">Windows DWM / OS</span>
@@ -518,7 +518,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               </div>
               <div className="p-2.5 bg-gallery-paper rounded-[4px] border border-border-hairline">
                 <span className="block text-ink-steel">Free Safety Buffer</span>
-                <span className="font-semibold text-proofline-green">{freeVram} MB</span>
+                <span className="font-semibold text-atkin-success">{freeVram} MB</span>
               </div>
             </div>
           </div>
@@ -527,7 +527,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-[13px] text-ink">Context Window Limit</span>
-              <span className="text-[12px] font-mono text-proofline-blue font-semibold">{contextWindow} tokens</span>
+              <span className="text-[12px] font-mono text-atkin-ink font-semibold">{contextWindow} tokens</span>
             </div>
             <div className="flex items-center gap-3">
               {[2048, 4096, 8192].map(tokens => (
@@ -536,7 +536,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   onClick={() => setContextWindow(tokens)}
                   className={`px-3 py-1.5 rounded-[4px] text-[12px] font-medium transition-colors ${
                     contextWindow === tokens 
-                      ? 'bg-proofline-blue text-white shadow-xs' 
+                      ? 'bg-atkin-ink text-white shadow-xs' 
                       : 'bg-gallery-white border border-border-hairline text-ink-slate hover:text-ink'
                   }`}
                 >
@@ -568,11 +568,11 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               onClick={onToggleVaultLock}
               className={`px-4 py-2 rounded-[4px] text-[12px] font-medium flex items-center gap-2 transition-colors ${
                 isVaultLocked 
-                  ? 'bg-proofline-crimson text-white hover:bg-proofline-crimson/90' 
+                  ? 'bg-atkin-danger text-white hover:bg-atkin-danger/90' 
                   : 'bg-gallery-paper border border-border-hairline text-ink hover:bg-gallery-mist'
               }`}
             >
-              {isVaultLocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5 text-proofline-green" />}
+              {isVaultLocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5 text-atkin-success" />}
               <span>{isVaultLocked ? 'Vault is Locked' : 'Lock Vault Now'}</span>
             </button>
           </div>
@@ -611,7 +611,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <span className="font-semibold text-ink text-[13px] block">
-                  Export Encrypted Vault Backup (.proofline-vault)
+                  Export Encrypted Vault Backup (.atkin-vault)
                 </span>
                 <span className="text-[11px] text-ink-steel">
                   Creates an AES-GCM-256 encrypted snapshot with SHA-256 tamper-evident integrity hash.
@@ -626,7 +626,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             </div>
 
             {backupSuccess && (
-              <div className="p-2.5 bg-proofline-green/10 border border-proofline-green/20 rounded-[4px] text-[12px] text-proofline-green flex items-center gap-2">
+              <div className="p-2.5 bg-atkin-success/10 border border-atkin-success/20 rounded-[4px] text-[12px] text-atkin-success flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>Encrypted vault backup successfully exported to local downloads!</span>
               </div>
@@ -659,9 +659,9 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-ink truncate">{job.title}</span>
                     <span className={`px-2 py-0.5 rounded-[2px] text-[10px] uppercase font-semibold ${
-                      job.state === 'completed' ? 'bg-proofline-green/15 text-proofline-green' :
-                      job.state === 'running' ? 'bg-proofline-blue/15 text-proofline-blue animate-pulse' :
-                      job.state === 'paused' ? 'bg-proofline-ochre/15 text-proofline-ochre' :
+                      job.state === 'completed' ? 'bg-atkin-success/15 text-atkin-success' :
+                      job.state === 'running' ? 'bg-atkin-ink/15 text-atkin-ink animate-pulse' :
+                      job.state === 'paused' ? 'bg-atkin-warning/15 text-atkin-warning' :
                       'bg-ink-steel/15 text-ink-steel'
                     }`}>
                       {job.state}
@@ -700,7 +700,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   {['queued', 'running', 'paused'].includes(job.state) && (
                     <button
                       onClick={() => JobQueue.getInstance().cancel(job.id)}
-                      className="p-1 rounded-[4px] hover:bg-gallery-mist text-proofline-crimson"
+                      className="p-1 rounded-[4px] hover:bg-gallery-mist text-atkin-danger"
                       title="Cancel"
                     >
                       <XCircle className="w-3.5 h-3.5" />
@@ -733,7 +733,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               <button
                 disabled={isRunningQual}
                 onClick={handleRunQualification}
-                className="px-3.5 py-1.5 bg-proofline-blue hover:bg-blue-700 text-white text-[12px] font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50"
+                className="px-3.5 py-1.5 bg-atkin-ink hover:bg-blue-700 text-white text-[12px] font-medium rounded-[4px] transition-colors flex items-center gap-1.5 shadow-xs disabled:opacity-50"
               >
                 <Play className={`w-3.5 h-3.5 ${isRunningQual ? 'animate-spin' : ''}`} />
                 <span>{isRunningQual ? 'Executing Suite...' : 'Run Qualification Suite'}</span>
@@ -809,7 +809,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               </div>
 
               <div className="text-right font-mono text-xs text-ink">
-                <span className="font-bold text-proofline-green">8 Curated Packs</span> · 14 Schedules · 5 Precedents
+                <span className="font-bold text-atkin-success">8 Curated Packs</span> · 14 Schedules · 5 Precedents
               </div>
             </div>
 
@@ -817,7 +817,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             <div className="p-3.5 bg-blue-50/50 border border-blue-200 rounded-[4px] text-xs text-blue-900 space-y-1">
               <span className="font-semibold block">Primary Corpus Provenance Disclosure:</span>
               <p className="text-[11.5px] leading-relaxed text-blue-800">
-                Proofline ships with a curated, rights-cleared Primary Law Pack verified under Open Government Licence v3.0 and Open Justice Licence. Indiscriminate multi-thousand document bulk scraping is rejected: doing so indiscriminately violates licensing constraints, introduces untracked revisions, and overwhelms local consumer hardware.
+                ATKIN ships with a curated, rights-cleared Primary Law Pack verified under Open Government Licence v3.0 and Open Justice Licence. Indiscriminate multi-thousand document bulk scraping is rejected: doing so indiscriminately violates licensing constraints, introduces untracked revisions, and overwhelms local consumer hardware.
               </p>
             </div>
 
@@ -928,7 +928,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   <Badge variant="blue" size="sm">Empirical Evaluation</Badge>
                 </div>
                 <p className="text-[12px] text-ink-slate mt-0.5">
-                  Controlled benchmark evaluating 3 distinct tiers: Vanilla Base Model (Gemma 4 unprompted), Local Quantized Gemma 4 (gemma4:e2b-it-qat on laptop GPU), and Proofline Deterministic IRAC Core.
+                  Controlled benchmark evaluating 3 distinct tiers: Vanilla Base Model (Gemma 4 unprompted), Local Quantized Gemma 4 (gemma4:e2b-it-qat on laptop GPU), and the ATKIN Deterministic IRAC Core.
                 </p>
               </div>
 
@@ -957,7 +957,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                       <td className="p-3 font-semibold text-ink">
                         {tier.evaluatedTier === 'base_model' ? 'Vanilla Gemma 4 (Unprompted Baseline)' :
                          tier.evaluatedTier === 'local_gemma4' ? 'Local Gemma 4 QAT (gemma4:e2b-it-qat on GPU)' :
-                         'Proofline Deterministic IRAC Core (Zero Hallucination)'}
+                         'ATKIN Deterministic IRAC Core'}
                       </td>
                       <td className="p-3 font-mono text-ink">{tier.passedTasks} / {tier.totalTasks}</td>
                       <td className="p-3 font-mono">
@@ -1029,7 +1029,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                   value={conflictQuery}
                   onChange={(e) => handleSearchConflicts(e.target.value)}
                   placeholder="Search party name, company, or director alias (e.g. 'Alan Bates', 'Fujitsu', 'NovaCorp')..."
-                  className="w-full pl-9 pr-4 py-2 border border-border-hairline rounded-[4px] text-xs text-ink bg-white focus:outline-none focus:ring-1 focus:ring-proofline-blue font-sans"
+                  className="w-full pl-9 pr-4 py-2 border border-border-hairline rounded-[4px] text-xs text-ink bg-white focus:outline-none focus:ring-1 focus:ring-atkin-ink font-sans"
                 />
               </div>
 
@@ -1120,7 +1120,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
               </div>
 
               <span className="text-[11px] font-mono text-ink-steel">
-                Zero Cloud Reliance · 100% Local Parsing
+                No Cloud Dependency · Local Parsing
               </span>
             </div>
 
@@ -1170,7 +1170,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
             {/* Offline File Importer Guidance */}
             <div className="p-4 bg-gallery-paper rounded-[4px] border border-border-hairline space-y-2 text-xs">
               <span className="font-semibold text-ink block">
-                How Proofline Resolves External OAuth Blockers for Lawyers:
+                How ATKIN Resolves External OAuth Blockers for Lawyers:
               </span>
               <p className="text-ink-slate leading-relaxed text-[11.5px]">
                 Law firms frequently forbid connecting cloud OAuth apps to live firm Exchange/Google suites due to client confidentiality covenants. Proofline solves this through <strong>Direct Offline Ingestion</strong>: export your email threads as standard <code>.eml</code>/<code>.mbox</code>, Slack channels as exported <code>.json</code>, or Linear tickets as <code>.csv</code>/<code>.json</code>. Proofline ingests them into the matter with byte-level SHA-256 integrity, span extraction, and contradiction detection without sending a single byte to Google, Slack, or Linear.

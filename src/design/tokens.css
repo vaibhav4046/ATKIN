@@ -45,11 +45,6 @@
 
 /* Backward compatibility mappings for legacy components during transition */
 :root {
-  --proofline-blue: var(--atkin-ink);
-  --proofline-navy: var(--atkin-surface);
-  --proofline-green: var(--atkin-success);
-  --proofline-ochre: var(--atkin-warning);
-  --proofline-crimson: var(--atkin-danger);
   --canvas-base: var(--atkin-bg);
   --surface-panel: var(--atkin-surface);
   --surface-recessed: var(--atkin-bg-subtle);

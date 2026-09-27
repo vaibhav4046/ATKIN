@@ -59,7 +59,7 @@ import {
   GOLDEN_REVIEWS
 } from '../domain/matters/goldenMatter.ts';
 
-export class ProoflineDatabase extends Dexie {
+export class AtkinDatabase extends Dexie {
   matters!: Table<Matter, string>;
   documents!: Table<Document, string>;
   spans!: Table<Span, string>;
@@ -109,7 +109,7 @@ export class ProoflineDatabase extends Dexie {
   }
 }
 
-export const db = new ProoflineDatabase();
+export const db = new AtkinDatabase();
 
 /**
  * Seed initial sample matters into IndexedDB if database is freshly initialized.
@@ -179,7 +179,7 @@ export async function seedInitialFixturesIfEmpty(): Promise<boolean> {
 
     return true;
   } catch (err) {
-    console.warn('Proofline IndexedDB seeding notice:', err);
+    console.warn('ATKIN IndexedDB seeding notice:', err);
     return false;
   }
 }

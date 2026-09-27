@@ -112,7 +112,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
 
     const newBlock: DraftBlock = {
       id: `blk-attendance-${Date.now()}`,
-      heading: 'Client Conference & Attendance Record (SRA Compliant)',
+      heading: 'Client Conference & Attendance Record',
       text: contentText,
       claimIds: [],
       spanIds: [],
@@ -191,7 +191,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
             className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-gallery-paper border border-border-hairline hover:bg-gallery-mist text-ink transition-colors flex items-center gap-1.5 shadow-sm"
             title="Add a new section to this draft"
           >
-            <Plus className="w-3.5 h-3.5 text-proofline-blue" />
+            <Plus className="w-3.5 h-3.5 text-atkin-ink" />
             <span>Add Section</span>
           </button>
 
@@ -201,7 +201,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
             className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-gallery-paper border border-border-hairline hover:bg-gallery-mist text-ink transition-colors flex items-center gap-1.5 shadow-sm"
             title="Import voice dictation or meeting transcript"
           >
-            <Mic className="w-3.5 h-3.5 text-proofline-blue" />
+            <Mic className="w-3.5 h-3.5 text-atkin-ink" />
             <span>Attendance Note</span>
           </button>
 
@@ -210,7 +210,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
             <button
               disabled={isGenerating}
               onClick={() => handleRegen(draft.type, true)}
-              className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-proofline-blue hover:bg-proofline-navy text-white transition-colors flex items-center gap-1 shadow-sm disabled:opacity-50"
+              className="text-[12px] font-medium px-3.5 py-1.5 rounded-[4px] bg-atkin-ink hover:bg-atkin-surface text-white transition-colors flex items-center gap-1 shadow-sm disabled:opacity-50"
             >
               <Cpu className="w-3.5 h-3.5" />
               <span>{isGenerating ? 'Synthesizing...' : 'Local Gemma 4 Draft'}</span>
@@ -255,7 +255,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
               }
               handleStartEdit(newBlock.id, newBlock.text);
             }}
-            className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-navy transition-colors shadow-sm inline-flex items-center gap-1.5"
+            className="px-4 py-2 bg-atkin-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-atkin-surface transition-colors shadow-sm inline-flex items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Initial Section</span>
@@ -274,7 +274,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
               key={block.id}
               className={`bg-gallery-white border rounded-[6px] p-6 transition-all shadow-sm space-y-3 ${
                 isNeedsReview
-                  ? 'border-proofline-ochre/40 ring-1 ring-proofline-ochre/20'
+                  ? 'border-atkin-warning/40 ring-1 ring-atkin-warning/20'
                   : 'border-border-hairline'
               }`}
             >
@@ -294,7 +294,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                   {isNeedsReview && (
                     <button
                       onClick={() => onApproveBlock(block.id)}
-                      className="text-[11px] font-medium text-proofline-green hover:underline flex items-center gap-1"
+                      className="text-[11px] font-medium text-atkin-success hover:underline flex items-center gap-1"
                     >
                       <CheckCircle2 className="w-3 h-3" />
                       <span>Approve Block</span>
@@ -307,7 +307,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                       className="text-[11px] font-medium text-ink-slate hover:text-ink flex items-center gap-1 px-2.5 py-1 rounded-[3px] border border-border-hairline hover:bg-gallery-mist transition-colors"
                       title="Edit this section"
                     >
-                      <Edit3 className="w-3 h-3 text-proofline-blue" />
+                      <Edit3 className="w-3 h-3 text-atkin-ink" />
                       <span>Edit Section</span>
                     </button>
                   )}
@@ -316,7 +316,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
 
               {/* Review Callout if flagged */}
               {isNeedsReview && (
-                <div className="p-3 bg-proofline-ochre/10 rounded-[4px] border border-proofline-ochre/25 text-[12px] text-proofline-ochre flex items-start gap-2">
+                <div className="p-3 bg-atkin-warning/10 rounded-[4px] border border-atkin-warning/25 text-[12px] text-atkin-warning flex items-start gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold block">Evidential Audit Flag:</span>
@@ -331,7 +331,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                   <textarea
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
-                    className="w-full text-[14px] bg-gallery-paper border border-border-hairline rounded-[4px] p-3 text-ink focus:border-proofline-blue focus:outline-none font-legal-serif leading-relaxed"
+                    className="w-full text-[14px] bg-gallery-paper border border-border-hairline rounded-[4px] p-3 text-ink focus:border-atkin-ink focus:outline-none font-legal-serif leading-relaxed"
                     rows={5}
                   />
                   <div className="flex justify-end gap-2">
@@ -352,11 +352,11 @@ export const DraftTab: React.FC<DraftTabProps> = ({
               ) : (
                 <div 
                   onClick={() => handleStartEdit(block.id, block.text)}
-                  className="text-[14px] text-ink leading-relaxed font-legal-serif whitespace-pre-line bg-gallery-paper/30 p-4 rounded-[4px] border border-border-hairline/40 cursor-pointer hover:border-proofline-blue/50 hover:bg-gallery-paper/60 transition-colors group relative"
+                  className="text-[14px] text-ink leading-relaxed font-legal-serif whitespace-pre-line bg-gallery-paper/30 p-4 rounded-[4px] border border-border-hairline/40 cursor-pointer hover:border-atkin-ink/50 hover:bg-gallery-paper/60 transition-colors group relative"
                   title="Click to edit section text"
                 >
                   {block.text}
-                  <div className="hidden group-hover:flex items-center gap-1 text-[11px] text-proofline-blue font-sans absolute top-2 right-2 bg-white px-2 py-0.5 rounded-[3px] border border-proofline-blue/30 shadow-xs">
+                  <div className="hidden group-hover:flex items-center gap-1 text-[11px] text-atkin-ink font-sans absolute top-2 right-2 bg-white px-2 py-0.5 rounded-[3px] border border-atkin-ink/30 shadow-xs">
                     <Edit3 className="w-3 h-3" />
                     <span>Click to Edit</span>
                   </div>
@@ -376,7 +376,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                           <button
                             key={sid}
                             onClick={() => span && onSelectSpan(span)}
-                            className="px-2 py-0.5 rounded-[3px] bg-gallery-mist border border-border-hairline text-ink hover:border-proofline-blue hover:text-proofline-blue transition-colors flex items-center gap-1"
+                            className="px-2 py-0.5 rounded-[3px] bg-gallery-mist border border-border-hairline text-ink hover:border-atkin-ink hover:text-atkin-ink transition-colors flex items-center gap-1"
                           >
                             <FileText className="w-2.5 h-2.5" />
                             <span>{doc?.filename || sid}</span>
@@ -413,7 +413,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
           <div className="bg-gallery-white border border-border-hairline rounded-[6px] p-6 w-full max-w-[620px] shadow-lg space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-border-hairline/60 pb-3">
               <div className="flex items-center gap-2">
-                <Mic className="w-4 h-4 text-proofline-blue" />
+                <Mic className="w-4 h-4 text-atkin-ink" />
                 <h3 className="text-[16px] font-semibold text-ink">
                   Dictation &amp; SRA Attendance Note Studio
                 </h3>
@@ -432,7 +432,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                 </label>
                 <button
                   onClick={() => setTranscriptInput(SAMPLE_DICTATION_TRANSCRIPT)}
-                  className="text-proofline-blue hover:underline"
+                  className="text-atkin-ink hover:underline"
                 >
                   Load Sample Transcript
                 </button>
@@ -442,7 +442,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                 value={transcriptInput}
                 onChange={(e) => setTranscriptInput(e.target.value)}
                 rows={6}
-                className="w-full text-[12px] font-mono bg-gallery-paper border border-border-hairline rounded-[4px] p-3 text-ink focus:border-proofline-blue focus:outline-none leading-relaxed"
+                className="w-full text-[12px] font-mono bg-gallery-paper border border-border-hairline rounded-[4px] p-3 text-ink focus:border-atkin-ink focus:outline-none leading-relaxed"
                 placeholder="Paste conference transcript with [timestamps] and [speakers]..."
               />
             </div>
@@ -450,7 +450,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
             <div className="flex justify-end gap-2">
               <button
                 onClick={handleParseDictation}
-                className="px-4 py-2 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-proofline-navy transition-colors shadow-sm"
+                className="px-4 py-2 bg-atkin-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-atkin-surface transition-colors shadow-sm"
               >
                 Parse SRA Attendance Note
               </button>
@@ -484,7 +484,7 @@ export const DraftTab: React.FC<DraftTabProps> = ({
                     <span className="font-semibold text-ink block">Extracted Action Points:</span>
                     {parsedAttendanceNote.actionItems.map((act, i) => (
                       <div key={i} className="flex items-center gap-1.5 text-ink-slate">
-                        <CheckSquare className="w-3 h-3 text-proofline-blue shrink-0" />
+                        <CheckSquare className="w-3 h-3 text-atkin-ink shrink-0" />
                         <span><strong>{act.action}</strong> ({act.assignee})</span>
                       </div>
                     ))}

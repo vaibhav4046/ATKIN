@@ -218,13 +218,13 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
       <div className="w-[300px] border-r border-border-hairline flex flex-col justify-between bg-canvas-subtle shrink-0">
         <div className="p-3 border-b border-border-hairline flex items-center justify-between bg-white">
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4 text-proofline-blue" />
+            <FileText className="w-4 h-4 text-atkin-ink" />
             <span className="text-[12.5px] font-semibold text-ink">Matter Documents ({documents.length})</span>
           </div>
           
           <button
             onClick={() => setIsIngestModalOpen(true)}
-            className="px-2.5 py-1 bg-proofline-blue text-white rounded-[3px] text-[11px] font-medium hover:bg-blue-700 flex items-center gap-1 transition-colors shadow-subtle"
+            className="px-2.5 py-1 bg-atkin-ink text-white rounded-[3px] text-[11px] font-medium hover:bg-blue-700 flex items-center gap-1 transition-colors shadow-subtle"
           >
             <Plus className="w-3 h-3" />
             <span>Ingest File</span>
@@ -254,7 +254,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                   </div>
                   {docHasInj && (
                     <span title="Contains adversarial injection text (quarantined inert)">
-                      <ShieldAlert className="w-3.5 h-3.5 text-proofline-ochre shrink-0" />
+                      <ShieldAlert className="w-3.5 h-3.5 text-atkin-warning shrink-0" />
                     </span>
                   )}
                 </div>
@@ -275,8 +275,8 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
 
         {/* Local Sovereignty Indicator */}
         <div className="p-2.5 border-t border-border-hairline bg-white text-[10.5px] text-ink-steel flex items-center gap-1.5 font-mono">
-          <ShieldCheck className="w-3.5 h-3.5 text-proofline-green shrink-0" />
-          <span>Local IndexedDB · Zero Cloud Uploads</span>
+          <ShieldCheck className="w-3.5 h-3.5 text-atkin-success shrink-0" />
+          <span>Local IndexedDB · No Cloud Uploads</span>
         </div>
       </div>
 
@@ -314,7 +314,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                       title="Copy full SHA-256 hash"
                     >
                       {copiedHash === activeDoc.sha256 ? (
-                        <Check className="w-3 h-3 text-proofline-green inline" />
+                        <Check className="w-3 h-3 text-atkin-success inline" />
                       ) : (
                         <Copy className="w-3 h-3 inline" />
                       )}
@@ -331,7 +331,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                   placeholder="Filter in document..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full text-[11.5px] bg-white border border-border-hairline rounded-[4px] pl-8 pr-3 py-1 text-ink focus-visible:outline-none focus:border-proofline-blue"
+                  className="w-full text-[11.5px] bg-white border border-border-hairline rounded-[4px] pl-8 pr-3 py-1 text-ink focus-visible:outline-none focus:border-atkin-ink"
                 />
               </div>
             </div>
@@ -346,7 +346,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
               <div>
                 Click highlighted text to inspect byte coordinates and verify SHA-256 integrity.
               </div>
-              <div className="text-proofline-green font-medium">
+              <div className="text-atkin-success font-medium">
                 {docSpans.length} verified evidential spans indexed
               </div>
             </div>
@@ -360,7 +360,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
             </p>
             <button
               onClick={() => setIsIngestModalOpen(true)}
-              className="px-3.5 py-1.5 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-blue-700 shadow-subtle flex items-center gap-1.5"
+              className="px-3.5 py-1.5 bg-atkin-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-blue-700 shadow-subtle flex items-center gap-1.5"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Ingest Document Now</span>
@@ -375,7 +375,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
           <div className="bg-white border border-border-hairline rounded-[6px] p-5 w-full max-w-[620px] shadow-modal space-y-4">
             <div className="flex items-center justify-between border-b border-border-hairline pb-3">
               <div className="flex items-center gap-2">
-                <FileCheck className="w-4 h-4 text-proofline-blue" />
+                <FileCheck className="w-4 h-4 text-atkin-ink" />
                 <div>
                   <h3 className="text-[14px] font-semibold text-ink">
                     Sovereign Evidential Document Ingestion
@@ -445,7 +445,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                     value={ingestFilename}
                     onChange={(e) => setIngestFilename(e.target.value)}
                     placeholder="e.g. Witness_Statement_Bates.txt"
-                    className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus-visible:outline-none focus:border-proofline-blue font-mono"
+                    className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus-visible:outline-none focus:border-atkin-ink font-mono"
                   />
                 </div>
                 <div>
@@ -456,19 +456,19 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                     type="date"
                     value={ingestDate}
                     onChange={(e) => setIngestDate(e.target.value)}
-                    className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus-visible:outline-none focus:border-proofline-blue font-mono"
+                    className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus-visible:outline-none focus:border-atkin-ink font-mono"
                   />
                 </div>
               </div>
 
               {/* Local File Picker */}
               <div className="flex items-center gap-2 p-2.5 bg-canvas-subtle border border-dashed border-border-hairline rounded-[4px]">
-                <Upload className="w-4 h-4 text-proofline-blue shrink-0" />
+                <Upload className="w-4 h-4 text-atkin-ink shrink-0" />
                 <label className="text-[11.5px] text-ink-steel cursor-pointer flex-1 flex items-center justify-between">
                   <span>
-                    <strong className="text-proofline-blue hover:underline">Choose local file from disk</strong> (.txt, .md, .json, .eml, .csv, .log)
+                    <strong className="text-atkin-ink hover:underline">Choose local file from disk</strong> (.txt, .md, .json, .eml, .csv, .log)
                   </span>
-                  <span className="text-[10px] text-ink-muted uppercase font-mono">100% Client-Side</span>
+                  <span className="text-[10px] text-ink-muted uppercase font-mono">Client-Side</span>
                   <input
                     type="file"
                     accept=".txt,.md,.json,.eml,.csv,.log,.text"
@@ -498,7 +498,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                   value={ingestText}
                   onChange={(e) => setIngestText(e.target.value)}
                   placeholder="Paste raw contract clauses, witness statements, court judgment extracts, or audit logs..."
-                  className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] p-3 text-ink focus-visible:outline-none focus:border-proofline-blue font-mono leading-relaxed"
+                  className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] p-3 text-ink focus-visible:outline-none focus:border-atkin-ink font-mono leading-relaxed"
                 />
               </div>
 
@@ -510,7 +510,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                   type="text"
                   value={ingestPrivacy}
                   onChange={(e) => setIngestPrivacy(e.target.value)}
-                  className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus-visible:outline-none focus:border-proofline-blue"
+                  className="w-full text-[12px] bg-canvas-subtle border border-border-hairline rounded-[4px] px-3 py-1.5 text-ink focus-visible:outline-none focus:border-atkin-ink"
                 />
               </div>
             </div>
@@ -518,7 +518,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
             {/* Analysis Progress status */}
             {isAnalyzing && (
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-[4px] flex items-center gap-2 text-[12px] text-blue-900 animate-pulse font-mono">
-                <Binary className="w-4 h-4 text-proofline-blue" />
+                <Binary className="w-4 h-4 text-atkin-ink" />
                 <span>{analysisStatus}</span>
               </div>
             )}
@@ -536,7 +536,7 @@ Provider warrants that system uptime shall be 99.9% excluding planned maintenanc
                 type="button"
                 disabled={isAnalyzing || !ingestFilename.trim() || !ingestText.trim()}
                 onClick={() => handleExecuteIngestion(ingestText, ingestFilename, ingestDate)}
-                className="px-4 py-1.5 bg-proofline-blue text-white rounded-[4px] text-[12px] font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-subtle flex items-center gap-1.5"
+                className="px-4 py-1.5 bg-atkin-ink text-white rounded-[4px] text-[12px] font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-subtle flex items-center gap-1.5"
               >
                 <FileCheck className="w-3.5 h-3.5" />
                 <span>{isAnalyzing ? 'Analyzing...' : 'Execute Ingestion'}</span>
@@ -578,7 +578,7 @@ function renderHighlightedDocText(
         onClick={() => onSelectSpan(span)}
         className={`cursor-pointer transition-colors px-1 py-0.5 rounded-[2px] font-mono ${
           isSelected
-            ? 'bg-proofline-blue text-white ring-1 ring-blue-700'
+            ? 'bg-atkin-ink text-white ring-1 ring-blue-700'
             : isInjection
             ? 'bg-amber-100 text-amber-900 border border-amber-300'
             : 'bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-100'

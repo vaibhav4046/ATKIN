@@ -53,15 +53,6 @@ export default {
           steel: 'var(--atkin-muted)',
           muted: 'var(--atkin-muted)',
         },
-        // Compatibility mapping for existing components
-        proofline: {
-          blue: 'var(--atkin-ink)',
-          navy: 'var(--atkin-surface)',
-          ochre: 'var(--atkin-warning)',
-          green: 'var(--atkin-success)',
-          crimson: 'var(--atkin-danger)',
-          amber: 'var(--atkin-warning)',
-        }
       },
       // Restrained, semantic radius scale
       borderRadius: {

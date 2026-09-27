@@ -42,7 +42,7 @@ describe('Generate Physical Synthetic Export Deliverables', () => {
     });
     const encryptedPkg = await BundleExchange.exportEncryptedPackage(plainBundle, 'SovereignVault2026!');
     fs.writeFileSync(
-      path.join(exportsDir, 'Bates_v_PostOffice_EncryptedBundle.proofline'), 
+      path.join(exportsDir, 'Bates_v_PostOffice_EncryptedBundle.atkin'), 
       JSON.stringify(encryptedPkg, null, 2), 
       'utf-8'
     );
@@ -87,7 +87,7 @@ describe('Generate Physical Synthetic Export Deliverables', () => {
 
     expect(fs.existsSync(path.join(exportsDir, 'Bates_v_PostOffice_CourtBrief.md'))).toBe(true);
     expect(fs.existsSync(path.join(exportsDir, 'Bates_v_PostOffice_LegalDraft.doc'))).toBe(true);
-    expect(fs.existsSync(path.join(exportsDir, 'Bates_v_PostOffice_EncryptedBundle.proofline'))).toBe(true);
+    expect(fs.existsSync(path.join(exportsDir, 'Bates_v_PostOffice_EncryptedBundle.atkin'))).toBe(true);
     expect(fs.existsSync(path.join(exportsDir, 'Bates_v_PostOffice_StatutoryDeadlines.ics'))).toBe(true);
     expect(fs.existsSync(path.join(exportsDir, 'Bates_v_PostOffice_AttendanceNote.txt'))).toBe(true);
     expect(fs.existsSync(path.join(exportsDir, 'Bates_v_PostOffice_ObsidianNote.md'))).toBe(true);

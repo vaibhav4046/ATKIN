@@ -93,7 +93,7 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
                 <h3 className="text-base font-semibold text-ink font-serif">
                   Cross-Device Companion Pairing
                 </h3>
-                <Badge variant="green" size="sm">Air-Gapped LAN</Badge>
+                <Badge variant="green" size="sm">Local network</Badge>
               </div>
               <p className="text-xs text-ink-slate mt-0.5">
                 Pair your Android mobile phone for client audio dictation and mobile case review without cloud servers.
@@ -134,7 +134,7 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
                   {session?.pairingCode || '--- ---'}
                 </div>
                 <span className="text-[11px] text-ink-steel">
-                  Expires in 5 minutes · Zero cloud traffic
+                  Expires in 5 minutes · Local network only
                 </span>
               </div>
 
@@ -151,7 +151,7 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
 
               <button
                 onClick={handleSimulateHandshake}
-                className="w-full mt-2 py-2 px-3 bg-proofline-blue hover:bg-proofline-navy text-white rounded text-xs font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                className="w-full mt-2 py-2 px-3 bg-atkin-ink hover:bg-atkin-surface text-white rounded text-xs font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <span>Verify Mobile Handshake</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -176,7 +176,7 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
               </h4>
               <button
                 onClick={startNewSession}
-                className="text-xs text-proofline-blue hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-xs text-atkin-ink hover:underline flex items-center gap-1 cursor-pointer"
               >
                 <RefreshCw className="w-3 h-3" />
                 <span>New Session</span>
@@ -198,7 +198,7 @@ export const DevicePairingModal: React.FC<DevicePairingModalProps> = ({
                       {device.platform === 'android_mobile' ? (
                         <Smartphone className="w-4 h-4 text-emerald-600" />
                       ) : (
-                        <Laptop className="w-4 h-4 text-proofline-blue" />
+                        <Laptop className="w-4 h-4 text-atkin-ink" />
                       )}
                     </div>
                     <div>

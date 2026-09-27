@@ -1,7 +1,7 @@
 /**
  * ATKIN Deterministic IRAC Model Adapter
  * Implements LegalModel interface using ATKIN's deterministic rule & reasoning engine.
- * Always available locally, zero hallucination, operates with 0 bytes network egress.
+ * Always available locally. No network calls, no model weights to download.
  */
 
 import type { LegalModel, ModelCapabilities, ModelHealth, ModelRequest, ModelResult } from '../legalModel.ts';

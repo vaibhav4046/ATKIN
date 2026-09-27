@@ -1,11 +1,11 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Proofline Sovereign Legal Copilot//Court Calendar v1.0//EN
+PRODID:-//ATKIN//Court Calendar v1.0//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:hearing-bates-001@proofline.local
-DTSTAMP:20260926T161353Z
+UID:hearing-bates-001@atkin.local
+DTSTAMP:20260927T043355Z
 DTSTART:20261112T103000Z
 DTEND:20261112T163000Z
 SUMMARY:High Court Horizon Technical Hearing (Fraser J)

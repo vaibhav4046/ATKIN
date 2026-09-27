@@ -476,7 +476,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       memories: memoryEngine.getMemoriesForMatter(activeMatter.id)
     });
     const jsonStr = JSON.stringify(bundle, null, 2);
-    downloadFile(jsonStr, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Sovereign_Bundle.proofline`, 'application/json');
+    downloadFile(jsonStr, `${activeMatter.title.replace(/[^a-z0-9]/gi, '_')}_Sovereign_Bundle.atkin`, 'application/json');
   };
 
   const handleExportNotebook = () => {
@@ -675,7 +675,7 @@ export const AppShell: React.FC<AppShellProps> = ({
                   <h3 className="text-xl font-serif text-ink tracking-tight">Your Practice is Clean</h3>
                   <p className="text-xs text-ink-slate leading-relaxed">
                     You are in your private, sovereign workspace. No matters have been created yet.
-                    All documents you import remain 100% on this computer.
+                    Documents you import are stored on this computer.
                   </p>
                 </div>
                 <div className="space-y-2 pt-2">
@@ -942,7 +942,7 @@ export const AppShell: React.FC<AppShellProps> = ({
               </div>
 
               <div className="text-[11px] text-ink-steel">
-                Default Jurisdiction: <strong>England and Wales</strong>. Files remain 100% on this computer.
+                Default Jurisdiction: <strong>England and Wales</strong>. Files are stored on this computer.
               </div>
 
               <div className="flex justify-end gap-2 pt-2">

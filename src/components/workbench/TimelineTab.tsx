@@ -369,7 +369,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
               <div className="text-[12.5px] font-medium text-ink font-mono">
                 {contradictionCardData.left.docName}
               </div>
-              <blockquote className="text-[12px] text-ink-slate italic border-l-2 border-proofline-blue pl-2.5 my-1">
+              <blockquote className="text-[12px] text-ink-slate italic border-l-2 border-atkin-ink pl-2.5 my-1">
                 "{contradictionCardData.left.quote}"
               </blockquote>
               {contradictionCardData.left.spanId && (
@@ -378,7 +378,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                     const s = spansById.get(contradictionCardData!.left.spanId!);
                     if (s) onSelectSpan(s);
                   }}
-                  className="text-[11px] text-proofline-blue hover:underline font-medium flex items-center gap-1 pt-1"
+                  className="text-[11px] text-atkin-ink hover:underline font-medium flex items-center gap-1 pt-1"
                 >
                   <span>Inspect Source Span ({contradictionCardData.left.lineLabel})</span>
                   <ArrowRight className="w-3 h-3" />
@@ -437,10 +437,10 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
               <div 
                 className={`absolute -left-[31px] top-0.5 w-4 h-4 rounded-full border-2 bg-white transition-colors ${
                   evt.isConflict 
-                    ? 'border-proofline-ochre bg-proofline-ochre/20' 
+                    ? 'border-atkin-warning bg-atkin-warning/20' 
                     : evt.isKeyStatutory 
-                    ? 'border-proofline-green bg-proofline-green/20' 
-                    : 'border-border-hairline group-hover:border-proofline-blue'
+                    ? 'border-atkin-success bg-atkin-success/20' 
+                    : 'border-border-hairline group-hover:border-atkin-ink'
                 }`} 
               />
 
@@ -478,7 +478,7 @@ export const TimelineTab: React.FC<TimelineTabProps> = ({
                     const s = spansById.get(evt.spanId!);
                     if (s) onSelectSpan(s);
                   }}
-                  className="text-[11px] text-proofline-blue hover:underline font-medium flex items-center gap-1 mt-1.5"
+                  className="text-[11px] text-atkin-ink hover:underline font-medium flex items-center gap-1 mt-1.5"
                 >
                   <FileText className="w-3 h-3" />
                   <span>Inspect Linked Source Record</span>

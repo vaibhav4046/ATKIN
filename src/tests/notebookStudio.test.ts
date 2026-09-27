@@ -50,7 +50,7 @@ describe('NotebookStudioEngine - Open Notebook Reverse-Engineered Legal Studio',
     expect(reply.citations.length).toBeGreaterThan(0);
     expect(reply.citations[0].startOffset).toBeDefined();
     expect(reply.citations[0].endOffset).toBeDefined();
-    expect(reply.citations[0].verifiedAdmissible).toBe(true);
+    expect(reply.citations[0].quoteLocatedInSource).toBe(true);
     expect(reply.evidentialCoverageRatio).toBeGreaterThan(0.2);
   });
 
@@ -214,7 +214,7 @@ describe('NotebookStudioEngine - Open Notebook Reverse-Engineered Legal Studio',
     const markdown = notebookStudioEngine.exportNotebookToMarkdown(notebook, BATES_DOCUMENTS);
 
     expect(markdown).toContain('---');
-    expect(markdown).toContain('generator: "Proofline Sovereign Notebook Studio"');
+    expect(markdown).toContain('generator: "ATKIN Notebook Studio"');
     expect(markdown).toContain('[[Documents/');
     expect(markdown).toContain('Executive Case Brief');
     expect(markdown).toContain('Audio Overviews & Judicial Dialectics');

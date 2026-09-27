@@ -33,3 +33,7 @@ target/
 .env*
 
 lab/
+
+# local preview server logs
+preview.err
+preview.log

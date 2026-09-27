@@ -17,7 +17,13 @@ export interface NotebookCitation {
   startOffset?: number;
   endOffset?: number;
   checksum?: string;
-  verifiedAdmissible: boolean;
+  /**
+   * True only when the quoted text was actually located in the source document.
+   *
+   * This is a text-provenance fact, not a legal conclusion. Whether the evidence
+   * is admissible in front of a court is never asserted here.
+   */
+  quoteLocatedInSource: boolean;
   temporalDate?: string;
 }
 
@@ -74,7 +80,7 @@ export interface NotebookPodcast {
   speakers: NotebookPodcastSpeaker[];
   turns: NotebookPodcastTurn[];
   totalDurationSeconds: number;
-  billingUnits6Min: number; // SRA compliant 6-min billing units
+  billingUnits6Min: number; // 6-minute billing units as defined by the SRA Code of Conduct
   generatedAt: string;
 }
 

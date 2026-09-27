@@ -244,7 +244,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
               <select
                 value={kindFilter}
                 onChange={(e) => setKindFilter(e.target.value)}
-                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-2.5 py-1 text-ink focus:outline-none focus:border-proofline-blue"
+                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-2.5 py-1 text-ink focus:outline-none focus:border-atkin-ink"
               >
                 <option value="all">All Kinds</option>
                 <option value="fact">Facts Only</option>
@@ -255,7 +255,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-2.5 py-1 text-ink focus:outline-none focus:border-proofline-blue"
+                className="text-[12px] bg-gallery-paper border border-border-hairline rounded-[4px] px-2.5 py-1 text-ink focus:outline-none focus:border-atkin-ink"
               >
                 <option value="all">All Statuses</option>
                 <option value="supported">Supported</option>
@@ -279,8 +279,8 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                   key={claim.id}
                   className={`bg-gallery-white border rounded-[6px] p-5 transition-all shadow-xs ${
                     isContested
-                      ? 'border-proofline-ochre/40 ring-1 ring-proofline-ochre/20'
-                      : 'border-border-hairline hover:border-proofline-blue/30'
+                      ? 'border-atkin-warning/40 ring-1 ring-atkin-warning/20'
+                      : 'border-border-hairline hover:border-atkin-ink/30'
                   }`}
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-2.5">
@@ -294,7 +294,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                       </Badge>
 
                       {claim.temporalScope && (
-                        <Badge variant="slate" size="sm" icon={<Calendar className="w-3 h-3 text-proofline-blue" />}>
+                        <Badge variant="slate" size="sm" icon={<Calendar className="w-3 h-3 text-atkin-ink" />}>
                           Date: {claim.temporalScope}
                         </Badge>
                       )}
@@ -334,7 +334,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                             onClick={() => span && onSelectSpan(span)}
                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-mono transition-colors text-left ${
                               isAdverse 
-                                ? 'bg-proofline-ochre/10 border-proofline-ochre/30 text-proofline-ochre hover:bg-proofline-ochre/20' 
+                                ? 'bg-atkin-warning/10 border-atkin-warning/30 text-atkin-warning hover:bg-atkin-warning/20' 
                                 : 'bg-gallery-paper border-border-hairline text-ink-slate hover:bg-gallery-mist hover:text-ink'
                             }`}
                             title={edge.rationale}
@@ -342,7 +342,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                             <FileText className="w-3 h-3 shrink-0" />
                             <span className="truncate max-w-[200px]">{doc ? doc.filename : edge.spanId}</span>
                             {span && <span className="text-ink-steel">L{span.lineStart}–{span.lineEnd}</span>}
-                            {isAdverse && <span className="font-bold ml-1 text-proofline-ochre">[ADVERSE]</span>}
+                            {isAdverse && <span className="font-bold ml-1 text-atkin-warning">[ADVERSE]</span>}
                           </button>
                         );
                       })}
@@ -356,7 +356,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                       {!isEditing && (
                         <button
                           onClick={() => handleStartEdit(claim)}
-                          className="text-proofline-blue hover:underline flex items-center gap-1 text-[11px]"
+                          className="text-atkin-ink hover:underline flex items-center gap-1 text-[11px]"
                         >
                           <Edit3 className="w-3 h-3" />
                           <span>Edit Note</span>
@@ -369,7 +369,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                         <textarea
                           value={noteText}
                           onChange={(e) => setNoteText(e.target.value)}
-                          className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-lg p-2 text-ink focus:outline-none focus:border-proofline-blue font-sans"
+                          className="w-full text-[12px] bg-gallery-white border border-border-hairline rounded-lg p-2 text-ink focus:outline-none focus:border-atkin-ink font-sans"
                           rows={2}
                         />
                         <div className="flex justify-end gap-2">
@@ -443,10 +443,10 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                             <button
                               key={e.id}
                               onClick={() => s && onSelectSpan(s)}
-                              className="flex items-center gap-1 text-left text-[11px] text-proofline-blue hover:underline font-mono truncate max-w-[180px]"
+                              className="flex items-center gap-1 text-left text-[11px] text-atkin-ink hover:underline font-mono truncate max-w-[180px]"
                               title={e.rationale}
                             >
-                              <ShieldCheck className="w-3 h-3 text-proofline-green shrink-0" />
+                              <ShieldCheck className="w-3 h-3 text-atkin-success shrink-0" />
                               <span className="truncate">{d ? d.filename : e.spanId}</span>
                             </button>
                           );
@@ -525,7 +525,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
                       type="checkbox"
                       checked={item.status === 'verified'}
                       onChange={() => {}} // handled by parent onClick
-                      className="w-4 h-4 text-proofline-blue rounded-[2px] cursor-pointer"
+                      className="w-4 h-4 text-atkin-ink rounded-[2px] cursor-pointer"
                     />
                     <div>
                       <span className={`text-[12.5px] font-medium block ${item.status === 'verified' ? 'text-ink line-through opacity-70' : 'text-ink'}`}>
@@ -560,7 +560,7 @@ export const FactsTab: React.FC<FactsTabProps> = ({
               {witnessQuestions.map((q, idx) => (
                 <div key={q.id} className="p-3.5 bg-canvas-subtle border border-border-hairline rounded-[4px] space-y-1.5">
                   <div className="flex items-start gap-2">
-                    <span className="font-mono text-[11.5px] font-bold text-proofline-blue">Q{idx + 1}.</span>
+                    <span className="font-mono text-[11.5px] font-bold text-atkin-ink">Q{idx + 1}.</span>
                     <p className="text-[12.5px] font-medium text-ink leading-snug">
                       "{q.question}"
                     </p>
