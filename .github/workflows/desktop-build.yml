@@ -6,6 +6,11 @@ on:
       - 'v*'
   workflow_dispatch:
 
+# tauri-action creates/updates the draft release and uploads its assets, which
+# needs write access; the repo default token is read-only.
+permissions:
+  contents: write
+
 jobs:
   build-tauri:
     strategy:
@@ -46,14 +51,24 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      # Tag pushes publish a draft release. Manual runs only build and upload the
+      # bundles as workflow artifacts, so they never touch a published release.
       - name: Build Tauri Desktop Binary
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__
-          releaseName: 'Proofline v__VERSION__'
-          releaseBody: 'Official sovereign desktop release of Proofline.'
+          tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          releaseName: ${{ github.ref_type == 'tag' && format('Atkin {0}', github.ref_name) || '' }}
+          releaseBody: 'Atkin sovereign legal AI workspace, desktop build.'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: Upload bundles (manual runs)
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: atkin-${{ matrix.platform }}
+          path: src-tauri/target/**/release/bundle/**/*
+          if-no-files-found: error
